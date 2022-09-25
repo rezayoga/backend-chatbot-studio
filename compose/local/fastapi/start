@@ -5,5 +5,5 @@ set -o pipefail
 set -o nounset
 
 alembic upgrade head
-uvicorn main:app --reload --reload-dir project --host 103.41.204.222
+uvicorn main:app --reload --reload-dir project --host 0.0.0.0
 

@@ -44,8 +44,7 @@ jobs:
             cd /home/rezayogaswara/python_projects/backend-chatbot-studio
             pwd
             echo ----------------------------------------------
-            source env/bin/activate
+            source venv/bin/activate
             pip install --upgrade pip
             pip install -r requirements.txt
             echo ----------------------------------------------
-            python -m pytest -v

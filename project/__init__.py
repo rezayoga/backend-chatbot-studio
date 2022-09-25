@@ -15,6 +15,6 @@ def create_app() -> FastAPI:
 
     @app.get("/")
     async def root():
-        return {"message": "Hello World"}
+        return {"message": "Started"}
 
     return app

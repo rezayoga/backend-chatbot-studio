@@ -4,7 +4,7 @@ from multiprocessing import cpu_count
 bind = 'unix:/home/rezayogaswara/python_projects/chatbotstudioapi.sock'
 
 # Worker Options
-workers = cpu_count() + 1
+workers = cpu_count() + 2
 worker_class = 'uvicorn.workers.UvicornWorker'
 
 # Logging Options

@@ -1,7 +1,18 @@
+from unicodedata import name
 from pydantic import BaseModel
 from typing import Optional, List
 from datetime import datetime
+import models
 
+
+class CreateUsers(BaseModel):
+    username: Optional[str] = None
+    email: Optional[str] = None
+    hashed_password: Optional[str] = None
+    name: Optional[str] = None
+
+    class Config:
+        orm_mode = True
 
 class Template_Content(BaseModel):
     id: Optional[str] = None

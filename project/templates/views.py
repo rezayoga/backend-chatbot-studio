@@ -6,10 +6,11 @@ from fastapi import HTTPException
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from project.database import SessionLocal
-from project.templates.models import Template
+from project.templates.models import *
 
 from . import templates_router
 from .schemas import Template as TemplateSchema
+from .schemas import CreateUsers as CreateUserSchema
 
 logger = logging.getLogger(__name__)
 session = SessionLocal()
@@ -33,3 +34,18 @@ async def read():
     if templates is None:
         raise HTTPException(status_code=404, detail="Empty templates")
     return JSONResponse(status_code=200, content=jsonable_encoder(templates))
+
+
+@templates_router.post("/create/user")
+async def create_user(created_user: CreateUserSchema):
+    logger.info("create_user() called")
+    user = User()
+    user.username = created_user.username
+    user.email = created_user.email
+    user.name = created_user.name
+    user.hashed_password = created_user.hashed_password
+    user.is_active = True
+    session.add(user)
+    session.commit()
+
+    return JSONResponse(status_code=200, content={"message": "success"})

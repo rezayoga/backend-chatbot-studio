@@ -36,8 +36,6 @@ jobs:
             pip install --upgrade pip
             pip install -r requirements.txt
             echo ----------------------------------------------
-            # sudo systemctl stop datajatim
-            # sudo systemctl start datajatim
-            # sudo systemctl status datajatim
-            docker-compose down -v --remove-orphans
-            docker-compose up -d --build
+            sudo systemctl stop chatbotstudioapi
+            sudo systemctl start chatbotstudioapi
+            sudo systemctl status chatbotstudioapi

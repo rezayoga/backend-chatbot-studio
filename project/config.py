@@ -4,7 +4,7 @@ from functools import lru_cache
 
 class BaseConfig:
     DATABASE_URL: str = os.environ.get(
-        "DATABASE_URL", "postgresql+psycopg2://reza:reza@host.docker.internal/db_chatbot_studio")
+        "DATABASE_URL", "postgresql+psycopg2://reza:reza@localhost/db_chatbot_studio")
     DATABASE_CONNECT_DICT: dict = {}
 
     CELERY_BROKER_URL: str = os.environ.get(

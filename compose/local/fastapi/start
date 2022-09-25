@@ -5,5 +5,4 @@ set -o pipefail
 set -o nounset
 
 alembic upgrade head
-# uvicorn main:app --reload --reload-dir project --host 0.0.0.0
-gunicorn main:app -k uvicorn.workers.UvicornWorker
+uvicorn main:app --reload --reload-dir project --host 0.0.0.0

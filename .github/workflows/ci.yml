@@ -31,20 +31,3 @@ jobs:
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
           # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-      - name: Test in server using pytest
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SERVER_CREDENTIAL_HOSTNAME }}
-          username: ${{ secrets.SERVER_CREDENTIAL_USERNAME }}
-          key: ${{ secrets.SERVER_CREDENTIAL_PRIVATE_KEY }}
-          port: 2211
-          script_stop: true
-          debug: true
-          script: |
-            cd /home/rezayogaswara/python_projects/backend-chatbot-studio
-            pwd
-            echo ----------------------------------------------
-            source venv/bin/activate
-            pip install --upgrade pip
-            pip install -r requirements.txt
-            echo ----------------------------------------------

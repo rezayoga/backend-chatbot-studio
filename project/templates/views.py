@@ -1,14 +1,15 @@
-from . import templates_router
 import logging
 import uuid
-from .schemas import Template as TemplateSchema
-from fastapi.responses import JSONResponse
-from fastapi import HTTPException
-from project.templates.models import Template
-from project.database import SessionLocal
 from typing import List
+
+from fastapi import HTTPException
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
+from project.database import SessionLocal
+from project.templates.models import Template
+
+from . import templates_router
+from .schemas import Template as TemplateSchema
 
 logger = logging.getLogger(__name__)
 session = SessionLocal()

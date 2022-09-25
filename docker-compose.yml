@@ -21,17 +21,6 @@ services:
     depends_on:
       - redis
 
-  nginx:
-    image: nginx:latest
-    # this volume is used to map the files and folders on the host to the container
-    # so if we change code on the host, code in the docker container will also be changed
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-    ports:
-      - 80:80
-    depends_on:
-      - web
-
   redis:
     image: redis:latest
 

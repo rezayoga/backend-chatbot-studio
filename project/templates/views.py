@@ -1,13 +1,10 @@
-import json
-from re import template
 from . import templates_router
 import logging
 import uuid
 from .schemas import Template as TemplateSchema
-from .schemas import Template_Content as TemplateContentSchema
 from fastapi.responses import JSONResponse
 from fastapi import HTTPException
-from project.templates.models import Template, Template_Content
+from project.templates.models import Template
 from project.database import SessionLocal
 from typing import List
 from fastapi.encoders import jsonable_encoder

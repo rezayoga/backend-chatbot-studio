@@ -1,8 +1,8 @@
-from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey
-from sqlalchemy.dialects.postgresql import JSONB
-from sqlalchemy.sql import func
-from sqlalchemy.orm import relationship
 from project.database import Base
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 
 
 class Template_Content(Base):

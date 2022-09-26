@@ -1,10 +1,10 @@
 from multiprocessing import cpu_count
 
 # Socket Path
-bind = 'unix:/home/rezayogaswara/python_projects/chatbotstudioapi.sock'
+bind = 'unix:/home/rezayogaswara/python_projects/chatbotstudio.sock'
 
 # Worker Options
-workers = cpu_count() + 2
+workers = cpu_count() + 1
 worker_class = 'uvicorn.workers.UvicornWorker'
 
 # Logging Options

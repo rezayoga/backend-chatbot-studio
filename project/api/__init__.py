@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-templates_router = APIRouter(
-    prefix="/templates/v1",
+api_router = APIRouter(
+    prefix="/api/v1",
 )
 
 from . import views, models, tasks, schemas  # noqa

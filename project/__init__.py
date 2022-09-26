@@ -10,8 +10,8 @@ def create_app() -> FastAPI:
     # do this before loading routes              # new
     app.celery_app = create_celery()
 
-    from project.templates import templates_router                # new
-    app.include_router(templates_router)                      # new
+    from project.api import api_router                # new
+    app.include_router(api_router)                      # new
 
     @app.get("/")
     async def root():

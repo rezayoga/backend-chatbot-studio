@@ -6,9 +6,9 @@ from fastapi import HTTPException
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from project.database import SessionLocal
-from project.templates.models import *
+from project.api.models import *
 
-from . import templates_router
+from . import api_router
 from .schemas import Template as TemplateSchema
 from .schemas import CreateUser as CreateUserSchema
 from passlib.context import CryptContext
@@ -23,7 +23,7 @@ def get_password_hash(password: str):
     return bcrypt.hash(password)
 
 
-@templates_router.get("/create/")
+@api_router.get("/create/")
 async def create():
     logger.info("create() called")
 
@@ -33,7 +33,7 @@ async def create():
     return JSONResponse(status_code=200, content={"message": "success"})
 
 
-@templates_router.get("/read/", response_model=List[TemplateSchema])
+@api_router.get("/read/", response_model=List[TemplateSchema])
 async def read():
     logger.info("read() called")
 
@@ -43,7 +43,7 @@ async def read():
     return JSONResponse(status_code=200, content=jsonable_encoder(templates))
 
 
-@templates_router.post("/create/user")
+@api_router.post("/create/user")
 async def create_user(created_user: CreateUserSchema):
     logger.info("create_user() called")
     user = User()

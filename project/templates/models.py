@@ -53,6 +53,7 @@ class Template(Base):
     template_name = Column(Text, nullable=False)
     division_id = Column(String(128), nullable=True)
     template_contents = relationship("Template_Content", backref="template")
+    version = Column(String, nullable=True)
     owner_id = Column(Integer, ForeignKey("users.id"))
     owner = relationship("User", backref="templates")
 

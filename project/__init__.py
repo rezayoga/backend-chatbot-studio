@@ -1,9 +1,28 @@
 from fastapi import FastAPI
 from project.celery_utils import create_celery   # new
+from fastapi.openapi.utils import get_openapi
 
 
 def create_app() -> FastAPI:
     app = FastAPI()
+
+    def custom_openapi():
+        if app.openapi_schema:
+            return app.openapi_schema
+        
+        openapi_schema = get_openapi(
+            title="Chatbot Studio API",
+            version="1.0.0",
+            description="API schema for Jatis Chatbot Studio",
+            routes=app.routes,
+        )
+        openapi_schema["info"]["x-logo"] = {
+            "url": "https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png"
+        }
+        app.openapi_schema = openapi_schema
+        return app.openapi_schema
+
+    app.openapi = custom_openapi
 
     from project.logging import configure_logging          # new
     configure_logging()

@@ -10,7 +10,7 @@ from project.templates.models import *
 
 from . import templates_router
 from .schemas import Template as TemplateSchema
-from .schemas import CreateUsers as CreateUserSchema
+from .schemas import CreateUser as CreateUserSchema
 from passlib.context import CryptContext
 
 bcrypt = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -44,7 +44,7 @@ async def read():
 
 
 @templates_router.post("/create/user")
-async def create_user(created_user: CreateUserSchema) -> User:
+async def create_user(created_user: CreateUserSchema):
     logger.info("create_user() called")
     user = User()
     user.username = created_user.username

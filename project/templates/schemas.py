@@ -4,7 +4,7 @@ from typing import Optional, List
 from datetime import datetime
 
 
-class CreateUsers(BaseModel):
+class CreateUser(BaseModel):
     username: Optional[str] = None
     email: Optional[str] = None
     password: Optional[str] = None

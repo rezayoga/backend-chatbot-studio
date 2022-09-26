@@ -16,9 +16,9 @@ def create_app() -> FastAPI:
             description="API schema for Jatis Chatbot Studio",
             routes=app.routes,
         )
-        openapi_schema["info"]["x-logo"] = {
+        """ openapi_schema["info"]["x-logo"] = {
             "url": "https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png"
-        }
+        } """
         app.openapi_schema = openapi_schema
         return app.openapi_schema
 

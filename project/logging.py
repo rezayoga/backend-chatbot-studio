@@ -33,3 +33,4 @@ def configure_logging():
     }
 
     logging.config.dictConfig(logging_dict)
+    logging.getLogger("uvicorn.access").setLevel(logging.INFO)

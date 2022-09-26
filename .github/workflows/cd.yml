@@ -36,6 +36,6 @@ jobs:
             pip install --upgrade pip
             pip install -r requirements.txt
             echo ----------------------------------------------
-            sudo systemctl stop chatbotstudioapi
-            sudo systemctl start chatbotstudioapi
-            sudo systemctl status chatbotstudioapi
+            sudo systemctl stop chatbotstudio
+            sudo systemctl start chatbotstudio
+            sudo systemctl status chatbotstudio

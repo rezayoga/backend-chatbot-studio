@@ -17,7 +17,6 @@ class User(Base):
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
-
     templates = relationship("Template", backref="template_owner")
 
     def __repr__(self):
@@ -35,7 +34,6 @@ class Template_Content(Base):
     created_at = Column(DateTime(timezone=True),
                         nullable=False, default=func.now())
     template_id = Column(String(128), ForeignKey("templates.id"))
-    template = relationship("Template", backref="contents")
 
     def __repr__(self) -> str:
         return f"<Template: {self.id} -  {self.content} -  {self.option}>"
@@ -52,9 +50,9 @@ class Template(Base):
                         nullable=False, default=func.now())
     template_name = Column(Text, nullable=False)
     division_id = Column(String(128), nullable=True)
-    template_contents = relationship("Template_Content", backref="template")
     owner_id = Column(Integer, ForeignKey("users.id"))
-    owner = relationship("User", backref="templates")
+    template_contents = relationship("Template_Content", backref="template_content")
+    template_changelogs = relationship("Template_Changelog", backref="template_changelog")
 
     def __repr__(self) -> str:
         return f"<Template: {self.id} -  {self.content} -  {self.channel} -  {self.channel_account_alias}>"
@@ -71,7 +69,6 @@ class Template_Changelog(Base):
     action = Column(String(128), nullable=True)
     payload = Column(JSONB, nullable=True)
     template_id = Column(String(128), ForeignKey("templates.id"))
-    template = relationship("Template", backref="changelogs")
 
     def __repr__(self) -> str:
         return f"<Template: {self.id} -  {self.template_id} -  {self.user_id} -  {self.action}>"

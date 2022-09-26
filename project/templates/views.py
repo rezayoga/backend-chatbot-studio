@@ -18,8 +18,10 @@ bcrypt = CryptContext(schemes=["bcrypt"], deprecated="auto")
 logger = logging.getLogger(__name__)
 session = SessionLocal()
 
+
 def get_password_hash(password: str):
     return bcrypt.hash(password)
+
 
 @templates_router.get("/create/")
 async def create():

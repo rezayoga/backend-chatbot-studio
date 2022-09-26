@@ -8,7 +8,7 @@ import models
 class CreateUsers(BaseModel):
     username: Optional[str] = None
     email: Optional[str] = None
-    hashed_password: Optional[str] = None
+    password: Optional[str] = None
     name: Optional[str] = None
 
     class Config:

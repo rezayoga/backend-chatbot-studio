@@ -1,8 +1,8 @@
 from email.policy import default
 from unicodedata import name
 from project.database import Base
-from sqlalchemy import Column, DateTime, ForeignKey, String, Text, Boolean, Integer
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy import Column, DateTime, ForeignKey, String, Text, Boolean, Integer, text
+from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
@@ -27,7 +27,7 @@ class User(Base):
 class Template_Content(Base):
     __tablename__ = "template_contents"
 
-    id = Column(String(128), primary_key=True, default=func.uuid_generate_v4())
+    id = Column(UUID(as_uuid=True), primary_key=True, server_default=text("uuid_generate_v4()"),)
     parent_id = Column(String(128), nullable=False, index=True)
     payload = Column(JSONB, nullable=True)
     option = Column(Text, nullable=True)
@@ -42,7 +42,7 @@ class Template_Content(Base):
 class Template(Base):
     __tablename__ = "templates"
 
-    id = Column(String(128), primary_key=True, default=func.uuid_generate_v4())
+    id = Column(UUID(as_uuid=True), primary_key=True, server_default=text("uuid_generate_v4()"),)
     client = Column(String(128), nullable=True)
     channel = Column(String(128), nullable=True)
     channel_account_alias = Column(String(128), nullable=True)
@@ -61,7 +61,7 @@ class Template(Base):
 class Template_Changelog(Base):
     __tablename__ = "template_changelogs"
 
-    id = Column(String(128), primary_key=True, default=func.uuid_generate_v4())
+    id = Column(UUID(as_uuid=True), primary_key=True, server_default=text("uuid_generate_v4()"),)
     version = Column(String(128), nullable=True)
     user_id = Column(Integer, nullable=False, index=True)
     created_at = Column(DateTime(timezone=True),

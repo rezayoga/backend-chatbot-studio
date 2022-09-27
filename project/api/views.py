@@ -25,8 +25,10 @@ session = SessionLocal()
 def get_password_hash(password: str):
     return bcrypt.hash(password)
 
+
 def verify_password(plain_password, hashed_password):
     return bcrypt.verify(plain_password, hashed_password)
+
 
 def authenticate_user(username: str, password: str):
     user = session.query(User)\
@@ -74,6 +76,8 @@ async def create_user(created_user: CreateUserSchema):
     return user
 
 api_router.post("/token")
+
+
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
     user = authenticate_user(form_data.username, form_data.password)
     if not user:

@@ -5,7 +5,7 @@ from sqlalchemy import Column, DateTime, ForeignKey, String, Text, Boolean, Inte
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-
+from fastapi_utils.guid_type import GUID
 
 class User(Base):
     __tablename__ = "users"
@@ -27,13 +27,13 @@ class User(Base):
 class Template_Content(Base):
     __tablename__ = "template_contents"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, server_default=text("uuid_generate_v4()"),)
-    parent_id = Column(String(128), nullable=False, index=True)
+    id = Column(GUID, primary_key=True)
+    parent_id = Column(GUID, nullable=True, index=True)
     payload = Column(JSONB, nullable=True)
     option = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True),
                         nullable=False, default=func.now())
-    template_id = Column(String(128), ForeignKey("templates.id"))
+    template_id = Column(GUID, ForeignKey("templates.id"))
 
     def __repr__(self) -> str:
         return f"<Template: {self.id} -  {self.content} -  {self.option}>"
@@ -42,7 +42,7 @@ class Template_Content(Base):
 class Template(Base):
     __tablename__ = "templates"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, server_default=text("uuid_generate_v4()"),)
+    id = Column(GUID, primary_key=True)
     client = Column(String(128), nullable=True)
     channel = Column(String(128), nullable=True)
     channel_account_alias = Column(String(128), nullable=True)
@@ -61,14 +61,14 @@ class Template(Base):
 class Template_Changelog(Base):
     __tablename__ = "template_changelogs"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, server_default=text("uuid_generate_v4()"),)
+    id = Column(GUID, primary_key=True)
     version = Column(String(128), nullable=True)
     user_id = Column(Integer, nullable=False, index=True)
     created_at = Column(DateTime(timezone=True),
                         nullable=False, default=func.now())
     action = Column(String(128), nullable=True)
     payload = Column(JSONB, nullable=True)
-    template_id = Column(String(128), ForeignKey("templates.id"))
+    template_id = Column(GUID, ForeignKey("templates.id"))
 
     def __repr__(self) -> str:
         return f"<Template: {self.id} -  {self.template_id} -  {self.user_id} -  {self.action}>"

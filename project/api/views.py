@@ -70,10 +70,8 @@ async def create_user(created_user: CreateUserSchema):
     user.name = created_user.name
     user.hashed_password = get_password_hash(created_user.password)
     user.is_active = True
-    session.add(user)
-    session.commit()
-
     return JSONResponse(status_code=200, content=jsonable_encoder(user))
+
 
 @api_router.post("/token")
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):

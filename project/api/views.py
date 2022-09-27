@@ -40,7 +40,7 @@ def authenticate_user(username: str, password: str):
     return user
 
 
-@api_router.post("/templates/", tags=["POST"])
+@api_router.post("/templates/", tags=["TEMPLATE"])
 async def create_template(created_template: TemplateSchema):
     template = Template()
     template.client = created_template.client
@@ -55,7 +55,7 @@ async def create_template(created_template: TemplateSchema):
     return JSONResponse(status_code=200, content={"message": "Template created successfully"})
 
 
-@api_router.get("/templates/", tags=["GET"], response_model=List[TemplateSchema])
+@api_router.get("/templates/", tags=["TEMPLATE"], response_model=List[TemplateSchema])
 async def get_templates():
     templates = session.query(Template).all()
     if templates is None:
@@ -63,7 +63,7 @@ async def get_templates():
     return JSONResponse(status_code=200, content=jsonable_encoder(templates))
 
 
-@api_router.get("/users/", tags=["GET"], response_model=List[UserSchema])
+@api_router.get("/users/", tags=["USER"], response_model=List[UserSchema])
 async def get_users():
     users = session.query(User).all()
     if users is None:
@@ -71,7 +71,7 @@ async def get_users():
     return JSONResponse(status_code=200, content=jsonable_encoder(users))
 
 
-@api_router.post("/users", tags=["POST"])
+@api_router.post("/users", tags=["USER"])
 async def create_user(created_user: UserSchema):
     logger.info("create_user() called")
     user = User()
@@ -85,7 +85,7 @@ async def create_user(created_user: UserSchema):
     return JSONResponse(status_code=200, content={"message": "User created successfully"})
 
 
-@api_router.post("/token", tags=["POST"])
+@api_router.post("/token", tags=["USER"])
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
     user = authenticate_user(form_data.username, form_data.password)
     if not user:

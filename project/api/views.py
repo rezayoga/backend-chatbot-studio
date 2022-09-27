@@ -43,7 +43,6 @@ def authenticate_user(username: str, password: str):
 
 @api_router.get("/create/")
 async def create():
-    logger.info("create() called")
 
     session.add(Template(id=uuid.uuid4(), template_name=uuid.uuid4()))
     session.commit()
@@ -51,9 +50,8 @@ async def create():
     return JSONResponse(status_code=200, content={"message": "success"})
 
 
-@api_router.get("/read/", response_model=List[TemplateSchema])
-async def read():
-    logger.info("read() called")
+@api_router.get("/templates/", response_model=List[TemplateSchema])
+async def templates():
 
     templates = session.query(Template).all()
     if templates is None:

@@ -10,7 +10,7 @@ from project.api.models import *
 
 from . import api_router
 from .schemas import Template as TemplateSchema
-from .schemas import CreateUser as CreateUserSchema
+from .schemas import User as UserSchema
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordRequestForm
 
@@ -41,26 +41,30 @@ def authenticate_user(username: str, password: str):
     return user
 
 
-@api_router.get("/create/")
-async def create():
-
-    session.add(Template(id=uuid.uuid4(), template_name=uuid.uuid4()))
+@api_router.post("/templates/")
+async def create_template(created_template: TemplateSchema):
+    template = Template()
+    template.client = created_template.client
+    template.channel = created_template.channel
+    template.channel_account_alias = created_template.channel_account_alias
+    template.template_name = created_template.template_name
+    template.division_id = created_template.division_id
+    session.add(template)
     session.commit()
 
-    return JSONResponse(status_code=200, content={"message": "success"})
+    return JSONResponse(status_code=200, content={"message": "Template created successfully"})
 
 
 @api_router.get("/templates/", response_model=List[TemplateSchema])
 async def templates():
-
     templates = session.query(Template).all()
     if templates is None:
         raise HTTPException(status_code=404, detail="Empty templates")
     return JSONResponse(status_code=200, content=jsonable_encoder(templates))
 
 
-@api_router.post("/create/user")
-async def create_user(created_user: CreateUserSchema):
+@api_router.post("/users")
+async def create_user(created_user: UserSchema):
     logger.info("create_user() called")
     user = User()
     user.username = created_user.username
@@ -68,10 +72,9 @@ async def create_user(created_user: CreateUserSchema):
     user.name = created_user.name
     user.hashed_password = get_password_hash(created_user.password)
     user.is_active = True
-    #return JSONResponse(status_code=200, content=jsonable_encoder(user))
-    
     session.add(user)
     session.commit()
+    return JSONResponse(status_code=200, content={"message": "User created successfully"})
 
 
 @api_router.post("/token")

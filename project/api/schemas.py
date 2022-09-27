@@ -4,14 +4,18 @@ from typing import Optional, List
 from datetime import datetime
 
 
-class CreateUser(BaseModel):
+class User(BaseModel):
     username: Optional[str] = None
     email: Optional[str] = None
     password: Optional[str] = None
     name: Optional[str] = None
+    is_active: Optional[bool] = True
+    created_at = Optional[datetime] = None
+    updated_at = Optional[datetime] = None
 
     class Config:
         orm_mode = True
+
 
 class Template_Content(BaseModel):
     id: Optional[str] = None

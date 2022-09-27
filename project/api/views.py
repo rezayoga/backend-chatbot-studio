@@ -75,9 +75,7 @@ async def create_user(created_user: CreateUserSchema):
 
     return user
 
-api_router.post("/token")
-
-
+@api_router.post("/token")
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
     user = authenticate_user(form_data.username, form_data.password)
     if not user:

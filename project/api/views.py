@@ -56,7 +56,7 @@ async def create_template(created_template: TemplateSchema):
 
 
 @api_router.get("/templates/", response_model=List[TemplateSchema])
-async def templates():
+async def get_templates():
     templates = session.query(Template).all()
     if templates is None:
         raise HTTPException(status_code=404, detail="Empty templates")

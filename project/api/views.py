@@ -13,7 +13,6 @@ from .schemas import Template as TemplateSchema
 from .schemas import User as UserSchema
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordRequestForm
-
 from project import api
 
 bcrypt = CryptContext(schemes=["bcrypt"], deprecated="auto")

@@ -10,6 +10,9 @@ class CreateUser(BaseModel):
     password: Optional[str] = None
     name: Optional[str] = None
 
+    class Config:
+        orm_mode = True
+
 class Template_Content(BaseModel):
     id: Optional[str] = None
     parent_id: Optional[str] = None

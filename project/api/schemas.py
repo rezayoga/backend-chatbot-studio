@@ -34,7 +34,6 @@ class Template(BaseModel):
     channel_account_alias: Optional[str] = None
     template_name: Optional[str] = None
     division_id: Optional[str] = None
-    template_contents: Optional[List[Template_Content]] = None
 
     class Config:
         orm_mode = True

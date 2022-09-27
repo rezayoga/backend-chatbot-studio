@@ -71,7 +71,7 @@ async def get_users():
     return JSONResponse(status_code=200, content=jsonable_encoder(users))
 
 
-@api_router.post("/users", tags=["users"])
+@api_router.post("/users/", tags=["users"])
 async def create_user(created_user: UserSchema):
     logger.info("create_user() called")
     user = User()
@@ -85,7 +85,7 @@ async def create_user(created_user: UserSchema):
     return JSONResponse(status_code=200, content={"message": "User created successfully"})
 
 
-@api_router.post("/token", tags=["users"])
+@api_router.post("/token/", tags=["users"])
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
     user = authenticate_user(form_data.username, form_data.password)
     if not user:

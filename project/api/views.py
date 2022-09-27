@@ -48,6 +48,7 @@ async def create_template(created_template: TemplateSchema):
     template.channel_account_alias = created_template.channel_account_alias
     template.template_name = created_template.template_name
     template.division_id = created_template.division_id
+    template.owner_id = created_template.owner_id
     session.add(template)
     session.commit()
 

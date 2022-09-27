@@ -52,7 +52,7 @@ async def create_template(created_template: TemplateSchema):
     session.add(template)
     session.commit()
 
-    return JSONResponse(status_code=200, content={"message": "Template created successfully"})
+    return JSONResponse(status_code=200, content={"message": "Template created successfully!"})
 
 
 @api_router.get("/templates/", response_model=List[TemplateSchema])
@@ -74,7 +74,7 @@ async def create_user(created_user: UserSchema):
     user.is_active = True
     session.add(user)
     session.commit()
-    return JSONResponse(status_code=200, content={"message": "User created successfully"})
+    return JSONResponse(status_code=200, content={"message": "User created successfully!"})
 
 
 @api_router.post("/token")

@@ -9,12 +9,15 @@ def create_app() -> FastAPI:
     def custom_openapi():
         if app.openapi_schema:
             return app.openapi_schema
-        
+
         openapi_schema = get_openapi(
             title="Chatbot Studio API",
             version="1.0.0",
-            description="API schema for Jatis Chatbot Studio",
+            description="API schema for Jatis Mobile Chatbot Studio",
             routes=app.routes,
+            servers=[{"url": "https://chatbotstudio.rezayogaswara.dev"}],
+            contacts={"name": "Reza Yogaswara",
+                      "email": "reza.yogaswara@jatis.com"},
         )
         """ openapi_schema["info"]["x-logo"] = {
             "url": "https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png"

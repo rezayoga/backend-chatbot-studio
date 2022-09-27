@@ -28,7 +28,6 @@ class Template_Content(Base):
 
     id = Column(String(128), primary_key=True)
     parent_id = Column(String(128), nullable=False, index=True)
-    content = Column(Text, nullable=True)
     payload = Column(JSONB, nullable=True)
     option = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True),

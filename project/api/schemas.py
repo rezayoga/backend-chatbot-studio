@@ -10,8 +10,6 @@ class User(BaseModel):
     password: Optional[str] = None
     name: Optional[str] = None
     is_active: Optional[bool] = True
-    created_at = Optional[datetime] = None
-    updated_at = Optional[datetime] = None
 
     class Config:
         orm_mode = True
@@ -23,7 +21,6 @@ class Template_Content(BaseModel):
     content: Optional[str] = None
     payload: Optional[str] = None
     option: Optional[str] = None
-    created_at: Optional[datetime] = None
     template_id: Optional[str] = None
 
     class Config:
@@ -35,7 +32,6 @@ class Template(BaseModel):
     client: Optional[str] = None
     channel: Optional[str] = None
     channel_account_alias: Optional[str] = None
-    created_at: Optional[datetime] = None
     template_name: Optional[str] = None
     division_id: Optional[str] = None
     template_contents: Optional[List[Template_Content]] = None

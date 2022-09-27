@@ -52,7 +52,7 @@ async def create_template(created_template: TemplateSchema):
     session.add(template)
     session.commit()
 
-    return JSONResponse(status_code=200, content={"message": "Template created successfully!"})
+    return JSONResponse(status_code=200, content={"message": "Template created successfully"})
 
 
 @api_router.get("/templates/", response_model=List[TemplateSchema])
@@ -61,6 +61,14 @@ async def get_templates():
     if templates is None:
         raise HTTPException(status_code=404, detail="Empty templates")
     return JSONResponse(status_code=200, content=jsonable_encoder(templates))
+
+
+@api_router.get("/users/", response_model=List[UserSchema])
+async def get_users():
+    users = session.query(User).all()
+    if users is None:
+        raise HTTPException(status_code=404, detail="Empty users")
+    return JSONResponse(status_code=200, content=jsonable_encoder(users))
 
 
 @api_router.post("/users")
@@ -74,7 +82,7 @@ async def create_user(created_user: UserSchema):
     user.is_active = True
     session.add(user)
     session.commit()
-    return JSONResponse(status_code=200, content={"message": "User created successfully!"})
+    return JSONResponse(status_code=200, content={"message": "User created successfully"})
 
 
 @api_router.post("/token")

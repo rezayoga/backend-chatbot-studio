@@ -16,7 +16,6 @@ class User(BaseModel):
 
 
 class Template_Content(BaseModel):
-    id: Optional[str] = None
     parent_id: Optional[str] = None
     content: Optional[str] = None
     payload: Optional[str] = None
@@ -28,7 +27,6 @@ class Template_Content(BaseModel):
 
 
 class Template(BaseModel):
-    id: Optional[str] = None
     client: Optional[str] = None
     channel: Optional[str] = None
     channel_account_alias: Optional[str] = None

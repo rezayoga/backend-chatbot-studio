@@ -15,7 +15,7 @@ def create_app() -> FastAPI:
             version="1.0.0",
             description="API schema for Jatis Mobile Chatbot Studio",
             routes=app.routes,
-            servers=[{"url": "https://chatbotstudio.rezayogaswara.dev"}]
+            servers=[{"url": "https://chatbotstudio.rezayogaswara.dev/"}]
         )
         """ openapi_schema["info"]["x-logo"] = {
             "url": "https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png"

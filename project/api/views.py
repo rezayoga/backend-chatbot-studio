@@ -36,7 +36,7 @@ def authenticate_user(username: str, password: str):
         .first()
     if not user:
         return False
-    if not verify_password(password, user.password):
+    if not verify_password(password, user.hashed_password):
         return False
     return user
 
@@ -70,12 +70,15 @@ async def create_user(created_user: CreateUserSchema):
     user.name = created_user.name
     user.hashed_password = get_password_hash(created_user.password)
     user.is_active = True
-    return JSONResponse(status_code=200, content=jsonable_encoder(user))
+    #return JSONResponse(status_code=200, content=jsonable_encoder(user))
+    
+    session.add(user)
+    session.commit()
 
 
 @api_router.post("/token")
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = authenticate_user(form_data.username, form_data.hashed_password)
+    user = authenticate_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(
             status_code=400, detail="Incorrect username or password"

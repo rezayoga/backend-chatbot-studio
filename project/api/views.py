@@ -89,6 +89,14 @@ def token_exception():
     return token_exception_response
 
 
+def not_found_exception(message: str):
+    not_found_exception_response = HTTPException(
+        status_code=404,
+        detail=message,
+    )
+    return not_found_exception_response
+
+
 @api_router.get("/templates/user", tags=["templates"])
 async def read_all_templates_by_user_id(user: dict = Depends(get_current_user)):
 
@@ -112,19 +120,23 @@ async def read_template_by_template_id(template_id: str, user: dict = Depends(ge
         .first()
     
     if template is None:
-        raise HTTPException(status_code=404, detail="Template not found")
+        raise not_found_exception("Template not found")
     
     return template
 
 @api_router.post("/templates/", tags=["templates"])
-async def create_template(created_template: TemplateSchema):
+async def create_template(created_template: TemplateSchema, user: dict = Depends(get_current_user)):
+    
+    if user is None:
+        raise get_user_exception()
+    
     template = Template()
     template.client = created_template.client
     template.channel = created_template.channel
     template.channel_account_alias = created_template.channel_account_alias
     template.template_name = created_template.template_name
     template.division_id = created_template.division_id
-    template.owner_id = created_template.owner_id
+    template.owner_id = user.get('id')
     session.add(template)
     session.commit()
 

@@ -96,7 +96,7 @@ async def read_all_templates_by_user(user: dict = Depends(get_current_user)):
         raise get_user_exception()
 
     return session.query(Template)\
-        .filter(Template.user_id == user.id)\
+        .filter(Template.owner_id == user.id)\
         .all()
 
 

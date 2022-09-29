@@ -90,10 +90,8 @@ def token_exception():
 
 
 @api_router.get("/templates/user", tags=["templates"])
-async def read_all_templates_by_user(user: dict = Depends(get_current_user)):
+async def read_all_templates_by_user_id(user: dict = Depends(get_current_user)):
 
-    logging.info("user: %s", user)
-    
     if user is None:
         raise get_user_exception()
 
@@ -101,6 +99,22 @@ async def read_all_templates_by_user(user: dict = Depends(get_current_user)):
         .filter(Template.owner_id == user.get('id'))\
         .all()
 
+
+@api_router.get("/templates/{template_id}", tags=["templates"])
+async def read_template_by_template_id(template_id: int, user: dict = Depends(get_current_user)):
+
+    if user is None:
+        raise get_user_exception()
+
+    template = session.query(Template)\
+        .filter(Template.id == template_id)\
+        .filter(Template.owner_id == user.get('id'))\
+        .first()
+    
+    if template is None:
+        raise HTTPException(status_code=404, detail="Template not found")
+    
+    return template
 
 @api_router.post("/templates/", tags=["templates"])
 async def create_template(created_template: TemplateSchema):

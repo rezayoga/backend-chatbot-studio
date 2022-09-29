@@ -92,6 +92,8 @@ def token_exception():
 @api_router.get("/templates/user", tags=["templates"])
 async def read_all_templates_by_user(user: dict = Depends(get_current_user)):
 
+    print(user)
+    
     if user is None:
         raise get_user_exception()
 

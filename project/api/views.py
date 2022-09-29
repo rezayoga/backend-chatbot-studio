@@ -89,7 +89,7 @@ def token_exception():
     return token_exception_response
 
 
-@api_router.get("/templates/user")
+@api_router.get("/templates/user", tags=["templates"])
 async def read_all_templates_by_user(user: dict = Depends(get_current_user)):
 
     if user is None:

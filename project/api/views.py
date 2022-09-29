@@ -101,7 +101,7 @@ async def read_all_templates_by_user_id(user: dict = Depends(get_current_user)):
 
 
 @api_router.get("/templates/{template_id}", tags=["templates"])
-async def read_template_by_template_id(template_id: int, user: dict = Depends(get_current_user)):
+async def read_template_by_template_id(template_id: str, user: dict = Depends(get_current_user)):
 
     if user is None:
         raise get_user_exception()

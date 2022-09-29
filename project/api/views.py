@@ -2,6 +2,7 @@ import logging
 import uuid
 from typing import List, Optional
 import os
+from webbrowser import get
 from fastapi import HTTPException, Depends
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
@@ -46,6 +47,7 @@ def authenticate_user(username: str, password: str):
         return False
     return user
 
+
 def create_access_token(username: str, user_id: int, expires_delta: Optional[timedelta] = None):
     encode = {"sub": username, "id": user_id}
     if expires_delta:
@@ -55,22 +57,52 @@ def create_access_token(username: str, user_id: int, expires_delta: Optional[tim
     encode.update({"exp": expire})
     return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
 
+
 async def get_current_user(token: str = Depends(oauth_bearer)):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
         user_id: int = payload.get("id")
         if username is None or user_id is None:
-            raise HTTPException(status_code=400, detail="Invalid token")
+            raise get_user_exception()
         token_data = TokenData(username=username, user_id=user_id)
     except JWTError:
-        raise HTTPException(status_code=400, detail="Invalid token")
+        raise get_user_exception()
     user = session.query(User)\
         .filter(User.username == token_data.username and User.id == token_data.user_id)\
         .first()
     if user is None:
         raise HTTPException(status_code=400, detail="Invalid token")
     return user
+
+#Exception
+def get_user_exception():
+    credentials_exception = HTTPException(
+        status_code=401,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    return credentials_exception
+
+
+def token_exception():
+    token_exception_response = HTTPException(
+        status_code=401,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    return token_exception_response
+
+
+@api_router.get("/templates/user")
+async def read_all_templates_by_user(user: dict = Depends(get_current_user)):
+
+    if user is None:
+        raise get_user_exception()
+
+    return session.query(Template)\
+        .filter(Template.user_id == user.id)\
+        .all()
 
 
 @api_router.post("/templates/", tags=["templates"])

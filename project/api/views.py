@@ -101,7 +101,7 @@ async def read_all_templates_by_user(user: dict = Depends(get_current_user)):
         .filter(Template.owner_id == user.id)\
         .all() """
         
-    return user
+    return user.id
 
 
 @api_router.post("/templates/", tags=["templates"])

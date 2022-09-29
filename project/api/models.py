@@ -33,6 +33,8 @@ class Template_Content(Base):
     option = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True),
                         nullable=False, default=func.now())
+    
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     template_id = Column(String, ForeignKey("templates.id"))
 
     def __repr__(self) -> str:
@@ -48,6 +50,7 @@ class Template(Base):
     channel_account_alias = Column(String(128), nullable=True)
     created_at = Column(DateTime(timezone=True),
                         nullable=False, default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     template_name = Column(Text, nullable=False)
     division_id = Column(String(128), nullable=True)
     owner_id = Column(Integer, ForeignKey("users.id"))
@@ -68,6 +71,8 @@ class Template_Changelog(Base):
     user_id = Column(Integer, nullable=False, index=True)
     created_at = Column(DateTime(timezone=True),
                         nullable=False, default=func.now())
+    
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     action = Column(String(128), nullable=True)
     payload = Column(JSONB, nullable=True)
     template_id = Column(String, ForeignKey("templates.id"))

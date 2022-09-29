@@ -165,6 +165,26 @@ async def update_template(template_id: str, updated_template: TemplateSchema, us
 
     return JSONResponse(status_code=200, content={"message": "Template updated successfully"})
 
+@api_router.delete("/templates/{template_id}", tags=["templates"])
+async def delete_template(template_id: str, user: dict = Depends(get_current_user)):
+
+    if user is None:
+        raise get_user_exception()
+
+    template = session.query(Template)\
+        .filter(Template.id == template_id)\
+        .filter(Template.owner_id == user.get('id'))\
+        .first()
+
+    if template is None:
+        raise not_found_exception("Template not found")
+
+    session.delete(template)
+    session.commit()
+
+    return JSONResponse(status_code=200, content={"message": "Template deleted successfully"})
+
+
 @api_router.get("/templates/", tags=["templates"], response_model=List[TemplateSchema])
 async def get_templates():
     templates = session.query(Template).all()

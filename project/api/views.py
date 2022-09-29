@@ -73,8 +73,7 @@ async def get_users():
 
 @api_router.post("/users/", tags=["users"])
 async def create_user(created_user: UserSchema):
-    logger.info("create_user() called")
-    user = User()
+    user = User() 
     user.username = created_user.username
     user.email = created_user.email
     user.name = created_user.name

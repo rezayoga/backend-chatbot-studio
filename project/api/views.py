@@ -17,8 +17,8 @@ from project import api
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
 
-SECRET_KEY = os.getenv("SECRET_KEY")
-ALGORITHM = os.getenv("ALGORITHM")
+SECRET_KEY = os.environ.get("SECRET_KEY")
+ALGORITHM = os.environ.get("ALGORITHM")
 
 oauth_bearer = OAuth2PasswordBearer(tokenUrl="/api/v1/token")
 

@@ -92,16 +92,14 @@ def token_exception():
 @api_router.get("/templates/user", tags=["templates"])
 async def read_all_templates_by_user(user: dict = Depends(get_current_user)):
 
-    """ logging.info("user: %s", user)
+    logging.info("user: %s", user)
     
     if user is None:
         raise get_user_exception()
 
     return session.query(Template)\
-        .filter(Template.owner_id == user.id)\
-        .all() """
-        
-    return user.get('id')
+        .filter(Template.owner_id == user.get('id'))\
+        .all()
 
 
 @api_router.post("/templates/", tags=["templates"])

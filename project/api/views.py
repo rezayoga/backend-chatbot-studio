@@ -48,8 +48,8 @@ def authenticate_user(username: str, password: str):
     return user
 
 
-def create_access_token(username: str, user_id: int, expires_delta: Optional[timedelta] = None):
-    encode = {"sub": username, "id": user_id}
+def create_access_token(username: str, id: int, expires_delta: Optional[timedelta] = None):
+    encode = {"sub": username, "id": id}
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:

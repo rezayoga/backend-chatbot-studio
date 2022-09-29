@@ -16,7 +16,7 @@ from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from project import api
 from datetime import datetime, timedelta
-from jose import JWTError, jwt, TokenData
+from jose import JWTError, jwt
 
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e75945f34a"
 ALGORITHM = "HS256"
@@ -65,15 +65,10 @@ async def get_current_user(token: str = Depends(oauth_bearer)):
         user_id: int = payload.get("id")
         if username is None or user_id is None:
             raise get_user_exception()
-        token_data = TokenData(username=username, user_id=user_id)
+        return {"username": username, "user_id": user_id}
     except JWTError:
         raise get_user_exception()
-    user = session.query(User)\
-        .filter(User.username == token_data.username and User.id == token_data.user_id)\
-        .first()
-    if user is None:
-        raise HTTPException(status_code=400, detail="Invalid token")
-    return user
+    
 
 #Exception
 def get_user_exception():

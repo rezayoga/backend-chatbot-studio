@@ -97,7 +97,7 @@ def not_found_exception(message: str):
     return not_found_exception_response
 
 
-@api_router.get("/templates/user", tags=["templates"])
+@api_router.get("/templates/user/", tags=["templates"])
 async def read_all_templates_by_user_id(user: dict = Depends(get_current_user)):
 
     if user is None:
@@ -142,6 +142,28 @@ async def create_template(created_template: TemplateSchema, user: dict = Depends
 
     return JSONResponse(status_code=200, content={"message": "Template created successfully"})
 
+@api_router.put("/templates/{template_id}", tags=["templates"])
+async def update_template(template_id: str, updated_template: TemplateSchema, user: dict = Depends(get_current_user)):
+
+    if user is None:
+        raise get_user_exception()
+
+    template = session.query(Template)\
+        .filter(Template.id == template_id)\
+        .filter(Template.owner_id == user.get('id'))\
+        .first()
+
+    if template is None:
+        raise not_found_exception("Template not found")
+
+    template.client = updated_template.client
+    template.channel = updated_template.channel
+    template.channel_account_alias = updated_template.channel_account_alias
+    template.template_name = updated_template.template_name
+    template.division_id = updated_template.division_id
+    session.commit()
+
+    return JSONResponse(status_code=200, content={"message": "Template updated successfully"})
 
 @api_router.get("/templates/", tags=["templates"], response_model=List[TemplateSchema])
 async def get_templates():

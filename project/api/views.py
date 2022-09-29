@@ -96,6 +96,37 @@ def not_found_exception(message: str):
     )
     return not_found_exception_response
 
+@api_router.post("/users/", tags=["auth"])
+async def create_user(created_user: UserSchema):
+    user = User() 
+    user.username = created_user.username
+    user.email = created_user.email
+    user.name = created_user.name
+    user.hashed_password = get_password_hash(created_user.password)
+    user.is_active = True
+    session.add(user)
+    session.commit()
+    return JSONResponse(status_code=200, content={"message": "User created successfully"})
+
+
+@api_router.post("/token/", tags=["auth"])
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
+    user = authenticate_user(form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(
+            status_code=400, detail="Incorrect username or password"
+        )
+    token_expires = timedelta(minutes=15)
+    token = create_access_token(user.username, user.id, token_expires)
+    return {"access_token": token, "token_type": "bearer"}
+
+@api_router.get("/users/", tags=["users"], response_model=List[UserSchema])
+async def get_users():
+    users = session.query(User).all()
+    if users is None:
+        raise HTTPException(status_code=404, detail="Empty users")
+    return JSONResponse(status_code=200, content=jsonable_encoder(users))
+
 
 @api_router.get("/templates/user/", tags=["templates"])
 async def read_all_templates_by_user_id(user: dict = Depends(get_current_user)):
@@ -191,36 +222,3 @@ async def get_templates():
     if templates is None:
         raise HTTPException(status_code=404, detail="Empty templates")
     return JSONResponse(status_code=200, content=jsonable_encoder(templates))
-
-
-@api_router.get("/users/", tags=["users"], response_model=List[UserSchema])
-async def get_users():
-    users = session.query(User).all()
-    if users is None:
-        raise HTTPException(status_code=404, detail="Empty users")
-    return JSONResponse(status_code=200, content=jsonable_encoder(users))
-
-
-@api_router.post("/users/", tags=["auth"])
-async def create_user(created_user: UserSchema):
-    user = User() 
-    user.username = created_user.username
-    user.email = created_user.email
-    user.name = created_user.name
-    user.hashed_password = get_password_hash(created_user.password)
-    user.is_active = True
-    session.add(user)
-    session.commit()
-    return JSONResponse(status_code=200, content={"message": "User created successfully"})
-
-
-@api_router.post("/token/", tags=["auth"])
-async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = authenticate_user(form_data.username, form_data.password)
-    if not user:
-        raise HTTPException(
-            status_code=400, detail="Incorrect username or password"
-        )
-    token_expires = timedelta(minutes=15)
-    token = create_access_token(user.username, user.id, token_expires)
-    return {"access_token": token, "token_type": "bearer"}

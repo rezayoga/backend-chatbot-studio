@@ -1,7 +1,7 @@
 import logging
 import uuid
-from typing import List
-
+from typing import List, Optional
+import os
 from fastapi import HTTPException, Depends
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
@@ -12,8 +12,15 @@ from . import api_router
 from .schemas import Template as TemplateSchema
 from .schemas import User as UserSchema
 from passlib.context import CryptContext
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from project import api
+from datetime import datetime, timedelta
+from jose import JWTError, jwt
+
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM")
+
+oauth_bearer = OAuth2PasswordBearer(tokenUrl="/api/v1/token")
 
 bcrypt = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -39,6 +46,14 @@ def authenticate_user(username: str, password: str):
         return False
     return user
 
+def create_access_token(username: str, user_id: int, expires_delta: Optional[timedelta] = None):
+    encode = {"sub": username, "id": user_id}
+    if expires_delta:
+        expire = datetime.utcnow() + expires_delta
+    else:
+        expire = datetime.utcnow() + timedelta(minutes=15)
+    encode.update({"exp": expire})
+    return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
 
 @api_router.post("/templates/", tags=["templates"])
 async def create_template(created_template: TemplateSchema):
@@ -91,4 +106,6 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
         raise HTTPException(
             status_code=400, detail="Incorrect username or password"
         )
-    return {"access_token": user.username, "token_type": "bearer"}
+    token_expires = timedelta(minutes=15)
+    token = create_access_token(user.username, user.id, token_expires)
+    return {"access_token": token, "token_type": "bearer"}

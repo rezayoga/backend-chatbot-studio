@@ -19,7 +19,7 @@ from project import api
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
 
-SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e75945f34a"
+SECRET_KEY = "d4d2b169f9c91008caf5cb68c9e4125a16bf139469de01f98fe8ac03ed8f8d0a"
 ALGORITHM = "HS256"
 
 oauth_bearer = OAuth2PasswordBearer(tokenUrl="/api/v1/token")
@@ -54,7 +54,7 @@ def create_access_token(username: str, id: int, expires_delta: Optional[timedelt
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=15)
+        expire = datetime.utcnow() + timedelta(minutes=120)
     encode.update({"exp": expire})
     return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
 
@@ -108,7 +108,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
         raise HTTPException(
             status_code=400, detail="Incorrect username or password"
         )
-    token_expires = timedelta(minutes=15)
+    token_expires = timedelta(minutes=120)
     token = create_access_token(user.username, user.id, token_expires)
     return {"access_token": token, "token_type": "bearer"}
 

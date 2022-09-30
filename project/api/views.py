@@ -260,7 +260,6 @@ async def create_template_content(created_template_content: Template_ContentSche
 
     template_content = Template_Content()
     template_content.template_id = created_template_content.template_id
-    template_content.content = created_template_content.content
     template_content.content_type = created_template_content.content_type
     template_content.content_order = created_template_content.content_order
     session.add(template_content)

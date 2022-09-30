@@ -17,7 +17,6 @@ class User(BaseModel):
 
 class Template_Content(BaseModel):
     parent_id: Optional[str] = None
-    content: Optional[str] = None
     payload: Optional[str] = None
     option: Optional[str] = None
     template_id: Optional[str] = None

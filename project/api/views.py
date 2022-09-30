@@ -218,7 +218,8 @@ async def get_templates():
         raise not_found_exception("Templates not found")
     return JSONResponse(status_code=200, content=jsonable_encoder(templates))
 
-""" users """
+""" template contents """
+
 
 @api_router.get("/users/", tags=["users"], response_model=List[UserSchema])
 async def get_users():

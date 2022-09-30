@@ -1,11 +1,19 @@
 from fastapi import FastAPI
 from project.celery_utils import create_celery   # new
 from fastapi.openapi.utils import get_openapi
-
+from fastapi.middleware.cors import CORSMiddleware
 
 def create_app() -> FastAPI:
     app = FastAPI()
+    origins = ["*"]
 
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
     def custom_openapi():
         if app.openapi_schema:
             return app.openapi_schema
@@ -13,7 +21,7 @@ def create_app() -> FastAPI:
         openapi_schema = get_openapi(
             title="Chatbot Studio API",
             version="1.0.0",
-            description="API schema for Jatis Mobile Chatbot Studio",
+            description="API docs for Jatis Mobile Chatbot Studio",
             routes=app.routes,
             servers=[{"url": "https://chatbotstudio.rezayogaswara.dev/"}]
         )

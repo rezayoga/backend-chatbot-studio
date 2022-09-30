@@ -23,24 +23,6 @@ class User(Base):
     def __repr__(self):
         return f"{self.name} <{self.email}>"
 
-
-class Template_Content(Base):
-    __tablename__ = "template_contents"
-
-    id = Column(String, primary_key=True, default=func.uuid_generate_v4())
-    parent_id = Column(String, nullable=True, index=True)
-    payload = Column(JSONB, nullable=True)
-    option = Column(Text, nullable=True)
-    created_at = Column(DateTime(timezone=True),
-                        nullable=False, default=func.now())
-    
-    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
-    template_id = Column(String, ForeignKey("templates.id"))
-
-    def __repr__(self) -> str:
-        return f"<Template: {self.id} -  {self.content} -  {self.option}>"
-
-
 class Template(Base):
     __tablename__ = "templates"
 
@@ -63,6 +45,22 @@ class Template(Base):
         return f"<Template: {self.id} -  {self.content} -  {self.channel} -  {self.channel_account_alias}>"
 
 
+class Template_Content(Base):
+    __tablename__ = "template_contents"
+
+    id = Column(String, primary_key=True, default=func.uuid_generate_v4())
+    parent_id = Column(String, nullable=True, index=True)
+    payload = Column(JSONB, nullable=True)
+    option = Column(Text, nullable=True)
+    created_at = Column(DateTime(timezone=True),
+                        nullable=False, default=func.now())
+    
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    template_id = Column(String, ForeignKey("templates.id"))
+
+    def __repr__(self) -> str:
+        return f"<Template: {self.id} -  {self.content} -  {self.option}>"
+    
 class Template_Changelog(Base):
     __tablename__ = "template_changelogs"
 

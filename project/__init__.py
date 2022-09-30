@@ -1,17 +1,17 @@
 from fastapi import FastAPI
 from project.celery_utils import create_celery   # new
 from fastapi.openapi.utils import get_openapi
-from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware import Middleware
+from starlette.middleware.cors import CORSMiddleware
 
 
 def create_app() -> FastAPI:
-    app = FastAPI()
     origins = ["http://localhost", "http://localhost:5173"]
 
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=origins
-    )
+    middleware = [
+        Middleware(CORSMiddleware, allow_origins=origins)
+    ]
+    app = FastAPI(middleware=middleware)
 
     def custom_openapi():
         if app.openapi_schema:

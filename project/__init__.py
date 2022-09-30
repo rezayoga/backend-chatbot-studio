@@ -15,7 +15,7 @@ def create_app() -> FastAPI:
     async def preflight_handler(request: Request, rest_of_path: str) -> Response:
         response = Response()
         response.headers['Access-Control-Allow-Origin'] = ALLOWED_ORIGINS
-        response.headers['Access-Control-Allow-Methods'] = 'POST, GET, DELETE, OPTIONS'
+        response.headers['Access-Control-Allow-Methods'] = 'POST, GET, DELETE, OPTIONS, PUT'
         response.headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type'
         response.headers['Access-Control-Allow-Credentials'] = 'true'
         return response
@@ -25,7 +25,7 @@ def create_app() -> FastAPI:
     async def add_CORS_header(request: Request, call_next):
         response = await call_next(request)
         response.headers['Access-Control-Allow-Origin'] = ALLOWED_ORIGINS
-        response.headers['Access-Control-Allow-Methods'] = 'POST, GET, DELETE, OPTIONS'
+        response.headers['Access-Control-Allow-Methods'] = 'POST, GET, DELETE, OPTIONS, PUT'
         response.headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type'
         response.headers['Access-Control-Allow-Credentials'] = 'true'
         return response

@@ -11,6 +11,7 @@ from project.api.models import *
 
 from . import api_router
 from .schemas import Template as TemplateSchema
+from .schemas import Template_Content as Template_ContentSchema
 from .schemas import User as UserSchema
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
@@ -138,7 +139,7 @@ async def get_templates_by_user_id(user: dict = Depends(get_current_user)):
         .all()
 
 
-@api_router.get("/templates/{template_id}", tags=["templates"])
+@api_router.get("/templates/{template_id}/", tags=["templates"])
 async def get_template_by_template_id(template_id: str, user: dict = Depends(get_current_user)):
 
     if user is None:
@@ -174,7 +175,7 @@ async def create_template(created_template: TemplateSchema, user: dict = Depends
     return JSONResponse(status_code=200, content={"message": "Template created successfully"})
 
 
-@api_router.put("/templates/{template_id}", tags=["templates"])
+@api_router.put("/templates/{template_id}/", tags=["templates"])
 async def update_template(template_id: str, updated_template: TemplateSchema, user: dict = Depends(get_current_user)):
 
     if user is None:
@@ -198,7 +199,7 @@ async def update_template(template_id: str, updated_template: TemplateSchema, us
     return JSONResponse(status_code=200, content={"message": "Template updated successfully"})
 
 
-@api_router.delete("/templates/{template_id}", tags=["templates"])
+@api_router.delete("/templates/{template_id}/", tags=["templates"])
 async def delete_template(template_id: str, user: dict = Depends(get_current_user)):
 
     if user is None:
@@ -228,7 +229,7 @@ async def get_templates():
 """ template contents """
 
 
-@api_router.get("/template-contents/{template_id}", tags=["template-contents"])
+@api_router.get("/template-contents/{template_id}/", tags=["template-contents"])
 async def get_template_contents_by_template_id(template_id: str, user: dict = Depends(get_current_user)):
 
     if user is None:
@@ -242,14 +243,30 @@ async def get_template_contents_by_template_id(template_id: str, user: dict = De
     if template is None:
         raise not_found_exception("Template not found")
 
-    template_contents = session.query(TemplateContent)\
-        .filter(TemplateContent.template_id == template_id)\
+    template_contents = session.query(Template_Content)\
+        .filter(Template_Content.template_id == template_id)\
         .all()
 
     if template_contents is None:
         raise not_found_exception("Template contents not found")
 
     return template_contents
+
+
+@api_router.post("/template-contents/", tags=["template-contents"])
+async def create_template_content(created_template_content: Template_ContentSchema, user: dict = Depends(get_current_user)):
+    if user is None:
+        raise get_user_exception()
+
+    template_content = Template_Content()
+    template_content.template_id = created_template_content.template_id
+    template_content.content = created_template_content.content
+    template_content.content_type = created_template_content.content_type
+    template_content.content_order = created_template_content.content_order
+    session.add(template_content)
+    session.commit()
+
+    return JSONResponse(status_code=200, content={"message": "Template content created successfully"})
 
 
 """ users """

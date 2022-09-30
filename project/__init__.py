@@ -17,6 +17,7 @@ def create_app() -> FastAPI:
         response.headers['Access-Control-Allow-Origin'] = ALLOWED_ORIGINS
         response.headers['Access-Control-Allow-Methods'] = 'POST, GET, DELETE, OPTIONS'
         response.headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type'
+        response.headers['Access-Control-Allow-Credentials'] = 'true'
         return response
 
     # set CORS headers
@@ -26,6 +27,7 @@ def create_app() -> FastAPI:
         response.headers['Access-Control-Allow-Origin'] = ALLOWED_ORIGINS
         response.headers['Access-Control-Allow-Methods'] = 'POST, GET, DELETE, OPTIONS'
         response.headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type'
+        response.headers['Access-Control-Allow-Credentials'] = 'true'
         return response
 
     def custom_openapi():

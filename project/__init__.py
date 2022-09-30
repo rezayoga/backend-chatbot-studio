@@ -21,7 +21,7 @@ def create_app() -> FastAPI:
         return response
 
     # set CORS headers
-    @app.middleware("http")
+    @app.middleware('http')
     async def add_CORS_header(request: Request, call_next):
         response = await call_next(request)
         response.headers['Access-Control-Allow-Origin'] = ALLOWED_ORIGINS

@@ -7,13 +7,13 @@ def create_app() -> FastAPI:
     app = FastAPI()
     origins = ["*"]
 
-    """ app.add_middleware(
+    app.add_middleware(
         CORSMiddleware,
         allow_origins=origins,
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
-    ) """
+    )
     def custom_openapi():
         if app.openapi_schema:
             return app.openapi_schema

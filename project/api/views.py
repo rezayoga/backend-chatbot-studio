@@ -68,9 +68,9 @@ async def get_current_user(token: str = Depends(oauth_bearer)):
         return {"username": username, "id": id}
     except JWTError:
         raise get_user_exception()
-    
 
-#Exception
+
+# Exception
 def get_user_exception():
     credentials_exception = HTTPException(
         status_code=401,
@@ -96,7 +96,9 @@ def not_found_exception(message: str):
     )
     return not_found_exception_response
 
+
 """ auth """
+
 
 @api_router.post("/token/", tags=["auth"])
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
@@ -109,9 +111,10 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     token = create_access_token(user.username, user.id, token_expires)
     return {"access_token": token, "token_type": "bearer"}
 
+
 @api_router.post("/users/", tags=["auth"])
 async def create_user(created_user: UserSchema):
-    user = User() 
+    user = User()
     user.username = created_user.username
     user.email = created_user.email
     user.name = created_user.name
@@ -122,6 +125,7 @@ async def create_user(created_user: UserSchema):
     return JSONResponse(status_code=200, content={"message": "User created successfully"})
 
 """ templates """
+
 
 @api_router.get("/templates/user/", tags=["templates"])
 async def get_templates_by_user_id(user: dict = Depends(get_current_user)):
@@ -144,18 +148,19 @@ async def get_template_by_template_id(template_id: str, user: dict = Depends(get
         .filter(Template.id == template_id)\
         .filter(Template.owner_id == user.get('id'))\
         .first()
-    
+
     if template is None:
         raise not_found_exception("Template not found")
-    
+
     return template
+
 
 @api_router.post("/templates/", tags=["templates"])
 async def create_template(created_template: TemplateSchema, user: dict = Depends(get_current_user)):
-    
+
     if user is None:
         raise get_user_exception()
-    
+
     template = Template()
     template.client = created_template.client
     template.channel = created_template.channel
@@ -167,6 +172,7 @@ async def create_template(created_template: TemplateSchema, user: dict = Depends
     session.commit()
 
     return JSONResponse(status_code=200, content={"message": "Template created successfully"})
+
 
 @api_router.put("/templates/{template_id}", tags=["templates"])
 async def update_template(template_id: str, updated_template: TemplateSchema, user: dict = Depends(get_current_user)):
@@ -190,6 +196,7 @@ async def update_template(template_id: str, updated_template: TemplateSchema, us
     session.commit()
 
     return JSONResponse(status_code=200, content={"message": "Template updated successfully"})
+
 
 @api_router.delete("/templates/{template_id}", tags=["templates"])
 async def delete_template(template_id: str, user: dict = Depends(get_current_user)):
@@ -221,12 +228,36 @@ async def get_templates():
 """ template contents """
 
 
+@api_router.get("/template-contents/{template_id}", tags=["template-contents"])
+async def get_template_contents_by_template_id(template_id: str, user: dict = Depends(get_current_user)):
+
+    if user is None:
+        raise get_user_exception()
+
+    template = session.query(Template)\
+        .filter(Template.id == template_id)\
+        .filter(Template.owner_id == user.get('id'))\
+        .first()
+
+    if template is None:
+        raise not_found_exception("Template not found")
+
+    template_contents = session.query(TemplateContent)\
+        .filter(TemplateContent.template_id == template_id)\
+        .all()
+
+    if template_contents is None:
+        raise not_found_exception("Template contents not found")
+
+    return template_contents
+
+
+""" users """
+
+
 @api_router.get("/users/", tags=["users"], response_model=List[UserSchema])
 async def get_users():
     users = session.query(User).all()
     if users is None:
         raise not_found_exception("Empty users")
     return JSONResponse(status_code=200, content=jsonable_encoder(users))
-
-
-""" users """

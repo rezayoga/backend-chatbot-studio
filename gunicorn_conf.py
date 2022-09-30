@@ -11,3 +11,4 @@ worker_class = 'uvicorn.workers.UvicornWorker'
 loglevel = 'info'
 accesslog = '/home/rezayogaswara/python_projects/backend-chatbot-studio/access_log'
 errorlog = '/home/rezayogaswara/python_projects/backend-chatbot-studio/error_log'
+capture_output = True

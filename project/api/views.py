@@ -18,6 +18,7 @@ from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from project import api
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
+import json
 
 SECRET_KEY = "d4d2b169f9c91008caf5cb68c9e4125a16bf139469de01f98fe8ac03ed8f8d0a"
 ALGORITHM = "HS256"
@@ -264,7 +265,7 @@ async def create_template_content(created_template_content: Template_ContentSche
     template_content = Template_Content()
     template_content.template_id = created_template_content.template_id
     template_content.parent_id = created_template_content.parent_id
-    template_content.payload = created_template_content.payload
+    template_content.payload = json.dumps(created_template_content.payload)
     template_content.option = created_template_content.option
     session.add(template_content)
     session.commit()

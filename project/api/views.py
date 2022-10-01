@@ -260,10 +260,9 @@ async def create_template_content(created_template_content: Template_ContentSche
 
     template_content = Template_Content()
     template_content.template_id = created_template_content.template_id
-    template_content.content_type = created_template_content.content_type
-    template_content.content_order = created_template_content.content_order
-    session.add(template_content)
-    session.commit()
+    template_content.parent_id = created_template_content.parent_id
+    template_content.payload = created_template_content.payload
+    template_content.options = created_template_content.options
 
     return JSONResponse(status_code=200, content={"message": "Template content created successfully"})
 

@@ -203,9 +203,7 @@ class MessageObject(BaseModel):
 
     @validator('hsm')
     def validate_hsm(cls, v):
-        if ' ' not in v:
-            raise ValueError('must contain a space')
-        return v
+        return v or "None"
 
 
 class User(BaseModel):

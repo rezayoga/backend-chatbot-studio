@@ -269,7 +269,7 @@ async def create_template_content(created_template_content: Template_ContentSche
     session.add(template_content)
     session.commit()
 
-    return JSONResponse(status_code=200, content={"message": "Template content created successfully"})
+    return JSONResponse(status_code=200, content={"message": "Template content created successfully!"})
 
 
 """ users """

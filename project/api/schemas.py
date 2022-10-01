@@ -203,10 +203,10 @@ class MessageObject(BaseModel):
 
     @validator('hsm')
     def validate_hsm(cls, v):
-        if v:
-            return v
+        if v is None:
+            return "No Data"
         else:
-            raise ValueError('hsm is required')
+            return v
 
 
 class User(BaseModel):

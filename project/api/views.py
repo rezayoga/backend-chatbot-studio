@@ -1,26 +1,22 @@
 import logging
-import uuid
+from datetime import datetime, timedelta
 from typing import List, Optional
-import os
-from webbrowser import get
-from fastapi import HTTPException, Depends
+
+from fastapi import HTTPException, Depends, Request
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
+from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
+from jose import JWTError, jwt
+from passlib.context import CryptContext
 from pydantic import ValidationError
 
-from project.database import SessionLocal
 from project.api.models import *
-
+from project.database import SessionLocal
 from . import api_router
+from .schemas import GenericFormatErrorException, GenericMissingRequiredAttributeException
 from .schemas import Template as TemplateSchema
 from .schemas import Template_Content as Template_ContentSchema
 from .schemas import User as UserSchema
-from .schemas import GenericFormatErrorException, GenericMissingRequiredAttributeException
-from passlib.context import CryptContext
-from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
-from project import api
-from datetime import datetime, timedelta
-from jose import JWTError, jwt
 
 SECRET_KEY = "d4d2b169f9c91008caf5cb68c9e4125a16bf139469de01f98fe8ac03ed8f8d0a"
 ALGORITHM = "HS256"
@@ -88,12 +84,14 @@ def not_found_exception(message: str):
     )
     return not_found_exception_response
 
+
 def incorrect_request_exception(message: str):
     incorrect_request_exception_response = HTTPException(
         status_code=400,
         detail=message,
     )
     return incorrect_request_exception_response
+
 
 async def get_current_user(token: str = Depends(oauth_bearer)):
     try:
@@ -256,6 +254,14 @@ async def get_template_contents_by_template_id(template_id: str, user: dict = De
         raise not_found_exception("Template contents not found")
 
     return template_contents
+
+
+@api_router.exception_handler(ValidationError)
+async def validation_exception_handler(request: Request, exc: ValidationError):
+    return JSONResponse(
+        status_code=400,
+        content={"message": exc.errors()}
+    )
 
 
 @api_router.post("/template-contents/", tags=["template-contents"])

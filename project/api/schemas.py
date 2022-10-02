@@ -221,49 +221,49 @@ class MessageObject(ValidatedBaseModel):
     class Config:
         orm_mode = True
 
-    @validator('audio', 'document', 'image', 'sticker', 'video', pre=True)
+    @validator('audio', 'document', 'image', 'sticker', 'video')
     def validate_media(cls, v):
         if not isinstance(v, MediaObject):
             raise GenericFormatErrorException(v, 'Invalid MediaObject type!')
         return v
 
-    @validator('contacts', pre=True)
+    @validator('contacts')
     def validate_contacts(cls, v):
         if not isinstance(v, str):
             raise GenericFormatErrorException(v, 'Invalid ContactObject type!')
         return v
 
-    @validator('context', pre=True)
+    @validator('context')
     def validate_context(cls, v):
         if not isinstance(v, ContextObject):
             raise GenericFormatErrorException(v, 'Invalid ContextObject type!')
         return v
 
-    @validator('interactive', pre=True)
+    @validator('interactive')
     def validate_interactive(cls, v):
         if not isinstance(v, InteractiveObject):
             raise GenericFormatErrorException(v, 'Invalid InteractiveObject type!')
         return v
 
-    @validator('location', pre=True)
+    @validator('location')
     def validate_location(cls, v):
         if not isinstance(v, LocationObject):
             raise GenericFormatErrorException(v, 'Invalid LocationObject type!')
         return v
 
-    @validator('template', pre=True)
+    @validator('template')
     def validate_template(cls, v):
         if not isinstance(v, TemplateObject):
             raise GenericFormatErrorException(v, 'Invalid TemplateObject type!')
         return v
 
-    @validator('text', pre=True)
+    @validator('text')
     def validate_text(cls, v):
         if not isinstance(v, TextObject):
             raise GenericFormatErrorException(v, 'Invalid TextObject type!')
         return v
 
-    @validator('to', pre=True)
+    @validator('to')
     def validate_to(cls, v):
         if "to" not in v and "messaging_product" not in v:
             raise GenericMissingRequiredAttributeException(v["to"], 'Required attribute!')

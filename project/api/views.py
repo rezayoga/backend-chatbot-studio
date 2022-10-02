@@ -257,18 +257,15 @@ async def create_template_content(created_template_content: Template_ContentSche
     if user is None:
         raise get_user_exception()
 
-    try:
-        template_content = Template_Content()
-        template_content.template_id = created_template_content.template_id
-        template_content.parent_id = created_template_content.parent_id
-        template_content.payload = jsonable_encoder(
-            created_template_content.payload)
-        template_content.option = created_template_content.option
-        session.add(template_content)
-        session.commit()
-        return JSONResponse(status_code=200, content={"message": "Template content created successfully!"})
-    except ValidationError as e:
-        raise JSONResponse(status_code=400, content={"message": e.errors()})
+    template_content = Template_Content()
+    template_content.template_id = created_template_content.template_id
+    template_content.parent_id = created_template_content.parent_id
+    template_content.payload = jsonable_encoder(
+        created_template_content.payload)
+    template_content.option = created_template_content.option
+    session.add(template_content)
+    session.commit()
+    return JSONResponse(status_code=200, content={"message": "Template content created successfully!"})
 
 
 """ users """

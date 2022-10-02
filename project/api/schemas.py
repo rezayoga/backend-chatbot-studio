@@ -287,7 +287,7 @@ class MessageObject(ValidatedBaseModel):
         orm_mode = True
 
     @validator('audio', 'document', 'image', 'sticker', 'video')
-    def validate_media(cls, v, values):
+    def validate_media(cls, v):
         if not isinstance(v, MediaObject):
             raise GenericFormatErrorException(v, 'Invalid MediaObject type!')
         return v
@@ -324,7 +324,7 @@ class MessageObject(ValidatedBaseModel):
 
     @validator('text')
     def validate_text(cls, v):
-        if not isinstance(v, TextObject):
+        if isinstance(v, TextObject):
             raise GenericFormatErrorException(v, 'Invalid TextObject type!')
         return v
 
@@ -342,9 +342,9 @@ class User(BaseModel):
 
 class Template_Content(BaseModel):
     parent_id: Optional[str] = None
-    payload: Optional[MessageObject] = None
-    option: Optional[str] = None
-    template_id: Optional[str] = None
+    payload: MessageObject = Field(title="payload | Required", description="The payload of the template content")
+    option: str = Field(title="option | Required", description="The option of the template content")
+    template_id: str = Field(title="template_id | Required", description="The template_id of the template content")
 
     class Config:
         orm_mode = True

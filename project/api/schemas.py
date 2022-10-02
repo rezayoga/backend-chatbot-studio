@@ -277,7 +277,7 @@ class MessageObject(ValidatedBaseModel):
         orm_mode = True
 
     @validator('audio', 'document', 'image', 'sticker', 'video')
-    def validate_media(cls, v):
+    def validate_media(cls, v, values):
         if not isinstance(v, MediaObject):
             raise GenericFormatErrorException(v, 'Invalid MediaObject type!')
         return v

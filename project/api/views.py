@@ -6,6 +6,8 @@ from webbrowser import get
 from fastapi import HTTPException, Depends
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
+from pydantic import ValidationError
+
 from project.database import SessionLocal
 from project.api.models import *
 
@@ -39,8 +41,8 @@ def verify_password(plain_password, hashed_password):
 
 
 def authenticate_user(username: str, password: str):
-    user = session.query(User)\
-        .filter(User.username == username)\
+    user = session.query(User) \
+        .filter(User.username == username) \
         .first()
     if not user:
         return False
@@ -97,6 +99,7 @@ async def get_current_user(token: str = Depends(oauth_bearer)):
     except JWTError:
         raise get_user_exception()
 
+
 """ auth """
 
 
@@ -124,29 +127,28 @@ async def create_user(created_user: UserSchema):
     session.commit()
     return JSONResponse(status_code=200, content={"message": "User created successfully"})
 
+
 """ templates """
 
 
 @api_router.get("/templates/user/", tags=["templates"])
 async def get_templates_by_user_id(user: dict = Depends(get_current_user)):
-
     if user is None:
         raise get_user_exception()
 
-    return session.query(Template)\
-        .filter(Template.owner_id == user.get('id'))\
+    return session.query(Template) \
+        .filter(Template.owner_id == user.get('id')) \
         .all()
 
 
 @api_router.get("/templates/{template_id}/", tags=["templates"])
 async def get_template_by_template_id(template_id: str, user: dict = Depends(get_current_user)):
-
     if user is None:
         raise get_user_exception()
 
-    template = session.query(Template)\
-        .filter(Template.id == template_id)\
-        .filter(Template.owner_id == user.get('id'))\
+    template = session.query(Template) \
+        .filter(Template.id == template_id) \
+        .filter(Template.owner_id == user.get('id')) \
         .first()
 
     if template is None:
@@ -157,7 +159,6 @@ async def get_template_by_template_id(template_id: str, user: dict = Depends(get
 
 @api_router.post("/templates/", tags=["templates"])
 async def create_template(created_template: TemplateSchema, user: dict = Depends(get_current_user)):
-
     if user is None:
         raise get_user_exception()
 
@@ -176,13 +177,12 @@ async def create_template(created_template: TemplateSchema, user: dict = Depends
 
 @api_router.put("/templates/{template_id}/", tags=["templates"])
 async def update_template(template_id: str, updated_template: TemplateSchema, user: dict = Depends(get_current_user)):
-
     if user is None:
         raise get_user_exception()
 
-    template = session.query(Template)\
-        .filter(Template.id == template_id)\
-        .filter(Template.owner_id == user.get('id'))\
+    template = session.query(Template) \
+        .filter(Template.id == template_id) \
+        .filter(Template.owner_id == user.get('id')) \
         .first()
 
     if template is None:
@@ -200,13 +200,12 @@ async def update_template(template_id: str, updated_template: TemplateSchema, us
 
 @api_router.delete("/templates/{template_id}/", tags=["templates"])
 async def delete_template(template_id: str, user: dict = Depends(get_current_user)):
-
     if user is None:
         raise get_user_exception()
 
-    template = session.query(Template)\
-        .filter(Template.id == template_id)\
-        .filter(Template.owner_id == user.get('id'))\
+    template = session.query(Template) \
+        .filter(Template.id == template_id) \
+        .filter(Template.owner_id == user.get('id')) \
         .first()
 
     if template is None:
@@ -231,20 +230,19 @@ async def get_templates():
 
 @api_router.get("/template-contents/{template_id}/", tags=["template-contents"])
 async def get_template_contents_by_template_id(template_id: str, user: dict = Depends(get_current_user)):
-
     if user is None:
         raise get_user_exception()
 
-    template = session.query(Template)\
-        .filter(Template.id == template_id)\
-        .filter(Template.owner_id == user.get('id'))\
+    template = session.query(Template) \
+        .filter(Template.id == template_id) \
+        .filter(Template.owner_id == user.get('id')) \
         .first()
 
     if template is None:
         raise not_found_exception("Template not found")
 
-    template_contents = session.query(Template_Content)\
-        .filter(Template_Content.template_id == template_id)\
+    template_contents = session.query(Template_Content) \
+        .filter(Template_Content.template_id == template_id) \
         .all()
 
     if template_contents is None:
@@ -254,22 +252,23 @@ async def get_template_contents_by_template_id(template_id: str, user: dict = De
 
 
 @api_router.post("/template-contents/", tags=["template-contents"])
-async def create_template_content(created_template_content: Template_ContentSchema, user: dict = Depends(get_current_user)):
+async def create_template_content(created_template_content: Template_ContentSchema,
+                                  user: dict = Depends(get_current_user)):
     if user is None:
         raise get_user_exception()
 
-    print(type(created_template_content.payload))
-
-    template_content = Template_Content()
-    template_content.template_id = created_template_content.template_id
-    template_content.parent_id = created_template_content.parent_id
-    template_content.payload = jsonable_encoder(
-        created_template_content.payload)
-    template_content.option = created_template_content.option
-    session.add(template_content)
-    session.commit()
-
-    return JSONResponse(status_code=200, content={"message": "Template content created successfully!"})
+    try:
+        template_content = Template_Content()
+        template_content.template_id = created_template_content.template_id
+        template_content.parent_id = created_template_content.parent_id
+        template_content.payload = jsonable_encoder(
+            created_template_content.payload)
+        template_content.option = created_template_content.option
+        session.add(template_content)
+        session.commit()
+        return JSONResponse(status_code=200, content={"message": "Template content created successfully!"})
+    except ValidationError as e:
+        raise JSONResponse(status_code=400, content={"message": e.errors()})
 
 
 """ users """

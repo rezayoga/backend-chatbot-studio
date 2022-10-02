@@ -265,7 +265,7 @@ class MessageObject(ValidatedBaseModel):
 
     @validator('to', 'messaging_product')
     def validate_to(cls, v):
-        if "to" not in v and "messaging_product" not in v:
+        if v is None:
             raise GenericMissingRequiredAttributeException(v, 'Required attribute!')
         return v
 

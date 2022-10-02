@@ -1,3 +1,4 @@
+from datetime import date
 from typing import Optional, List, Dict, Any
 
 from pydantic import validator, BaseModel, Field
@@ -26,14 +27,55 @@ class GenericMissingRequiredAttributeException(Exception):
         super().__init__(self.message)
 
 
+class NameObject(BaseModel):
+    formatted_name: str = Field(title="formatted_name | Required", description="The formatted name of the object")
+    first_name: Optional[str] = None
+    middle_name: Optional[str] = None
+    last_name: Optional[str] = None
+    suffix: Optional[str] = None
+    prefix: Optional[str] = None
+
+
+class AddressObject(BaseModel):
+    street_address: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
+    zip: Optional[str] = None
+    country: Optional[str] = None
+    country_code: Optional[str] = None
+    type: Optional[str] = None
+
+
+class EmailObject(BaseModel):
+    email: Optional[str] = None
+    type: Optional[str] = None
+
+
+class OrgObject(BaseModel):
+    title: Optional[str] = None
+    department: Optional[str] = None
+    company: Optional[str] = None
+
+
+class PhoneObject(BaseModel):
+    phone: Optional[str] = None
+    type: Optional[str] = None
+    wa_id: Optional[str] = None
+
+
+class UrlObject(BaseModel):
+    url: Optional[str] = None
+    type: Optional[str] = None
+
+
 class ContactObject(BaseModel):
-    addresses: Optional[str] = None
-    birthday: Optional[str] = None
-    emails: Optional[str] = None
-    name: Optional[str] = None
-    phones: Optional[str] = None
-    org: Optional[str] = None
-    urls: Optional[str] = None
+    addresses: Optional[AddressObject] = None
+    birthday: Optional[date] = None
+    emails: Optional[EmailObject] = None
+    name: NameObject = Field(title="name | Required", description="Name of the contact")
+    phones: Optional[PhoneObject] = None
+    org: Optional[OrgObject] = None
+    urls: Optional[UrlObject] = None
 
     class Config:
         orm_mode = True
@@ -114,7 +156,8 @@ class HeaderObject(BaseModel):
     document: Optional[MediaObject] = None
     image: Optional[MediaObject] = None
     text: Optional[str] = None
-    type: Optional[str] = None
+    type: str = Field(title="type | Required", description="The type of the header object. Supported values: text, "
+                                                           "video, image, document")
     video: Optional[MediaObject] = None
 
     class Config:
@@ -136,11 +179,13 @@ class FooterObject(BaseModel):
 
 
 class InteractiveObject(BaseModel):
-    action: Optional[ActionObject] = None
+    action: ActionObject = Field(title="action | Required", description="The action of the interactive object")
     body: Optional[BodyObject] = None
     footer: Optional[FooterObject] = None
     header: Optional[HeaderObject] = None
-    type: Optional[str] = None
+    type: str = Field(title="type | Required",
+                      description="The type of the interactive object. Supported values: 'button', 'list', 'product', "
+                                  "''")
 
     class Config:
         orm_mode = True

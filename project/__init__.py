@@ -1,16 +1,13 @@
 from fastapi import FastAPI, Request, Response
-from project.celery_utils import create_celery   # new
+from project.celery_utils import create_celery  # new
 from fastapi.openapi.utils import get_openapi
 
 
 def create_app() -> FastAPI:
-
     app = FastAPI()
 
-
-
     # Salt to your taste
-    ALLOWED_ORIGINS = 'https://localhost:5173'    # or 'foo.com', etc.
+    ALLOWED_ORIGINS = 'https://localhost:5173'  # or 'foo.com', etc.
 
     # handle CORS preflight requests
     @app.options('/{rest_of_path:path}')
@@ -51,22 +48,22 @@ def create_app() -> FastAPI:
 
     app.openapi = custom_openapi
 
-    from project.logging import configure_logging          # new
+    from project.logging import configure_logging  # new
     configure_logging()
     # do this before loading routes              # new
     app.celery_app = create_celery()
 
-    from pydantic import ValidationError
-    @app.exception_handler(ValidationError)
-    async def validation_exception_handler(request: Request, exc: ValidationError):
+    from project.api.schemas import GenericFormatErrorException
+    @app.exception_handler(GenericFormatErrorException)
+    async def validation_exception_handler(request: Request, exc: GenericFormatErrorException):
         from starlette.responses import JSONResponse
         return JSONResponse(
             status_code=400,
             content={"message": exc.errors()}
         )
 
-    from project.api import api_router                # new
-    app.include_router(api_router)                      # new
+    from project.api import api_router  # new
+    app.include_router(api_router)  # new
 
     @app.get("/")
     async def root():

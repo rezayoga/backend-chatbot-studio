@@ -19,14 +19,6 @@ class GenericFormatErrorException(Exception):
         super().__init__(self.message)
 
 
-class GenericMissingRequiredAttributeException(Exception):
-
-    def __init__(self, title: str, message: str = None):
-        self.title = title
-        self.message = message
-        super().__init__(self.message)
-
-
 class NameObject(BaseModel):
     formatted_name: str = Field(title="formatted_name | Required", description="The formatted name of the object")
     first_name: Optional[str] = None

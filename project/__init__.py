@@ -59,7 +59,7 @@ def create_app() -> FastAPI:
         from starlette.responses import JSONResponse
         return JSONResponse(
             status_code=400,
-            content={"message": exc.errors()}
+            content={"message": exc}
         )
 
     from project.api import api_router  # new

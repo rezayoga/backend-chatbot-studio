@@ -2,18 +2,16 @@ import logging
 from datetime import datetime, timedelta
 from typing import List, Optional
 
-from fastapi import HTTPException, Depends, Request
+from fastapi import HTTPException, Depends
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from pydantic import ValidationError
 
 from project.api.models import *
 from project.database import SessionLocal
 from . import api_router
-from .schemas import GenericFormatErrorException, GenericMissingRequiredAttributeException
 from .schemas import Template as TemplateSchema
 from .schemas import Template_Content as Template_ContentSchema
 from .schemas import User as UserSchema

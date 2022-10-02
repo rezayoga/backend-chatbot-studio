@@ -1,4 +1,7 @@
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI, Request, Response, status
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
+
 from project.celery_utils import create_celery  # new
 from fastapi.openapi.utils import get_openapi
 
@@ -53,13 +56,12 @@ def create_app() -> FastAPI:
     # do this before loading routes              # new
     app.celery_app = create_celery()
 
-    from project.api.schemas import GenericFormatErrorException
-    @app.exception_handler(GenericFormatErrorException)
-    async def validation_exception_handler(request: Request, exc: GenericFormatErrorException):
-        from starlette.responses import JSONResponse
+    from fastapi.exceptions import RequestValidationError
+    @app.exception_handler(RequestValidationError)
+    async def validation_exception_handler(request: Request, exc: RequestValidationError):
         return JSONResponse(
-            status_code=400,
-            content={"message": exc}
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            content=jsonable_encoder({"detail": exc.errors(), "body": exc.body}),
         )
 
     from project.api import api_router  # new

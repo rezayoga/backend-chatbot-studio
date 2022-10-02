@@ -110,10 +110,20 @@ class ContextObject(BaseModel):
         orm_mode = True
 
 
+class ReplyObject(BaseModel):
+    id: Optional[str] = None
+    title: Optional[str] = None
+
+    class Config:
+        orm_mode = True
+
+
 class ButtonObject(BaseModel):
     text: Optional[str] = None
     title: Optional[str] = None
     id: Optional[str] = None
+    type: Optional[str] = None
+    reply: Optional[ReplyObject] = None
 
     class Config:
         orm_mode = True

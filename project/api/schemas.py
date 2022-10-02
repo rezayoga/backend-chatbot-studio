@@ -310,7 +310,7 @@ class MessageObject(ValidatedBaseModel):
         print(f"v: {v} - {type(v)}")
         print(f"values: {values} - {type(values)}")
 
-        if not isinstance(v, TextObject):
+        if isinstance(v, TextObject):
             raise ValueError('Invalid TextObject type!')
         return v
 

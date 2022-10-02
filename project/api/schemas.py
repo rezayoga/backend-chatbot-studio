@@ -1,7 +1,7 @@
 from datetime import date
 from typing import Optional, List, Dict, Any
 
-from pydantic import validator, BaseModel, Field, ValidationError
+from pydantic import validator, BaseModel, Field
 
 
 class ValidatedBaseModel(BaseModel):
@@ -272,43 +272,43 @@ class MessageObject(ValidatedBaseModel):
     @validator('audio', 'document', 'image', 'sticker', 'video')
     def validate_media(cls, v):
         if not isinstance(v, MediaObject):
-            raise ValidationError('Invalid MediaObject type!')
+            raise ValueError('Invalid MediaObject type!')
         return v
 
     @validator('contacts')
     def validate_contacts(cls, v):
         if not isinstance(v, str):
-            raise ValidationError('Invalid ContactObject type!')
+            raise ValueError('Invalid ContactObject type!')
         return v
 
     @validator('context')
     def validate_context(cls, v):
         if not isinstance(v, ContextObject):
-            raise ValidationError('Invalid ContextObject type!')
+            raise ValueError('Invalid ContextObject type!')
         return v
 
     @validator('interactive')
     def validate_interactive(cls, v):
         if not isinstance(v, InteractiveObject):
-            raise ValidationError('Invalid InteractiveObject type!')
+            raise ValueError('Invalid InteractiveObject type!')
         return v
 
     @validator('location')
     def validate_location(cls, v):
         if not isinstance(v, LocationObject):
-            raise ValidationError('Invalid LocationObject type!')
+            raise ValueError('Invalid LocationObject type!')
         return v
 
     @validator('template')
     def validate_template(cls, v):
         if not isinstance(v, TemplateObject):
-            raise ValidationError('Invalid TemplateObject type!')
+            raise ValueError('Invalid TemplateObject type!')
         return v
 
     @validator('text')
     def validate_text(cls, v, values):
         if isinstance(v, TextObject):
-            raise ValidationError('Invalid TextObject type!')
+            raise ValueError('Invalid TextObject type!')
         return v
 
 

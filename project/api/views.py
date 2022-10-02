@@ -15,6 +15,7 @@ from . import api_router
 from .schemas import Template as TemplateSchema
 from .schemas import Template_Content as Template_ContentSchema
 from .schemas import User as UserSchema
+from .schemas import GenericFormatErrorException, GenericMissingRequiredAttributeException
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from project import api
@@ -87,6 +88,12 @@ def not_found_exception(message: str):
     )
     return not_found_exception_response
 
+def incorrect_request_exception(message: str):
+    incorrect_request_exception_response = HTTPException(
+        status_code=400,
+        detail=message,
+    )
+    return incorrect_request_exception_response
 
 async def get_current_user(token: str = Depends(oauth_bearer)):
     try:
@@ -257,15 +264,20 @@ async def create_template_content(created_template_content: Template_ContentSche
     if user is None:
         raise get_user_exception()
 
-    template_content = Template_Content()
-    template_content.template_id = created_template_content.template_id
-    template_content.parent_id = created_template_content.parent_id
-    template_content.payload = jsonable_encoder(
-        created_template_content.payload)
-    template_content.option = created_template_content.option
-    session.add(template_content)
-    session.commit()
-    return JSONResponse(status_code=200, content={"message": "Template content created successfully!"})
+    try:
+        payload = jsonable_encoder(created_template_content.payload)
+        template_content = Template_Content()
+        template_content.template_id = created_template_content.template_id
+        template_content.parent_id = created_template_content.parent_id
+        template_content.payload = payload
+        template_content.option = created_template_content.option
+        session.add(template_content)
+        session.commit()
+        return JSONResponse(status_code=200, content={"message": "Template content created successfully!"})
+    except GenericMissingRequiredAttributeException as e:
+        raise incorrect_request_exception(e)
+    except GenericFormatErrorException as e:
+        raise incorrect_request_exception(e)
 
 
 """ users """

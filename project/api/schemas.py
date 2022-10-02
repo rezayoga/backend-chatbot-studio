@@ -306,7 +306,7 @@ class MessageObject(ValidatedBaseModel):
         return v
 
     @validator('text')
-    def validate_text(cls, v):
+    def validate_text(cls, v, values):
         if isinstance(v, TextObject):
             raise ValidationError('Invalid TextObject type!')
         return v

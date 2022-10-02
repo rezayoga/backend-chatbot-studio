@@ -263,7 +263,7 @@ class MessageObject(ValidatedBaseModel):
             raise GenericFormatErrorException(v, 'Invalid TextObject type!')
         return v
 
-    @validator('to')
+    @validator('to', 'messaging_product')
     def validate_to(cls, v):
         if "to" not in v and "messaging_product" not in v:
             raise GenericMissingRequiredAttributeException(v["to"], 'Required attribute!')

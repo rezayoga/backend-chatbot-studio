@@ -40,7 +40,7 @@ class ContactObject(BaseModel):
 
 
 class MediaObject(BaseModel):
-    id: Optional[str] = None
+    id: str = Field(title="id | Required", description="The id of the media object")
     link: Optional[str] = None
     caption: Optional[str] = None
     filename: Optional[str] = None
@@ -148,8 +148,8 @@ class InteractiveObject(BaseModel):
 
 class LocationObject(BaseModel):
     address: Optional[str] = None
-    latitude: Optional[str] = None
-    longitude: Optional[str] = None
+    latitude: Optional[str] = Field(title="latitude | Required", description="The latitude of the location")
+    longitude: Optional[str] = Field(title="longitude | Required", description="The longitude of the location")
     name: Optional[str] = None
 
     class Config:
@@ -157,7 +157,7 @@ class LocationObject(BaseModel):
 
 
 class TextObject(BaseModel):
-    body: Optional[str] = None
+    body: str = Field(title="body | Required", description="The body of the text object")
     preview_url: Optional[bool] = None
 
     class Config:
@@ -165,21 +165,21 @@ class TextObject(BaseModel):
 
 
 class LanguageObject(BaseModel):
-    policy: Optional[str] = None
-    code: Optional[str] = None
+    policy: str = Field(title="policy | Required", description="The language policy of the message")
+    code: str = Field(title="code | Required", description="The language code of the message")
 
     class Config:
         orm_mode = True
 
 
 class ButtonParameterObject(BaseModel):
-    type: Optional[str] = None
+    type: str = Field(title="type | Required", description="The type of the button parameter")
     payload: Optional[str] = None
     text: Optional[str] = None
 
 
 class ComponentsObject(BaseModel):
-    type: Optional[str] = None
+    type: str = Field(title="type | Required", description="The type of the component")
     sub_type: Optional[str] = None
     parameters: Optional[List[ButtonParameterObject]] = None
     index: Optional[str] = None
@@ -189,10 +189,18 @@ class ComponentsObject(BaseModel):
 
 
 class TemplateObject(BaseModel):
-    name: Optional[str] = None
-    language: Optional[LanguageObject] = None
+    name: str = Field(title="name | Required", description="The name of the template")
+    language: LanguageObject = Field(title="language | Required", description="The language of the template")
     components: Optional[List[ComponentsObject]] = None
     namespace: Optional[str] = None
+
+    class Config:
+        orm_mode = True
+
+
+class ReactionObject(BaseModel):
+    message_id: str = Field(title="message_id | Required", description="The message_id of the message to be reacted to")
+    emoji: str = Field(title="emoji | Required", description="The emoji to be used for the reaction")
 
     class Config:
         orm_mode = True
@@ -207,16 +215,18 @@ class MessageObject(ValidatedBaseModel):
     image: Optional[MediaObject] = None
     interactive: Optional[InteractiveObject] = None
     location: Optional[LocationObject] = None
-    messaging_product: str = Field(title="* Required", description="The messaging product to use for this message")
+    messaging_product: str = Field(title="messaging_product | Required",
+                                   description="The messaging product to use for this message")
     preview_url: Optional[bool] = None
     recipient_type: Optional[str] = None
     status: Optional[str] = None
     sticker: Optional[MediaObject] = None
     template: Optional[TemplateObject] = None
     text: Optional[TextObject] = None
-    to: str = Field(title="* Required", description="The phone number of the recipient")
+    to: str = Field(title="to | Required", description="The phone number of the recipient")
     type: Optional[str] = None
     video: Optional[MediaObject] = None
+    reaction: Optional[ReactionObject] = None
 
     class Config:
         orm_mode = True
@@ -261,12 +271,6 @@ class MessageObject(ValidatedBaseModel):
     def validate_text(cls, v):
         if not isinstance(v, TextObject):
             raise GenericFormatErrorException(v, 'Invalid TextObject type!')
-        return v
-
-    @validator('to', 'messaging_product')
-    def validate_to(cls, v):
-        if v is None:
-            raise GenericMissingRequiredAttributeException(v, 'Required attribute!')
         return v
 
 

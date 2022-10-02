@@ -1,6 +1,6 @@
 from typing import Optional, List, Dict, Any
 
-from pydantic import validator, BaseModel
+from pydantic import validator, BaseModel, Field
 
 
 class ValidatedBaseModel(BaseModel):
@@ -207,14 +207,14 @@ class MessageObject(ValidatedBaseModel):
     image: Optional[MediaObject] = None
     interactive: Optional[InteractiveObject] = None
     location: Optional[LocationObject] = None
-    messaging_product: Optional[str] = None
+    messaging_product: str = Field(title="* Required", description="The messaging product to use for this message")
     preview_url: Optional[bool] = None
     recipient_type: Optional[str] = None
     status: Optional[str] = None
     sticker: Optional[MediaObject] = None
     template: Optional[TemplateObject] = None
     text: Optional[TextObject] = None
-    to: Optional[str] = None
+    to: str = Field(title="* Required", description="The phone number of the recipient")
     type: Optional[str] = None
     video: Optional[MediaObject] = None
 
@@ -265,7 +265,7 @@ class MessageObject(ValidatedBaseModel):
 
     @validator('to', 'messaging_product')
     def validate_to(cls, v):
-        if not isinstance(v, str):
+        if v is None:
             raise GenericMissingRequiredAttributeException(v, 'Required attribute!')
         return v
 

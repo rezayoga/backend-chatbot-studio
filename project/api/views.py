@@ -256,14 +256,6 @@ async def get_template_contents_by_template_id(template_id: str, user: dict = De
     return template_contents
 
 
-@api_router.exception_handler(ValidationError)
-async def validation_exception_handler(request: Request, exc: ValidationError):
-    return JSONResponse(
-        status_code=400,
-        content={"message": exc.errors()}
-    )
-
-
 @api_router.post("/template-contents/", tags=["template-contents"])
 async def create_template_content(created_template_content: Template_ContentSchema,
                                   user: dict = Depends(get_current_user)):

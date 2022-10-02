@@ -7,6 +7,8 @@ def create_app() -> FastAPI:
 
     app = FastAPI()
 
+
+
     # Salt to your taste
     ALLOWED_ORIGINS = 'https://localhost:5173'    # or 'foo.com', etc.
 
@@ -53,6 +55,15 @@ def create_app() -> FastAPI:
     configure_logging()
     # do this before loading routes              # new
     app.celery_app = create_celery()
+
+    from pydantic import ValidationError
+    @app.exception_handler(ValidationError)
+    async def validation_exception_handler(request: Request, exc: ValidationError):
+        from starlette.responses import JSONResponse
+        return JSONResponse(
+            status_code=400,
+            content={"message": exc.errors()}
+        )
 
     from project.api import api_router                # new
     app.include_router(api_router)                      # new

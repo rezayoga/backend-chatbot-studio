@@ -1,8 +1,14 @@
 from operator import index
 from unicodedata import name
 from pydantic import BaseModel, validator
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 from datetime import datetime
+
+
+class ValidatedModel(BaseModel):
+    def dict(self, *args, **kwargs) -> Dict[str, Any]:
+        _ignored = kwargs.pop('exclude_none')
+        return super().dict(*args, exclude_none=True, **kwargs)
 
 
 class ContactObject(BaseModel):
@@ -178,7 +184,7 @@ class TemplateObject(BaseModel):
         orm_mode = True
 
 
-class MessageObject(BaseModel):
+class MessageObject(ValidatedModel):
     audio: Optional[MediaObject] = None
     contacts: Optional[ContactObject] = None
     context: Optional[ContextObject] = None

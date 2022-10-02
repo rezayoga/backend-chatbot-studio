@@ -3,10 +3,27 @@ from typing import Optional, List, Dict, Any
 from pydantic import validator, BaseModel
 
 
-class ValidatedModel(BaseModel):
+class ValidatedBaseModel(BaseModel):
     def dict(self, *args, **kwargs) -> Dict[str, Any]:
         _ignored = kwargs.pop('exclude_none')
         return super().dict(*args, exclude_none=True, **kwargs)
+
+
+class GenericFormatErrorException(Exception):
+    """ Custom exception for generic format error """
+
+    def __init__(self, value: object, message: str = None):
+        self.value = value
+        self.message = message
+        super().__init__(self.message)
+
+
+class GenericMissingRequiredAttributeException(Exception):
+
+    def __init__(self, title: str, message: str = None):
+        self.title = title
+        self.message = message
+        super().__init__(self.message)
 
 
 class ContactObject(BaseModel):
@@ -94,7 +111,6 @@ class ActionObject(BaseModel):
 
 
 class HeaderObject(BaseModel):
-
     document: Optional[MediaObject] = None
     image: Optional[MediaObject] = None
     text: Optional[str] = None
@@ -182,7 +198,7 @@ class TemplateObject(BaseModel):
         orm_mode = True
 
 
-class MessageObject(ValidatedModel):
+class MessageObject(ValidatedBaseModel):
     audio: Optional[MediaObject] = None
     contacts: Optional[ContactObject] = None
     context: Optional[ContextObject] = None
@@ -205,9 +221,53 @@ class MessageObject(ValidatedModel):
     class Config:
         orm_mode = True
 
-    @validator('hsm')
-    def validate_hsm(cls, v):
-        return v or "None"
+    @validator('audio', 'document', 'image', 'sticker', 'video', pre=True)
+    def validate_media(cls, v):
+        if not isinstance(v, MediaObject):
+            raise GenericFormatErrorException(v, 'Invalid MediaObject type!')
+        return v
+
+    @validator('contacts', pre=True)
+    def validate_contacts(cls, v):
+        if not isinstance(v, str):
+            raise GenericFormatErrorException(v, 'Invalid ContactObject type!')
+        return v
+
+    @validator('context', pre=True)
+    def validate_context(cls, v):
+        if not isinstance(v, ContextObject):
+            raise GenericFormatErrorException(v, 'Invalid ContextObject type!')
+        return v
+
+    @validator('interactive', pre=True)
+    def validate_interactive(cls, v):
+        if not isinstance(v, InteractiveObject):
+            raise GenericFormatErrorException(v, 'Invalid InteractiveObject type!')
+        return v
+
+    @validator('location', pre=True)
+    def validate_location(cls, v):
+        if not isinstance(v, LocationObject):
+            raise GenericFormatErrorException(v, 'Invalid LocationObject type!')
+        return v
+
+    @validator('template', pre=True)
+    def validate_template(cls, v):
+        if not isinstance(v, TemplateObject):
+            raise GenericFormatErrorException(v, 'Invalid TemplateObject type!')
+        return v
+
+    @validator('text', pre=True)
+    def validate_text(cls, v):
+        if not isinstance(v, TextObject):
+            raise GenericFormatErrorException(v, 'Invalid TextObject type!')
+        return v
+
+    @validator('to', pre=True)
+    def validate_to(cls, v):
+        if "to" not in v:
+            raise GenericMissingRequiredAttributeException(v["to"], 'Invalid to type!')
+        return v
 
 
 class User(BaseModel):

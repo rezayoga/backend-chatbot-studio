@@ -1,8 +1,6 @@
-from operator import index
-from unicodedata import name
-from pydantic import BaseModel, validator
 from typing import Optional, List, Dict, Any
-from datetime import datetime
+
+from pydantic import validator, BaseModel
 
 
 class ValidatedModel(BaseModel):

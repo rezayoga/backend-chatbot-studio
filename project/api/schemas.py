@@ -10,15 +10,6 @@ class ValidatedBaseModel(BaseModel):
         return super().dict(*args, exclude_none=True, **kwargs)
 
 
-class GenericFormatErrorException(Exception):
-    """ Custom exception for generic format error """
-
-    def __init__(self, value: object, message: str = None):
-        self.value = value
-        self.message = message
-        super().__init__(self.message)
-
-
 class NameObject(BaseModel):
     formatted_name: str = Field(title="formatted_name | Required", description="The formatted name of the object")
     first_name: Optional[str] = None
@@ -281,43 +272,43 @@ class MessageObject(ValidatedBaseModel):
     @validator('audio', 'document', 'image', 'sticker', 'video')
     def validate_media(cls, v):
         if not isinstance(v, MediaObject):
-            raise GenericFormatErrorException(v, 'Invalid MediaObject type!')
+            raise ValueError('Invalid MediaObject type!')
         return v
 
     @validator('contacts')
     def validate_contacts(cls, v):
         if not isinstance(v, str):
-            raise GenericFormatErrorException(v, 'Invalid ContactObject type!')
+            raise ValueError('Invalid ContactObject type!')
         return v
 
     @validator('context')
     def validate_context(cls, v):
         if not isinstance(v, ContextObject):
-            raise GenericFormatErrorException(v, 'Invalid ContextObject type!')
+            raise ValueError('Invalid ContextObject type!')
         return v
 
     @validator('interactive')
     def validate_interactive(cls, v):
         if not isinstance(v, InteractiveObject):
-            raise GenericFormatErrorException(v, 'Invalid InteractiveObject type!')
+            raise ValueError('Invalid InteractiveObject type!')
         return v
 
     @validator('location')
     def validate_location(cls, v):
         if not isinstance(v, LocationObject):
-            raise GenericFormatErrorException(v, 'Invalid LocationObject type!')
+            raise ValueError('Invalid LocationObject type!')
         return v
 
     @validator('template')
     def validate_template(cls, v):
         if not isinstance(v, TemplateObject):
-            raise GenericFormatErrorException(v, 'Invalid TemplateObject type!')
+            raise ValueError('Invalid TemplateObject type!')
         return v
 
     @validator('text')
     def validate_text(cls, v):
         if isinstance(v, TextObject):
-            raise GenericFormatErrorException(v, 'Invalid TextObject type!')
+            raise ValueError('Invalid TextObject type!')
         return v
 
 

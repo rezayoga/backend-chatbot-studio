@@ -269,7 +269,7 @@ class MessageObject(ValidatedBaseModel):
     template: Optional[TemplateObject] = None
     text: Optional[TextObject] = None
     to: str = Field(title="to | Required", description="The phone number of the recipient")
-    type: Optional[str] = None
+    type: Optional[str] = "text"
     video: Optional[MediaObject] = None
     reaction: Optional[ReactionObject] = None
 

@@ -269,48 +269,6 @@ class MessageObject(ValidatedBaseModel):
     class Config:
         orm_mode = True
 
-    @validator('audio', 'document', 'image', 'sticker', 'video')
-    def validate_media(cls, v):
-        if not isinstance(v, MediaObject):
-            raise ValueError('Invalid MediaObject type!')
-        return v
-
-    @validator('contacts')
-    def validate_contacts(cls, v):
-        if not isinstance(v, str):
-            raise ValueError('Invalid ContactObject type!')
-        return v
-
-    @validator('context')
-    def validate_context(cls, v):
-        if not isinstance(v, ContextObject):
-            raise ValueError('Invalid ContextObject type!')
-        return v
-
-    @validator('interactive')
-    def validate_interactive(cls, v):
-        if not isinstance(v, InteractiveObject):
-            raise ValueError('Invalid InteractiveObject type!')
-        return v
-
-    @validator('location')
-    def validate_location(cls, v):
-        if not isinstance(v, LocationObject):
-            raise ValueError('Invalid LocationObject type!')
-        return v
-
-    @validator('template')
-    def validate_template(cls, v):
-        if not isinstance(v, TemplateObject):
-            raise ValueError('Invalid TemplateObject type!')
-        return v
-
-    @validator('text')
-    def validate_text(cls, v):
-        if not isinstance(v, TextObject):
-            raise ValueError('Invalid TextObject type!')
-        return v
-
 
 class User(BaseModel):
     username: Optional[str] = None

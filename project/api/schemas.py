@@ -261,7 +261,7 @@ class MessageObject(ValidatedBaseModel):
     sticker: Optional[MediaObject] = None
     template: Optional[TemplateObject] = None
     text: Optional[TextObject] = None
-    to: str = Field(title="to", description="The phone number of the recipient")
+    to: Optional[str] = Field(title="to", description="The phone number of the recipient")
     type: Optional[str] = Field(title="type", description="The type of the message. Supported types: text, image, "
                                                           "document, video, audio, location, contact, sticker, "
                                                           "interactive, reaction")

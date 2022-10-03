@@ -330,6 +330,23 @@ async def update_template_content(template_content_id: str, updated_template_con
     return JSONResponse(status_code=200, content={"message": "Template content updated successfully"})
 
 
+@api_router.delete("/template-contents/{template_content_id}/", tags=["template-contents"])
+async def delete_template_content(template_content_id: str, user: dict = Depends(get_current_user)):
+    if user is None:
+        raise get_user_exception()
+
+    template_content = session.query(Template_Content) \
+        .filter(Template_Content.id == template_content_id) \
+        .first()
+
+    if template_content is None:
+        raise not_found_exception("Template content not found")
+
+    session.delete(template_content)
+    session.commit()
+    return JSONResponse(status_code=200, content={"message": "Template content deleted successfully"})
+
+
 """ users """
 
 

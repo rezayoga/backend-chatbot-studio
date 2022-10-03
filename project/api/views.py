@@ -349,7 +349,6 @@ async def delete_template_content(template_content_id: str, user: dict = Depends
 
 """ users """
 
-
 @api_router.get("/users/", tags=["users"], response_model=List[UserSchema])
 async def get_users():
     users = session.query(User).all()

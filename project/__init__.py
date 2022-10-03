@@ -7,14 +7,14 @@ from project.celery_utils import create_celery  # new
 
 def create_app() -> FastAPI:
     app = FastAPI(title="Chatbot Studio API",
-            version="1.0.0",
-            description="API docs for Jatis Mobile Chatbot Studio",
-            contact={
-                "name": "Reza Yogaswara",
-                "url": "https://me.rezayogaswara.dev/",
-                "email": "reza.yoga@gmail.com",
-            },
-            servers=[{"url": "https://chatbotstudio.rezayogaswara.dev/"}])
+                  version="1.0.0",
+                  description="API docs for Jatis Mobile Chatbot Studio",
+                  contact={
+                      "name": "Reza Yogaswara",
+                      "url": "https://me.rezayogaswara.dev/",
+                      "email": "reza.yoga@gmail.com",
+                  },
+                  servers=[{"url": "https://chatbotstudio.rezayogaswara.dev/"}])
 
     # Salt to your taste
     ALLOWED_ORIGINS = 'https://localhost:5173'  # or 'foo.com', etc.

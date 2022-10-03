@@ -95,10 +95,10 @@ async def get_current_user(token: str = Depends(oauth_bearer)):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
-        id: int = payload.get("id")
-        if username is None or id is None:
+        id_: int = payload.get("id")
+        if username is None or id_ is None:
             raise get_user_exception()
-        return {"username": username, "id": id}
+        return {"username": username, "id": id_}
     except JWTError:
         raise get_user_exception()
 

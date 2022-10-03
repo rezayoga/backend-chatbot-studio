@@ -262,7 +262,9 @@ class MessageObject(ValidatedBaseModel):
     template: Optional[TemplateObject] = None
     text: Optional[TextObject] = None
     to: str = Field(title="to", description="The phone number of the recipient")
-    type: Optional[str] = "text"
+    type: Optional[str] = Field(title="type", description="The type of the message. Supported types: text, image, "
+                                                          "document, video, audio, location, contact, sticker, "
+                                                          "interactive, reaction")
     video: Optional[MediaObject] = None
     reaction: Optional[ReactionObject] = None
 

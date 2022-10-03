@@ -4,11 +4,6 @@ from typing import Optional, List, Dict, Any
 from pydantic import constr, BaseModel, Field
 
 
-class ValidatedBaseModel(BaseModel):
-    def dict(self, *args, **kwargs) -> Dict[str, Any]:
-        _ignored = kwargs.pop('exclude_none')
-        return super().dict(*args, exclude_none=True, **kwargs)
-
 
 class NameObject(BaseModel):
     formatted_name: str = Field(title="formatted_name", description="The formatted name of the object")
@@ -245,7 +240,7 @@ class ReactionObject(BaseModel):
         orm_mode = True
 
 
-class MessageObject(ValidatedBaseModel):
+class MessageObject(BaseModel):
     audio: Optional[MediaObject] = None
     contacts: Optional[ContactObject] = None
     context: Optional[ContextObject] = None

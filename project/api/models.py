@@ -34,6 +34,7 @@ class Template(Base):
                         nullable=False, default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     template_name = Column(Text, nullable=False)
+    template_description = Column(Text, nullable=True)
     division_id = Column(String(128), nullable=True)
     owner_id = Column(Integer, ForeignKey("users.id"))
     template_contents = relationship(

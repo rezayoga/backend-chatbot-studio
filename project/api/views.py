@@ -130,7 +130,27 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 
     refresh_token_expires = timedelta(minutes=REFRESH_TOKEN_EXPIRE_MINUTES)
     refresh_token = create_refresh_token(user.username, user.id, refresh_token_expires)
-    return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
+    return {"access_token": access_token, "refresh_token": refresh_token}
+
+
+@api_router.post("/token/refresh/", tags=["auth"])
+async def refresh_token(refresh_token: str):
+    try:
+        payload = jwt.decode(refresh_token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        id_: int = payload.get("id")
+        if username is None or id_ is None:
+            raise token_exception()
+        user = session.query(User) \
+            .filter(User.username == username) \
+            .first()
+        if not user:
+            raise token_exception()
+        access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        access_token = create_access_token(user.username, user.id, access_token_expires)
+        return {"access_token": access_token}
+    except JWTError:
+        raise token_exception()
 
 
 @api_router.post("/users/", tags=["auth"])

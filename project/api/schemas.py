@@ -1,7 +1,7 @@
 from datetime import date
 from typing import Optional, List, Dict, Any
 
-from pydantic import constr, BaseModel, Field
+from pydantic import constr, BaseModel, Field, conlist
 
 
 class ValidatedBaseModel(BaseModel):
@@ -11,7 +11,7 @@ class ValidatedBaseModel(BaseModel):
 
 
 class NameObject(BaseModel):
-    formatted_name: str = Field(title="formatted_name | Required", description="The formatted name of the object")
+    formatted_name: str = Field(title="formatted_name", description="The formatted name of the object")
     first_name: Optional[str] = None
     middle_name: Optional[str] = None
     last_name: Optional[str] = None
@@ -55,7 +55,7 @@ class ContactObject(BaseModel):
     addresses: Optional[AddressObject] = None
     birthday: Optional[date] = None
     emails: Optional[EmailObject] = None
-    name: NameObject = Field(title="name | Required", description="Name of the contact")
+    name: NameObject = Field(title="name", description="Name of the contact")
     phones: Optional[PhoneObject] = None
     org: Optional[OrgObject] = None
     urls: Optional[UrlObject] = None
@@ -65,7 +65,7 @@ class ContactObject(BaseModel):
 
 
 class MediaObject(BaseModel):
-    id: str = Field(title="id | Required", description="The id of the media object")
+    id: str = Field(title="id", description="The id of the media object")
     link: Optional[str] = None
     caption: Optional[str] = None
     filename: Optional[str] = None
@@ -87,15 +87,15 @@ class Template(BaseModel):
 
 
 class ContextObject(BaseModel):
-    message_id: Optional[str] = None
+    message_id: str = Field(title="message_id", description="The id of the context object")
 
     class Config:
         orm_mode = True
 
 
 class ReplyObject(BaseModel):
-    id: Optional[str] = None
-    title: Optional[str] = None
+    title: conlist(str, min_items=1) = Field(title="title", description="The title of the reply object")
+    id: conlist(str, min_items=1) = Field(title="id", description="The id of the reply object")
 
     class Config:
         orm_mode = True
@@ -103,8 +103,8 @@ class ReplyObject(BaseModel):
 
 class ButtonObject(BaseModel):
     text: Optional[str] = None
-    title: Optional[str] = None
     id: Optional[str] = None
+    title: Optional[str] = None
     type: Optional[str] = None
     reply: Optional[ReplyObject] = None
 
@@ -149,8 +149,8 @@ class HeaderObject(BaseModel):
     document: Optional[MediaObject] = None
     image: Optional[MediaObject] = None
     text: Optional[str] = None
-    type: str = Field(title="type | Required", description="The type of the header object. Supported values: text, "
-                                                           "video, image, document")
+    type: str = Field(title="type", description="The type of the header object. Supported values: text, "
+                                                "video, image, document")
     video: Optional[MediaObject] = None
 
     class Config:
@@ -158,27 +158,27 @@ class HeaderObject(BaseModel):
 
 
 class BodyObject(BaseModel):
-    text: str = Field(title="text | Required", description="The text of the body object")
+    text: str = Field(title="text", description="The text of the body object")
 
     class Config:
         orm_mode = True
 
 
 class FooterObject(BaseModel):
-    text: str = Field(title="text | Required", description="The text of the footer object")
+    text: str = Field(title="text", description="The text of the footer object")
 
     class Config:
         orm_mode = True
 
 
 class InteractiveObject(BaseModel):
-    action: ActionObject = Field(title="action | Required", description="The action of the interactive object")
+    action: ActionObject = Field(title="action", description="The action of the interactive object")
     body: Optional[BodyObject] = None
     footer: Optional[FooterObject] = None
     header: Optional[HeaderObject] = None
-    type: str = Field(title="type | Required",
+    type: str = Field(title="type",
                       description="The type of the interactive object. Supported values: 'button', 'list', 'product', "
-                                  "''")
+                                  "'product_list'")
 
     class Config:
         orm_mode = True
@@ -186,8 +186,8 @@ class InteractiveObject(BaseModel):
 
 class LocationObject(BaseModel):
     address: Optional[str] = None
-    latitude: Optional[str] = Field(title="latitude | Required", description="The latitude of the location")
-    longitude: Optional[str] = Field(title="longitude | Required", description="The longitude of the location")
+    latitude: Optional[str] = Field(title="latitude", description="The latitude of the location")
+    longitude: Optional[str] = Field(title="longitude", description="The longitude of the location")
     name: Optional[str] = None
 
     class Config:
@@ -195,7 +195,7 @@ class LocationObject(BaseModel):
 
 
 class TextObject(BaseModel):
-    body: str = Field(title="body | Required", description="The body of the text object")
+    body: str = Field(title="body", description="The body of the text object")
     preview_url: Optional[bool] = None
 
     class Config:
@@ -203,21 +203,21 @@ class TextObject(BaseModel):
 
 
 class LanguageObject(BaseModel):
-    policy: str = Field(title="policy | Required", description="The language policy of the message")
-    code: str = Field(title="code | Required", description="The language code of the message")
+    policy: str = Field(title="policy", description="The language policy of the message")
+    code: str = Field(title="code", description="The language code of the message")
 
     class Config:
         orm_mode = True
 
 
 class ButtonParameterObject(BaseModel):
-    type: str = Field(title="type | Required", description="The type of the button parameter")
+    type: str = Field(title="type", description="The type of the button parameter")
     payload: Optional[str] = None
     text: Optional[str] = None
 
 
 class ComponentsObject(BaseModel):
-    type: str = Field(title="type | Required", description="The type of the component")
+    type: str = Field(title="type", description="The type of the component")
     sub_type: Optional[str] = None
     parameters: Optional[List[ButtonParameterObject]] = None
     index: Optional[str] = None
@@ -227,8 +227,8 @@ class ComponentsObject(BaseModel):
 
 
 class TemplateObject(BaseModel):
-    name: str = Field(title="name | Required", description="The name of the template")
-    language: LanguageObject = Field(title="language | Required", description="The language of the template")
+    name: str = Field(title="name", description="The name of the template")
+    language: LanguageObject = Field(title="language", description="The language of the template")
     components: Optional[List[ComponentsObject]] = None
     namespace: Optional[str] = None
 
@@ -237,8 +237,8 @@ class TemplateObject(BaseModel):
 
 
 class ReactionObject(BaseModel):
-    message_id: str = Field(title="message_id | Required", description="The message_id of the message to be reacted to")
-    emoji: str = Field(title="emoji | Required", description="The emoji to be used for the reaction")
+    message_id: str = Field(title="message_id", description="The message_id of the message to be reacted to")
+    emoji: str = Field(title="emoji", description="The emoji to be used for the reaction")
 
     class Config:
         orm_mode = True
@@ -253,7 +253,7 @@ class MessageObject(ValidatedBaseModel):
     image: Optional[MediaObject] = None
     interactive: Optional[InteractiveObject] = None
     location: Optional[LocationObject] = None
-    messaging_product: str = Field(title="messaging_product | Required",
+    messaging_product: str = Field(title="messaging_product",
                                    description="The messaging product to use for this message")
     preview_url: Optional[bool] = None
     recipient_type: Optional[str] = None
@@ -261,7 +261,7 @@ class MessageObject(ValidatedBaseModel):
     sticker: Optional[MediaObject] = None
     template: Optional[TemplateObject] = None
     text: Optional[TextObject] = None
-    to: str = Field(title="to | Required", description="The phone number of the recipient")
+    to: str = Field(title="to", description="The phone number of the recipient")
     type: Optional[str] = "text"
     video: Optional[MediaObject] = None
     reaction: Optional[ReactionObject] = None
@@ -283,9 +283,9 @@ class User(BaseModel):
 
 class Template_Content(BaseModel):
     parent_id: Optional[str] = None
-    payload: MessageObject = Field(title="payload | Required", description="The payload of the template content")
-    option: str = Field(title="option | Required", description="The option of the template content")
-    template_id: str = Field(title="template_id | Required", description="The template_id of the template content")
+    payload: MessageObject = Field(title="payload", description="The payload of the template content")
+    option: str = Field(title="option", description="The option of the template content")
+    template_id: str = Field(title="template_id", description="The template_id of the template content")
 
     class Config:
         orm_mode = True

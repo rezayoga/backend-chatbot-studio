@@ -55,7 +55,7 @@ class ContactObject(BaseModel):
     addresses: Optional[AddressObject] = None
     birthday: Optional[date] = None
     emails: Optional[EmailObject] = None
-    name: NameObject = Field(title="name", description="Name of the contact")
+    name: Optional[NameObject] = Field(title="name", description="Name of the contact")
     phones: Optional[PhoneObject] = None
     org: Optional[OrgObject] = None
     urls: Optional[UrlObject] = None

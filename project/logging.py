@@ -1,6 +1,8 @@
 import logging
 import logging.config
 
+from bugsnag.handlers import BugsnagHandler
+
 
 def configure_logging():
     logging_dict = {
@@ -33,4 +35,12 @@ def configure_logging():
     }
 
     logging.config.dictConfig(logging_dict)
-    logging.getLogger("uvicorn.access").setLevel(logging.INFO)
+    logger = logging.getLogger("uvicorn.access")
+    logger.setLevel(logging.INFO)
+
+    handler = BugsnagHandler()
+    # send only ERROR-level logs and above
+    # handler.setLevel(logging.ERROR)
+    # logger.addHandler(handler)
+
+    logger.addFilter(handler.leave_breadcrumbs)

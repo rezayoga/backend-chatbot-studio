@@ -47,6 +47,7 @@ def create_app() -> FastAPI:
 
     from project.logging import configure_logging  # new
     configure_logging()
+
     # do this before loading routes              # new
     app.celery_app = create_celery()
 

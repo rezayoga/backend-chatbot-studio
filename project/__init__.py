@@ -3,11 +3,18 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
 from project.celery_utils import create_celery  # new
-from fastapi.openapi.utils import get_openapi
 
 
 def create_app() -> FastAPI:
-    app = FastAPI()
+    app = FastAPI(title="Chatbot Studio API",
+            version="1.0.0",
+            description="API docs for Jatis Mobile Chatbot Studio",
+            contact={
+                "name": "Reza Yogaswara",
+                "url": "https://me.rezayogaswara.dev/",
+                "email": "reza.yoga@gmail.com",
+            },
+            servers=[{"url": "https://chatbotstudio.rezayogaswara.dev/"}])
 
     # Salt to your taste
     ALLOWED_ORIGINS = 'https://localhost:5173'  # or 'foo.com', etc.
@@ -31,25 +38,6 @@ def create_app() -> FastAPI:
         response.headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type'
         response.headers['Access-Control-Allow-Credentials'] = 'true'
         return response
-
-    def custom_openapi():
-        if app.openapi_schema:
-            return app.openapi_schema
-
-        openapi_schema = get_openapi(
-            title="Chatbot Studio API",
-            version="1.0.0",
-            description="API docs for Jatis Mobile Chatbot Studio",
-            routes=app.routes,
-            servers=[{"url": "https://chatbotstudio.rezayogaswara.dev/"}]
-        )
-        """ openapi_schema["info"]["x-logo"] = {
-            "url": "https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png"
-        } """
-        app.openapi_schema = openapi_schema
-        return app.openapi_schema
-
-    app.openapi = custom_openapi
 
     from project.logging import configure_logging  # new
     configure_logging()

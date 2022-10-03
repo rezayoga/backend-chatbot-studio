@@ -43,4 +43,4 @@ def configure_logging():
     # handler.setLevel(logging.ERROR)
     # logger.addHandler(handler)
 
-    logger.addFilter(handler.leave_breadcrumbs)
+    logger.addHandler(handler)

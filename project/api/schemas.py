@@ -1,7 +1,7 @@
 from datetime import date
 from typing import Optional, List, Dict, Any
 
-from pydantic import constr, BaseModel, Field, conlist
+from pydantic import constr, BaseModel, Field
 
 
 class ValidatedBaseModel(BaseModel):
@@ -95,8 +95,8 @@ class ContextObject(BaseModel):
 
 
 class ReplyObject(BaseModel):
-    title: conlist(str, min_items=1) = Field(title="title", description="The title of the reply object")
-    id: conlist(str, min_items=1) = Field(title="id", description="The id of the reply object")
+    title: constr(min_length=1) = Field(title="title", description="The title of the reply object")
+    id: constr(min_length=1) = Field(title="id", description="The id of the reply object")
 
     class Config:
         orm_mode = True

@@ -205,6 +205,7 @@ async def create_template(created_template: TemplateSchema, user: dict = Depends
     template.channel = created_template.channel
     template.channel_account_alias = created_template.channel_account_alias
     template.template_name = created_template.template_name
+    template.template_description = created_template.template_description
     template.division_id = created_template.division_id
     template.owner_id = user.get('id')
     session.add(template)
@@ -230,6 +231,7 @@ async def update_template(template_id: str, updated_template: TemplateSchema, us
     template.channel = updated_template.channel
     template.channel_account_alias = updated_template.channel_account_alias
     template.template_name = updated_template.template_name
+    template.template_description = updated_template.template_description
     template.division_id = updated_template.division_id
     session.commit()
 

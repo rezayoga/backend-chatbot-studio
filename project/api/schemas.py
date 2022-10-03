@@ -80,6 +80,7 @@ class Template(BaseModel):
     channel: Optional[str] = None
     channel_account_alias: Optional[str] = None
     template_name: Optional[str] = None
+    template_description: Optional[str] = None
     division_id: Optional[str] = None
 
     class Config:

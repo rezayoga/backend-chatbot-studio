@@ -1,9 +1,14 @@
 from fastapi import FastAPI, Request, Response, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
-
+import bugsnag
+import os
 from project.celery_utils import create_celery  # new
 
+bugsnag.configure(
+    api_key="2d4b6a2c28e1f8375a9597608e54b04d",
+    project_root=os.getcwd(),
+)
 
 def create_app() -> FastAPI:
     app = FastAPI(title="Chatbot Studio API",

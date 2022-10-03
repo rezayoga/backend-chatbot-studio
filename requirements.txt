@@ -60,3 +60,4 @@ wcwidth==0.2.5
 websockets==10.3
 wrapt==1.14.1
 python-jose[cryptography]==3.3.0
+bugsnag==3.9.0

@@ -1,7 +1,7 @@
 from datetime import date
 from typing import Optional, List, Dict, Any
 
-from pydantic import validator, BaseModel, Field
+from pydantic import constr, BaseModel, Field
 
 
 class ValidatedBaseModel(BaseModel):
@@ -120,9 +120,9 @@ class ProductObject(BaseModel):
 
 
 class RowObject(BaseModel):
-    id: Optional[str] = None
-    title: Optional[str] = None
-    description: Optional[str] = None
+    id: constr(max_length=24)
+    title: constr(max_length=200)
+    description: constr(max_length=72)
 
     class Config:
         orm_mode = True
@@ -158,14 +158,14 @@ class HeaderObject(BaseModel):
 
 
 class BodyObject(BaseModel):
-    text: Optional[str] = None
+    text: str = Field(title="text | Required", description="The text of the body object")
 
     class Config:
         orm_mode = True
 
 
 class FooterObject(BaseModel):
-    text: Optional[str] = None
+    text: str = Field(title="text | Required", description="The text of the footer object")
 
     class Config:
         orm_mode = True

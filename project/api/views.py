@@ -321,9 +321,10 @@ async def update_template_content(template_content_id: str, updated_template_con
     if template_content is None:
         raise not_found_exception("Template content not found")
 
+    payload = jsonable_encoder(updated_template_content.payload)
     template_content.template_id = updated_template_content.template_id
     template_content.parent_id = updated_template_content.parent_id
-    template_content.payload = updated_template_content.payload
+    template_content.payload = payload
     template_content.option = updated_template_content.option
     session.commit()
     return JSONResponse(status_code=200, content={"message": "Template content updated successfully"})

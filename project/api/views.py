@@ -308,6 +308,27 @@ async def create_template_content(created_template_content: Template_ContentSche
     return JSONResponse(status_code=200, content={"message": "Template content created successfully"})
 
 
+@api_router.put("/template-contents/{template_content_id}/", tags=["template-contents"])
+async def update_template_content(template_content_id: str, updated_template_content: Template_ContentSchema,
+                                  user: dict = Depends(get_current_user)):
+    if user is None:
+        raise get_user_exception()
+
+    template_content = session.query(Template_Content) \
+        .filter(Template_Content.id == template_content_id) \
+        .first()
+
+    if template_content is None:
+        raise not_found_exception("Template content not found")
+
+    template_content.template_id = updated_template_content.template_id
+    template_content.parent_id = updated_template_content.parent_id
+    template_content.payload = updated_template_content.payload
+    template_content.option = updated_template_content.option
+    session.commit()
+    return JSONResponse(status_code=200, content={"message": "Template content updated successfully"})
+
+
 """ users """
 
 

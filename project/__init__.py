@@ -14,8 +14,7 @@ def create_app() -> FastAPI:
                       "url": "https://me.rezayogaswara.dev/",
                       "email": "reza.yoga@gmail.com",
                   },
-                  servers=[{"url": "https://chatbotstudio.rezayogaswara.dev/api/v1/", "description": "Development -> "
-                                                                                                     "Staging"}])
+                  servers=[{"url": "https://chatbotstudio.rezayogaswara.dev/api/v1/", "description": "Development"}])
 
     # Salt to your taste
     ALLOWED_ORIGINS = 'https://localhost:5173'  # or 'foo.com', etc.

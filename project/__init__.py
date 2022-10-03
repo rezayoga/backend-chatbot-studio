@@ -64,6 +64,6 @@ def create_app() -> FastAPI:
     async def root():
         return {"message": "App started successfully"}
 
-    bugsnag.notify(Exception('Test error'))
+    # bugsnag.notify(Exception('Test error'))
 
     return app

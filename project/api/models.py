@@ -60,7 +60,7 @@ class Template_Content(Base):
     template_id = Column(String, ForeignKey("templates.id"))
 
     def __repr__(self) -> str:
-        return f"<Template: {self.id} -  {self.content} -  {self.option}>"
+        return f"<Template: {self.id} -  {self.payload} -  {self.option}>"
     
 class Template_Changelog(Base):
     __tablename__ = "template_changelogs"

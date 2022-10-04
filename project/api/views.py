@@ -187,7 +187,7 @@ async def create_template(created_template: TemplateSchema, user: dict = Depends
     session.add(template)
     session.commit()
 
-    logging.log(logging.INFO, type(template))
+    # logging.log(logging.INFO, type(template))
     logging.log(logging.INFO, template)
 
     data = jsonable_encoder(template)
@@ -252,7 +252,7 @@ async def update_template(template_id: str, updated_template: TemplateSchema, us
     session.commit()
 
     # logging.log(logging.INFO, type(template))
-    # logging.log(logging.INFO, template)
+    logging.log(logging.INFO, template)
 
     data = jsonable_encoder(template)
 
@@ -305,7 +305,7 @@ async def create_template_content(created_template_content: Template_ContentSche
     session.commit()
 
     # logging.log(logging.INFO, type(template_content))
-    # logging.log(logging.INFO, template_content)
+    logging.log(logging.INFO, template_content)
 
     data = jsonable_encoder(template_content)
 
@@ -366,7 +366,7 @@ async def update_template_content(template_content_id: str, updated_template_con
     session.commit()
 
     # logging.log(logging.INFO, type(template_content))
-    # logging.log(logging.INFO, template_content)
+    logging.log(logging.INFO, template_content)
 
     data = jsonable_encoder(template_content)
 

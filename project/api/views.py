@@ -251,8 +251,12 @@ async def update_template(template_id: str, updated_template: TemplateSchema, us
     template.division_id = updated_template.division_id
     session.commit()
 
-    print(template.id)
+    logging.log(logging.INFO, type(template))
+    logging.log(logging.INFO, template)
+
     data = jsonable_encoder(template)
+
+    logging.log(logging.INFO, data)
     return JSONResponse(status_code=200, content={"message": "Template updated successfully", "data": data})
 
 
@@ -307,7 +311,7 @@ async def create_template_content(created_template_content: Template_ContentSche
 
     logging.log(logging.INFO, data)
 
-    return JSONResponse(status_code=200, content={"message": "Template content created successfully", "data": data})
+    return JSONResponse(status_code=200, content={"message": "Template content created successfully", "body": data})
 
 
 @api_router.get("/template-contents/{template_id}/", tags=["template-contents"])
@@ -360,9 +364,13 @@ async def update_template_content(template_content_id: str, updated_template_con
     template_content.payload = payload
     template_content.option = updated_template_content.option
     session.commit()
-    print(template_content.id)
+    logging.log(logging.INFO, type(template_content))
+    logging.log(logging.INFO, template_content)
+
     data = jsonable_encoder(template_content)
-    return JSONResponse(status_code=200, content={"message": "Template content updated successfully", "data": data})
+
+    logging.log(logging.INFO, data)
+    return JSONResponse(status_code=200, content={"message": "Template content updated successfully", "body": data})
 
 
 @api_router.delete("/template-contents/{template_content_id}/", tags=["template-contents"])

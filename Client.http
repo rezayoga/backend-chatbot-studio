@@ -21,46 +21,10 @@ grant_type=&username=reza&password=reza&scope=&client_id=&client_secret=
 #    "messaging_product": "whatsapp",
 #    "recipient_type": "individual",
 #    "to": "{{Recipient-Phone-Number}}",
-#    "type": "interactive",
-#    "interactive": {
-#        "type": "product_list",
-#        "header": {
-#            "type": "<HEADER_TYPE>",
-#            "text": "<YOUR_TEXT_HEADER_CONTENT>"
-#        },
-#        "body": {
-#            "text": "<YOUR_TEXT_BODY_CONTENT>"
-#        },
-#        "footer": {
-#            "text": "<YOUR_TEXT_FOOTER_CONTENT>"
-#        },
-#        "action": {
-#            "catalog_id": "146265584024623",
-#            "sections": [
-#                {
-#                    "title": "<SECTION1_TITLE>",
-#                    "product_items": [
-#                        {
-#                            "product_retailer_id": "<YOUR_PRODUCT1_SKU_IN_CATALOG>"
-#                        },
-#                        {
-#                            "product_retailer_id": "<YOUR_SECOND_PRODUCT1_SKU_IN_CATALOG>"
-#                        }
-#                    ]
-#                },
-#                {
-#                    "title": "<SECTION2_TITLE>",
-#                    "product_items": [
-#                        {
-#                            "product_retailer_id": "<YOUR_PRODUCT2_SKU_IN_CATALOG>"
-#                        },
-#                        {
-#                            "product_retailer_id": "<YOUR_SECOND_PRODUCT2_SKU_IN_CATALOG>"
-#                        }
-#                    ]
-#                }
-#            ]
-#        }
+#    "type": "text",
+#    "text": {
+#        "preview_url": false,
+#        "body": "text-message-content"
 #    }
 #  },
 #  "option": "init",

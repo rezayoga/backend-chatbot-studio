@@ -368,7 +368,7 @@ async def update_template_content(template_content_id: str, updated_template_con
     # logging.log(logging.INFO, type(template_content))
     logging.log(logging.INFO, template_content)
 
-    data = jsonable_encoder(template_content)
+    data = jsonable_encoder(updated_template_content.from_orm(template_content).dict(exclude_none=True))
 
     logging.log(logging.INFO, data)
     return JSONResponse(status_code=200, content={"message": "Template content updated successfully", "body": data})

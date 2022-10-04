@@ -187,7 +187,7 @@ async def create_template(created_template: TemplateSchema, user: dict = Depends
     session.add(template)
     session.commit()
 
-    data = jsonable_encoder(template.to_dict())
+    data = jsonable_encoder(template)
 
     return JSONResponse(status_code=200, content={"message": "Template created successfully", "data": data})
 

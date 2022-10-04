@@ -187,7 +187,9 @@ async def create_template(created_template: TemplateSchema, user: dict = Depends
     session.add(template)
     session.commit()
 
-    return JSONResponse(status_code=200, content={"message": "Template created successfully", "data": json.dumps(template)})
+    data = jsonable_encoder(template)
+
+    return JSONResponse(status_code=200, content={"message": "Template created successfully", "data": data})
 
 
 @api_router.get("/templates/{template_id}/", tags=["templates"])

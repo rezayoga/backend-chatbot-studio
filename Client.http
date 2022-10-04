@@ -1,0 +1,120 @@
+###
+POST https://chatbotstudio.rezayogaswara.dev/api/v1/token/
+accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=&username=reza&password=reza&scope=&client_id=&client_secret=
+
+
+> {% client.global.set("access_token", response.body.access_token); %}
+
+###
+
+#POST https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/
+#accept: application/json
+#Content-Type: application/json
+#Authorization: Bearer {{access_token}}
+#
+#{
+#  "parent_id": "",
+#  "payload": {
+#    "messaging_product": "whatsapp",
+#    "recipient_type": "individual",
+#    "to": "{{Recipient-Phone-Number}}",
+#    "type": "interactive",
+#    "interactive": {
+#        "type": "product_list",
+#        "header": {
+#            "type": "<HEADER_TYPE>",
+#            "text": "<YOUR_TEXT_HEADER_CONTENT>"
+#        },
+#        "body": {
+#            "text": "<YOUR_TEXT_BODY_CONTENT>"
+#        },
+#        "footer": {
+#            "text": "<YOUR_TEXT_FOOTER_CONTENT>"
+#        },
+#        "action": {
+#            "catalog_id": "146265584024623",
+#            "sections": [
+#                {
+#                    "title": "<SECTION1_TITLE>",
+#                    "product_items": [
+#                        {
+#                            "product_retailer_id": "<YOUR_PRODUCT1_SKU_IN_CATALOG>"
+#                        },
+#                        {
+#                            "product_retailer_id": "<YOUR_SECOND_PRODUCT1_SKU_IN_CATALOG>"
+#                        }
+#                    ]
+#                },
+#                {
+#                    "title": "<SECTION2_TITLE>",
+#                    "product_items": [
+#                        {
+#                            "product_retailer_id": "<YOUR_PRODUCT2_SKU_IN_CATALOG>"
+#                        },
+#                        {
+#                            "product_retailer_id": "<YOUR_SECOND_PRODUCT2_SKU_IN_CATALOG>"
+#                        }
+#                    ]
+#                }
+#            ]
+#        }
+#    }
+#  },
+#  "option": "init",
+#  "template_id": "a24bc2a9-9f38-4eb7-858b-94a93d4a2de2"
+#}
+
+###
+
+#DELETE https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/fab565df-6e2b-4b90-854e-5fd2ac4a1ffd/
+#accept: application/json
+#Content-Type: application/json
+#Authorization: Bearer {{access_token}}
+
+###
+
+#PUT https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/f9d1ca3a-4fd7-4450-8f57-0459a3d323a3/
+#accept: application/json
+#Content-Type: application/json
+#Authorization: Bearer {{access_token}}
+#
+#{
+#  "parent_id": "",
+#  "payload": {
+#    "messaging_product": "whatsapp",
+#    "recipient_type": "individual",
+#    "to": "{{Recipient-Phone-Number}}",
+#    "type": "text",
+#    "text": {
+#        "preview_url": false,
+#        "body": "Updated template content!"
+#    }
+#  },
+#  "option": "init",
+#  "template_id": "a24bc2a9-9f38-4eb7-858b-94a93d4a2de2"
+#}
+
+###
+#GET https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/a24bc2a9-9f38-4eb7-858b-94a93d4a2de2/
+#accept: application/json
+#Content-Type: application/json
+#Authorization: Bearer {{access_token}}
+
+###
+
+POST https://chatbotstudio.rezayogaswara.dev/api/v1/templates/
+accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "client": "bx",
+  "channel": "bx",
+  "channel_account_alias": "bx",
+  "template_name": "Template Bx",
+  "template_description": "Desc Template Bx",
+  "division_id": "bx?"
+}

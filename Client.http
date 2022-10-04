@@ -105,16 +105,16 @@ Authorization: Bearer {{access_token}}
 
 ###
 
-#POST https://chatbotstudio.rezayogaswara.dev/api/v1/templates/
-#accept: application/json
-#Content-Type: application/json
-#Authorization: Bearer {{access_token}}
-#
-#{
-#  "client": "cbx",
-#  "channel": "cbx",
-#  "channel_account_alias": "cbx",
-#  "template_name": "Template CBx",
-#  "template_description": "Desc Template CBx",
-#  "division_id": "cbx?"
-#}
+POST https://chatbotstudio.rezayogaswara.dev/api/v1/templates/
+accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "client": "cbx",
+  "channel": "cbx",
+  "channel_account_alias": "cbx",
+  "template_name": "Template CBx",
+  "template_description": "Desc Template CBx",
+  "division_id": "cbx?"
+}

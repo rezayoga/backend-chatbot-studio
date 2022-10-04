@@ -187,8 +187,8 @@ async def create_template(created_template: TemplateSchema, user: dict = Depends
     session.add(template)
     session.commit()
 
-    # logging.log(logging.INFO, type(template))
-    # logging.log(logging.INFO, template)
+    logging.log(logging.INFO, type(template))
+    logging.log(logging.INFO, template)
 
     data = jsonable_encoder(template)
 

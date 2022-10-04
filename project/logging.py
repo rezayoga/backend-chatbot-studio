@@ -36,7 +36,7 @@ def configure_logging():
 
     logging.config.dictConfig(logging_dict)
     logger = logging.getLogger("uvicorn.access")
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.ERROR)
 
     handler = BugsnagHandler()
     # send only ERROR-level logs and above

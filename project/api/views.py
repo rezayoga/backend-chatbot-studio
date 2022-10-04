@@ -187,6 +187,7 @@ async def create_template(created_template: TemplateSchema, user: dict = Depends
     session.add(template)
     session.commit()
 
+    logging.log(logging.INFO, type(template))
     logging.log(logging.INFO, template)
 
     data = jsonable_encoder(template)
@@ -299,9 +300,12 @@ async def create_template_content(created_template_content: Template_ContentSche
     session.add(template_content)
     session.commit()
 
-    print(template.id)
+    logging.log(logging.INFO, type(template_content))
+    logging.log(logging.INFO, template_content)
 
     data = jsonable_encoder(template_content)
+
+    logging.log(logging.INFO, data)
 
     return JSONResponse(status_code=200, content={"message": "Template content created successfully", "data": data})
 

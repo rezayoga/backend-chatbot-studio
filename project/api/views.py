@@ -187,6 +187,8 @@ async def create_template(created_template: TemplateSchema, user: dict = Depends
     session.add(template)
     session.commit()
 
+    print(template.id)
+
     data = jsonable_encoder(template)
     return JSONResponse(status_code=200, content={"message": "Template created successfully", "data": data})
 
@@ -245,6 +247,8 @@ async def update_template(template_id: str, updated_template: TemplateSchema, us
     template.template_description = updated_template.template_description
     template.division_id = updated_template.division_id
     session.commit()
+
+    print(template.id)
     data = jsonable_encoder(template)
     return JSONResponse(status_code=200, content={"message": "Template updated successfully", "data": data})
 
@@ -292,6 +296,8 @@ async def create_template_content(created_template_content: Template_ContentSche
     template_content.option = created_template_content.option
     session.add(template_content)
     session.commit()
+
+    print(template.id)
 
     data = jsonable_encoder(template_content)
 
@@ -348,6 +354,7 @@ async def update_template_content(template_content_id: str, updated_template_con
     template_content.payload = payload
     template_content.option = updated_template_content.option
     session.commit()
+    print(template_content.id)
     data = jsonable_encoder(template_content)
     return JSONResponse(status_code=200, content={"message": "Template content updated successfully", "data": data})
 

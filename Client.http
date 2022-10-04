@@ -10,62 +10,62 @@ grant_type=&username=reza&password=reza&scope=&client_id=&client_secret=
 
 ###
 
-#POST https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/
-#accept: application/json
-#Content-Type: application/json
-#Authorization: Bearer {{access_token}}
-#
-#{
-#  "parent_id": "",
-#  "payload": {
-#    "messaging_product": "whatsapp",
-#    "recipient_type": "individual",
-#    "to": "{{Recipient-Phone-Number}}",
-#    "type": "interactive",
-#    "interactive": {
-#        "type": "product_list",
-#        "header": {
-#            "type": "<HEADER_TYPE>",
-#            "text": "<YOUR_TEXT_HEADER_CONTENT>"
-#        },
-#        "body": {
-#            "text": "<YOUR_TEXT_BODY_CONTENT>"
-#        },
-#        "footer": {
-#            "text": "<YOUR_TEXT_FOOTER_CONTENT>"
-#        },
-#        "action": {
-#            "catalog_id": "146265584024623",
-#            "sections": [
-#                {
-#                    "title": "<SECTION1_TITLE>",
-#                    "product_items": [
-#                        {
-#                            "product_retailer_id": "<YOUR_PRODUCT1_SKU_IN_CATALOG>"
-#                        },
-#                        {
-#                            "product_retailer_id": "<YOUR_SECOND_PRODUCT1_SKU_IN_CATALOG>"
-#                        }
-#                    ]
-#                },
-#                {
-#                    "title": "<SECTION2_TITLE>",
-#                    "product_items": [
-#                        {
-#                            "product_retailer_id": "<YOUR_PRODUCT2_SKU_IN_CATALOG>"
-#                        },
-#                        {
-#                            "product_retailer_id": "<YOUR_SECOND_PRODUCT2_SKU_IN_CATALOG>"
-#                        }
-#                    ]
-#                }
-#            ]
-#        }
-#    }
-#  },
-#  "option": "init",
-#  "template_id": "a24bc2a9-9f38-4eb7-858b-94a93d4a2de2"
-#}
+POST https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/
+accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "parent_id": "-",
+  "payload": {
+    "messaging_product": "whatsapp",
+    "recipient_type": "individual",
+    "to": "{{Recipient-Phone-Number}}",
+    "type": "interactive",
+    "interactive": {
+        "type": "product_list",
+        "header": {
+            "type": "<HEADER_TYPE>",
+            "text": "<YOUR_TEXT_HEADER_CONTENT>"
+        },
+        "body": {
+            "text": "<YOUR_TEXT_BODY_CONTENT>"
+        },
+        "footer": {
+            "text": "<YOUR_TEXT_FOOTER_CONTENT>"
+        },
+        "action": {
+            "catalog_id": "146265584024623",
+            "sections": [
+                {
+                    "title": "<SECTION1_TITLE>",
+                    "product_items": [
+                        {
+                            "product_retailer_id": "<YOUR_PRODUCT1_SKU_IN_CATALOG>"
+                        },
+                        {
+                            "product_retailer_id": "<YOUR_SECOND_PRODUCT1_SKU_IN_CATALOG>"
+                        }
+                    ]
+                },
+                {
+                    "title": "<SECTION2_TITLE>",
+                    "product_items": [
+                        {
+                            "product_retailer_id": "<YOUR_PRODUCT2_SKU_IN_CATALOG>"
+                        },
+                        {
+                            "product_retailer_id": "<YOUR_SECOND_PRODUCT2_SKU_IN_CATALOG>"
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+  },
+  "option": "init",
+  "template_id": "a24bc2a9-9f38-4eb7-858b-94a93d4a2de2"
+}
 
 ###
 
@@ -105,16 +105,16 @@ grant_type=&username=reza&password=reza&scope=&client_id=&client_secret=
 
 ###
 
-POST https://chatbotstudio.rezayogaswara.dev/api/v1/templates/
-accept: application/json
-Content-Type: application/json
-Authorization: Bearer {{access_token}}
-
-{
-  "client": "cbx",
-  "channel": "cbx",
-  "channel_account_alias": "cbx",
-  "template_name": "Template CBx",
-  "template_description": "Desc Template CBx",
-  "division_id": "cbx?"
-}
+#POST https://chatbotstudio.rezayogaswara.dev/api/v1/templates/
+#accept: application/json
+#Content-Type: application/json
+#Authorization: Bearer {{access_token}}
+#
+#{
+#  "client": "cbx",
+#  "channel": "cbx",
+#  "channel_account_alias": "cbx",
+#  "template_name": "Template CBx",
+#  "template_description": "Desc Template CBx",
+#  "division_id": "cbx?"
+#}

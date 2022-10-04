@@ -130,7 +130,8 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 
     refresh_token_expires = timedelta(minutes=REFRESH_TOKEN_EXPIRE_MINUTES)
     refresh_token = create_refresh_token(user.username, user.id, refresh_token_expires)
-    return {"access_token": access_token, "refresh_token": refresh_token}
+    return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer",
+            "expires_in": ACCESS_TOKEN_EXPIRE_MINUTES}
 
 
 @api_router.post("/token/refresh/", tags=["auth"])
@@ -148,7 +149,7 @@ async def refresh_token(refresh_token: str):
             raise token_exception()
         access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = create_access_token(user.username, user.id, access_token_expires)
-        return {"access_token": access_token}
+        return {"access_token": access_token, "token_type": "bearer", "expires_in": ACCESS_TOKEN_EXPIRE_MINUTES}
     except JWTError:
         raise token_exception()
 
@@ -185,7 +186,7 @@ async def create_template(created_template: TemplateSchema, user: dict = Depends
     session.add(template)
     session.commit()
 
-    return JSONResponse(status_code=200, content={"message": "Template created successfully"})
+    return JSONResponse(status_code=200, content={"message": "Template created successfully", "data": jsonable_encoder(template)})
 
 
 @api_router.get("/templates/{template_id}/", tags=["templates"])

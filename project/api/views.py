@@ -274,6 +274,13 @@ async def create_template_content(created_template_content: Template_ContentSche
     if user is None:
         raise get_user_exception()
 
+    template = session.query(Template) \
+        .filter(Template.id == created_template_content.template_id) \
+        .first()
+
+    if template is None:
+        raise not_found_exception("Template not found")
+
     payload = jsonable_encoder(created_template_content.payload.dict(exclude_none=True))
     template_content = Template_Content()
     template_content.template_id = created_template_content.template_id
@@ -348,6 +355,7 @@ async def delete_template_content(template_content_id: str, user: dict = Depends
 
 
 """ users """
+
 
 @api_router.get("/users/", tags=["users"], response_model=List[UserSchema])
 async def get_users():

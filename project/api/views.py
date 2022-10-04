@@ -189,7 +189,7 @@ async def create_template(created_template: TemplateSchema, user: dict = Depends
 
     print(template)
 
-    data = jsonable_encoder(template)
+    data = template
 
     return JSONResponse(status_code=200, content={"message": "Template created successfully", "data": data})
 

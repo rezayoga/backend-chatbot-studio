@@ -33,17 +33,17 @@ grant_type=&username=reza&password=reza&scope=&client_id=&client_secret=
 
 ###
 
-DELETE https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/f9d1ca3a-4fd7-4450-8f57-0459a3d323a3/
-accept: application/json
-Content-Type: application/json
-Authorization: Bearer {{access_token}}
-
-###
-
-#DELETE https://chatbotstudio.rezayogaswara.dev/api/v1/templates/a24bc2a9-9f38-4eb7-858b-94a93d4a2de2/
+#DELETE https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/f9d1ca3a-4fd7-4450-8f57-0459a3d323a3/
 #accept: application/json
 #Content-Type: application/json
 #Authorization: Bearer {{access_token}}
+
+###
+
+DELETE https://chatbotstudio.rezayogaswara.dev/api/v1/templates/2589349e-0877-49ef-9edc-fbe05d0c3d2c/
+accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
 ###
 

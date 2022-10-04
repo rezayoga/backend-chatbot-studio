@@ -1,10 +1,9 @@
-from email.policy import default
-from unicodedata import name
-from project.database import Base
-from sqlalchemy import Column, DateTime, ForeignKey, String, Text, Boolean, Integer, text
+from sqlalchemy import Column, DateTime, ForeignKey, String, Text, Boolean, Integer
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
+
+from project.database import Base
 
 
 class User(Base):
@@ -18,10 +17,11 @@ class User(Base):
     created_at = Column(DateTime(timezone=True),
                         nullable=False, default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
-    templates = relationship("Template", backref="template_owner")
+    templates = relationship("Template", backref="template_owner", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"{self.name} <{self.email}>"
+
 
 class Template(Base):
     __tablename__ = "templates"
@@ -40,7 +40,7 @@ class Template(Base):
     template_contents = relationship(
         "Template_Content", backref="template_content", cascade="all, delete-orphan")
     template_changelogs = relationship(
-        "Template_Changelog", backref="template_changelog")
+        "Template_Changelog", backref="template_changelog", cascade="all, delete-orphan")
 
     def __repr__(self) -> str:
         return f"<Template: {self.id} - {self.template_name} -  {self.template_description}>"
@@ -55,13 +55,14 @@ class Template_Content(Base):
     option = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True),
                         nullable=False, default=func.now())
-    
+
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     template_id = Column(String, ForeignKey("templates.id"))
 
     def __repr__(self) -> str:
         return f"<Template Content: {self.id} -  {self.payload} -  {self.option}>"
-    
+
+
 class Template_Changelog(Base):
     __tablename__ = "template_changelogs"
 
@@ -70,7 +71,7 @@ class Template_Changelog(Base):
     user_id = Column(Integer, nullable=False, index=True)
     created_at = Column(DateTime(timezone=True),
                         nullable=False, default=func.now())
-    
+
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     action = Column(String(128), nullable=True)
     payload = Column(JSONB, nullable=True)

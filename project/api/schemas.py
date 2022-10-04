@@ -4,7 +4,6 @@ from typing import Optional, List, Dict, Any
 from pydantic import constr, BaseModel, Field
 
 
-
 class NameObject(BaseModel):
     formatted_name: str = Field(title="formatted_name", description="The formatted name of the object")
     first_name: Optional[str] = None
@@ -65,18 +64,6 @@ class MediaObject(BaseModel):
     caption: Optional[str] = None
     filename: Optional[str] = None
     provider: Optional[str] = None
-
-    class Config:
-        orm_mode = True
-
-
-class Template(BaseModel):
-    client: constr(min_length=1)
-    channel: constr(min_length=1)
-    channel_account_alias: constr(min_length=1)
-    template_name: constr(min_length=1)
-    template_description: constr(min_length=1)
-    division_id: constr(min_length=1)
 
     class Config:
         orm_mode = True
@@ -269,21 +256,34 @@ class MessageObject(BaseModel):
 
 
 class User(BaseModel):
-    username: Optional[str] = None
-    email: Optional[str] = None
-    password: Optional[str] = None
-    name: Optional[str] = None
+    username: constr(min_length=1)
+    email: constr(min_length=1)
+    password: constr(min_length=1) = Field(title="password", description="The password of the user")
+    name: constr(min_length=1)
     is_active: Optional[bool] = True
 
     class Config:
         orm_mode = True
 
 
+class Template(BaseModel):
+    client: constr(min_length=1)
+    channel: constr(min_length=1)
+    channel_account_alias: constr(min_length=1)
+    template_name: constr(min_length=1)
+    template_description: constr(min_length=1)
+    division_id: constr(min_length=1)
+
+    class Config:
+        orm_mode = True
+
+
 class Template_Content(BaseModel):
-    parent_id: Optional[str] = None
+    parent_id: constr(min_length=1) = Field(title="parent_id", description="Fill '-' if no parent")
     payload: MessageObject = Field(title="payload", description="The payload of the template content")
     option: constr(min_length=1) = Field(title="option", description="The option of the template content")
-    template_id: constr(min_length=1) = Field(title="template_id", description="The template_id of the template content")
+    template_id: constr(min_length=1) = Field(title="template_id",
+                                              description="The template_id of the template content")
 
     class Config:
         orm_mode = True

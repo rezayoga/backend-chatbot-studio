@@ -321,6 +321,14 @@ async def update_template_content(template_content_id: str, updated_template_con
     if user is None:
         raise get_user_exception()
 
+    template = session.query(Template) \
+        .filter(Template.id == updated_template_content.template_id) \
+        .filter(Template.owner_id == user.get('id')) \
+        .first()
+
+    if template is None:
+        raise not_found_exception("Template not found")
+
     template_content = session.query(Template_Content) \
         .filter(Template_Content.id == template_content_id) \
         .first()

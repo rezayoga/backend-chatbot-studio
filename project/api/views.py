@@ -221,18 +221,20 @@ async def get_templates():
 
 @api_router.get("/templates/user/", tags=["templates"])
 async def get_templates_by_user_id(user: dict = Depends(get_current_user)):
-    logging.log(logging.INFO, f"Get templates by user id: {user.get('id')}")
+    # logging.log(logging.INFO, f"Get templates by user id: {user.get('id')}")
+    #
+    # if user is None:
+    #     raise get_user_exception()
+    #
+    # logging.log(logging.INFO, f"Get templates by user id: {user.get('id')}")
+    #
+    # templates = session.query(Template) \
+    #     .filter(Template.owner_id == user.get('id')) \
+    #     .all()
+    #
+    # return JSONResponse(status_code=200, content=jsonable_encoder(templates))
 
-    if user is None:
-        raise get_user_exception()
-
-    logging.log(logging.INFO, f"Get templates by user id: {user.get('id')}")
-
-    templates = session.query(Template) \
-        .filter(Template.owner_id == user.get('id')) \
-        .all()
-
-    return JSONResponse(status_code=200, content=jsonable_encoder(templates))
+    return JSONResponse(status_code=200, content={"message": f"Get templates by user id: {user.get('id')}"})
 
 
 @api_router.put("/templates/{template_id}/", tags=["templates"])

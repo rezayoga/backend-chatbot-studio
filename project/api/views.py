@@ -1,3 +1,4 @@
+import json
 import logging
 from datetime import datetime, timedelta
 from typing import List, Optional
@@ -186,7 +187,7 @@ async def create_template(created_template: TemplateSchema, user: dict = Depends
     session.add(template)
     session.commit()
 
-    return JSONResponse(status_code=200, content={"message": "Template created successfully", "data": template.id})
+    return JSONResponse(status_code=200, content={"message": "Template created successfully", "data": json.dumps(template)})
 
 
 @api_router.get("/templates/{template_id}/", tags=["templates"])

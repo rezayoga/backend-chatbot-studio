@@ -43,7 +43,7 @@ class Template(Base):
         "Template_Changelog", backref="template_changelog")
 
     def __repr__(self) -> str:
-        return f"<Template: {self.id} - {self.channel} -  {self.channel_account_alias}>"
+        return f"<Template: {self.id} - {self.template_name} -  {self.channel_account_alias}>"
 
 
 class Template_Content(Base):

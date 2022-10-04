@@ -267,12 +267,12 @@ class User(BaseModel):
 
 
 class Template(BaseModel):
-    client: constr(min_length=1)
+    client: Optional[str] = None
     channel: constr(min_length=1)
-    channel_account_alias: constr(min_length=1)
+    channel_account_alias: Optional[str] = None
     template_name: constr(min_length=1)
     template_description: constr(min_length=1)
-    division_id: constr(min_length=1)
+    division_id: Optional[str] = None
 
     class Config:
         orm_mode = True

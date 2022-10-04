@@ -224,6 +224,8 @@ async def get_templates_by_user_id(user: dict = Depends(get_current_user)):
     if user is None:
         raise get_user_exception()
 
+    logging.log(logging.INFO, f"Get templates by user id: {user.get('id')}")
+
     templates = session.query(Template) \
         .filter(Template.owner_id == user.get('id')) \
         .all()

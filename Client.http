@@ -10,7 +10,7 @@ grant_type=&username=reza&password=reza&scope=&client_id=&client_secret=
 
 ###
 
-GET https://chatbotstudio.rezayogaswara.dev/api/v1/templates/user/
+GET https://chatbotstudio.rezayogaswara.dev/api/v1/templates/5ae749fb-a61e-4747-ba9d-f5400a826829/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}

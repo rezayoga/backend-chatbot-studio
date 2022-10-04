@@ -195,35 +195,20 @@ async def create_template(created_template: TemplateSchema, user: dict = Depends
     return JSONResponse(status_code=200, content={"message": "Template created successfully", "body": data})
 
 
-@api_router.get("/templates/user/", tags=["templates"])
 @api_router.get("/templates/{template_id}/", tags=["templates"])
 async def get_template_by_template_id(template_id: str, user: dict = Depends(get_current_user)):
-    if template_id == "user":
-        logging.log(logging.INFO, f"Get templates by user id: {user.get('id')}")
+    if user is None:
+        raise get_user_exception()
 
-        if user is None:
-            raise get_user_exception()
+    template = session.query(Template) \
+        .filter(Template.id == template_id) \
+        .filter(Template.owner_id == user.get('id')) \
+        .first()
 
-        logging.log(logging.INFO, f"Get templates by user id: {user.get('id')}")
+    if template is None:
+        raise not_found_exception("Template not found")
 
-        templates = session.query(Template) \
-            .filter(Template.owner_id == user.get('id')) \
-            .all()
-
-        return JSONResponse(status_code=200, content=jsonable_encoder(templates))
-    else:
-        if user is None:
-            raise get_user_exception()
-
-        template = session.query(Template) \
-            .filter(Template.id == template_id) \
-            .filter(Template.owner_id == user.get('id')) \
-            .first()
-
-        if template is None:
-            raise not_found_exception("Template not found")
-
-        return JSONResponse(status_code=200, content=jsonable_encoder(template))
+    return JSONResponse(status_code=200, content=jsonable_encoder(template))
 
 
 @api_router.get("/templates/", tags=["templates"], response_model=List[TemplateSchema])
@@ -234,20 +219,20 @@ async def get_templates():
     return JSONResponse(status_code=200, content=jsonable_encoder(templates))
 
 
-# @api_router.get("/templates/user/", tags=["templates"])
-# async def get_templates_by_user_id(user: dict = Depends(get_current_user)):
-#     logging.log(logging.INFO, f"Get templates by user id: {user.get('id')}")
-#
-#     if user is None:
-#         raise get_user_exception()
-#
-#     logging.log(logging.INFO, f"Get templates by user id: {user.get('id')}")
-#
-#     templates = session.query(Template) \
-#         .filter(Template.owner_id == user.get('id')) \
-#         .all()
-#
-#     return JSONResponse(status_code=200, content=jsonable_encoder(templates))
+@api_router.get("/user/templates/", tags=["templates"])
+async def get_templates_by_user_id(user: dict = Depends(get_current_user)):
+    logging.log(logging.INFO, f"Get templates by user id: {user.get('id')}")
+
+    if user is None:
+        raise get_user_exception()
+
+    logging.log(logging.INFO, f"Get templates by user id: {user.get('id')}")
+
+    templates = session.query(Template) \
+        .filter(Template.owner_id == user.get('id')) \
+        .all()
+
+    return JSONResponse(status_code=200, content=jsonable_encoder(templates))
 
 
 @api_router.put("/templates/{template_id}/", tags=["templates"])

@@ -111,10 +111,10 @@ Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "client": "bx",
-  "channel": "bx",
-  "channel_account_alias": "bx",
-  "template_name": "Template Bx",
-  "template_description": "Desc Template Bx",
-  "division_id": "bx?"
+  "client": "cbx",
+  "channel": "cbx",
+  "channel_account_alias": "cbx",
+  "template_name": "Template CBx",
+  "template_description": "Desc Template CBx",
+  "division_id": "cbx?"
 }

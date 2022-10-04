@@ -187,7 +187,6 @@ async def create_template(created_template: TemplateSchema, user: dict = Depends
     session.add(template)
     session.commit()
 
-    # logging.log(logging.INFO, type(template))
     logging.log(logging.INFO, template)
 
     data = jsonable_encoder(template)
@@ -251,13 +250,12 @@ async def update_template(template_id: str, updated_template: TemplateSchema, us
     template.division_id = updated_template.division_id
     session.commit()
 
-    # logging.log(logging.INFO, type(template))
     logging.log(logging.INFO, template)
 
     data = jsonable_encoder(updated_template.from_orm(template).dict(exclude_none=True))
 
     logging.log(logging.INFO, data)
-    return JSONResponse(status_code=200, content={"message": "Template updated successfully", "data": data})
+    return JSONResponse(status_code=200, content={"message": "Template updated successfully", "body": data})
 
 
 @api_router.delete("/templates/{template_id}/", tags=["templates"])
@@ -304,7 +302,6 @@ async def create_template_content(created_template_content: Template_ContentSche
     session.add(template_content)
     session.commit()
 
-    # logging.log(logging.INFO, type(template_content))
     logging.log(logging.INFO, template_content)
 
     data = jsonable_encoder(template_content)
@@ -365,7 +362,6 @@ async def update_template_content(template_content_id: str, updated_template_con
     template_content.option = updated_template_content.option
     session.commit()
 
-    # logging.log(logging.INFO, type(template_content))
     logging.log(logging.INFO, template_content)
 
     data = jsonable_encoder(updated_template_content.from_orm(template_content).dict(exclude_none=True))

@@ -40,46 +40,86 @@ grant_type=&username=reza&password=reza&scope=&client_id=&client_secret=
 
 ###
 
-PUT https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/e81cd1cd-ec3a-4ebf-bba6-0864107ca844/
+PUT https://chatbotstudio.rezayogaswara.dev/api/v1/templates/2589349e-0877-49ef-9edc-fbe05d0c3d2c/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "parent_id": "-",
-  "payload": {
-    "messaging_product": "whatsapp",
-    "recipient_type": "individual",
-    "to": "{{Recipient-Phone-Number}}",
-    "type": "interactive",
-    "interactive": {
-        "type": "button",
-        "body": {
-            "text": "<BUTTON_TEXT>"
-        },
-        "action": {
-            "buttons": [
-                {
-                    "type": "reply",
-                    "reply": {
-                        "id": "<UNIQUE_BUTTON_ID_1>",
-                        "title": "<BUTTON_TITLE_1>"
-                    }
-                },
-                {
-                    "type": "reply",
-                    "reply": {
-                        "id": "<UNIQUE_BUTTON_ID_2>",
-                        "title": "<BUTTON_TITLE_2>"
-                    }
-                }
-            ]
-        }
-    }
-  },
-  "option": "init",
-  "template_id": "a24bc2a9-9f38-4eb7-858b-94a93d4a2de2"
+  "client": "y",
+  "channel": "y",
+  "channel_account_alias": "y",
+  "template_name": "Template y",
+  "template_description": "Desc Template y",
+  "division_id": "y?"
 }
+
+###
+
+#PUT https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/e81cd1cd-ec3a-4ebf-bba6-0864107ca844/
+#accept: application/json
+#Content-Type: application/json
+#Authorization: Bearer {{access_token}}
+#
+#{
+#  "parent_id": "-",
+#  "payload": {
+#    "messaging_product": "whatsapp",
+#    "recipient_type": "individual",
+#    "to": "{{Recipient-Phone-Number}}",
+#    "type": "interactive",
+#    "interactive": {
+#        "type": "list",
+#        "header": {
+#            "type": "text",
+#            "text": "<HEADER_TEXT>"
+#        },
+#        "body": {
+#            "text": "<BODY_TEXT>"
+#        },
+#        "footer": {
+#            "text": "<FOOTER_TEXT>"
+#        },
+#        "action": {
+#            "button": "<BUTTON_TEXT>",
+#            "sections": [
+#                {
+#                    "title": "<s1>",
+#                    "rows": [
+#                        {
+#                            "id": "<a>",
+#                            "title": "<SECTION_1_ROW_1_TITLE>",
+#                            "description": "<SECTION_1_ROW_1_DESC>"
+#                        },
+#                        {
+#                            "id": "<b>",
+#                            "title": "<SECTION_1_ROW_2_TITLE>",
+#                            "description": "<SECTION_1_ROW_2_DESC>"
+#                        }
+#                    ]
+#                },
+#                {
+#                    "title": "<s2>",
+#                    "rows": [
+#                        {
+#                            "id": "<a>",
+#                            "title": "<SECTION_2_ROW_1_TITLE>",
+#                            "description": "<SECTION_2_ROW_1_DESC>"
+#                        },
+#                        {
+#                            "id": "<b>",
+#                            "title": "<SECTION_2_ROW_2_TITLE>",
+#                            "description": "<SECTION_2_ROW_2_DESC>"
+#                        }
+#                    ]
+#                }
+#            ]
+#        }
+#    }
+#  },
+#  "option": "init",
+#  "template_id": "a24bc2a9-9f38-4eb7-858b-94a93d4a2de2"
+#}
 
 ###
 #GET https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/a24bc2a9-9f38-4eb7-858b-94a93d4a2de2/

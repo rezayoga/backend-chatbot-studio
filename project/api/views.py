@@ -208,7 +208,7 @@ async def get_template_by_template_id(template_id: str, user: dict = Depends(get
     if template is None:
         raise not_found_exception("Template not found")
 
-    return JSONResponse(status_code=200, content={jsonable_encoder(template)})
+    return JSONResponse(status_code=200, content=jsonable_encoder(template))
 
 
 @api_router.get("/templates/", tags=["templates"], response_model=List[TemplateSchema])

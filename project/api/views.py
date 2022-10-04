@@ -221,6 +221,8 @@ async def get_templates():
 
 @api_router.get("/templates/user/", tags=["templates"])
 async def get_templates_by_user_id(user: dict = Depends(get_current_user)):
+    logging.log(logging.INFO, f"Get templates by user id: {user.get('id')}")
+
     if user is None:
         raise get_user_exception()
 

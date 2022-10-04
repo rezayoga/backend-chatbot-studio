@@ -71,12 +71,12 @@ class MediaObject(BaseModel):
 
 
 class Template(BaseModel):
-    client: Optional[str] = None
-    channel: Optional[str] = None
-    channel_account_alias: Optional[str] = None
-    template_name: Optional[str] = None
-    template_description: Optional[str] = None
-    division_id: Optional[str] = None
+    client: constr(min_length=1)
+    channel: constr(min_length=1)
+    channel_account_alias: constr(min_length=1)
+    template_name: constr(min_length=1)
+    template_description: constr(min_length=1)
+    division_id: constr(min_length=1)
 
     class Config:
         orm_mode = True
@@ -282,8 +282,8 @@ class User(BaseModel):
 class Template_Content(BaseModel):
     parent_id: Optional[str] = None
     payload: MessageObject = Field(title="payload", description="The payload of the template content")
-    option: str = Field(title="option", description="The option of the template content")
-    template_id: str = Field(title="template_id", description="The template_id of the template content")
+    option: constr(min_length=1) = Field(title="option", description="The option of the template content")
+    template_id: constr(min_length=1) = Field(title="template_id", description="The template_id of the template content")
 
     class Config:
         orm_mode = True

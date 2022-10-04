@@ -208,7 +208,7 @@ async def get_template_by_template_id(template_id: str, user: dict = Depends(get
     if template is None:
         raise not_found_exception("Template not found")
 
-    return template
+    return JSONResponse(status_code=200, content={jsonable_encoder(template)})
 
 
 @api_router.get("/templates/", tags=["templates"], response_model=List[TemplateSchema])
@@ -224,9 +224,11 @@ async def get_templates_by_user_id(user: dict = Depends(get_current_user)):
     if user is None:
         raise get_user_exception()
 
-    return session.query(Template) \
+    templates = session.query(Template) \
         .filter(Template.owner_id == user.get('id')) \
         .all()
+
+    return JSONResponse(status_code=200, content=jsonable_encoder(templates))
 
 
 @api_router.put("/templates/{template_id}/", tags=["templates"])

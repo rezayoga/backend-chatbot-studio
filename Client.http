@@ -9,6 +9,13 @@ grant_type=&username=reza&password=reza&scope=&client_id=&client_secret=
 > {% client.global.set("access_token", response.body.access_token); %}
 
 ###
+
+GET https://chatbotstudio.rezayogaswara.dev/api/v1/templates/user/
+accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+###
 #
 #POST https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/
 #accept: application/json
@@ -40,10 +47,10 @@ grant_type=&username=reza&password=reza&scope=&client_id=&client_secret=
 
 ###
 
-DELETE https://chatbotstudio.rezayogaswara.dev/api/v1/templates/2589349e-0877-49ef-9edc-fbe05d0c3d2c/
-accept: application/json
-Content-Type: application/json
-Authorization: Bearer {{access_token}}
+#DELETE https://chatbotstudio.rezayogaswara.dev/api/v1/templates/2589349e-0877-49ef-9edc-fbe05d0c3d2c/
+#accept: application/json
+#Content-Type: application/json
+#Authorization: Bearer {{access_token}}
 
 ###
 
@@ -90,6 +97,7 @@ Authorization: Bearer {{access_token}}
 #}
 
 ###
+
 #GET https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/a24bc2a9-9f38-4eb7-858b-94a93d4a2de2/
 #accept: application/json
 #Content-Type: application/json

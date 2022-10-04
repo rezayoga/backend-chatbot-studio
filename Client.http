@@ -33,30 +33,37 @@ grant_type=&username=reza&password=reza&scope=&client_id=&client_secret=
 
 ###
 
-#DELETE https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/fab565df-6e2b-4b90-854e-5fd2ac4a1ffd/
+DELETE https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/f9d1ca3a-4fd7-4450-8f57-0459a3d323a3/
+accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+###
+
+#DELETE https://chatbotstudio.rezayogaswara.dev/api/v1/templates/a24bc2a9-9f38-4eb7-858b-94a93d4a2de2/
 #accept: application/json
 #Content-Type: application/json
 #Authorization: Bearer {{access_token}}
 
 ###
 
-PUT https://chatbotstudio.rezayogaswara.dev/api/v1/templates/2589349e-0877-49ef-9edc-fbe05d0c3d2c/
-accept: application/json
-Content-Type: application/json
-Authorization: Bearer {{access_token}}
-
-{
-  "client": "y",
-  "channel": "y",
-  "channel_account_alias": "y",
-  "template_name": "Template y",
-  "template_description": "Desc Template y",
-  "division_id": "y?"
-}
+#PUT https://chatbotstudio.rezayogaswara.dev/api/v1/templates/2589349e-0877-49ef-9edc-fbe05d0c3d2c/
+#accept: application/json
+#Content-Type: application/json
+#Authorization: Bearer {{access_token}}
+#
+#{
+#  "client": "y1",
+#  "channel": "y1",
+#  "channel_account_alias": "y1",
+#  "template_name": "Template y1",
+#  "template_description": "Desc Template y1",
+#  "division_id": "y1?"
+#}
 
 ###
 
-#PUT https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/e81cd1cd-ec3a-4ebf-bba6-0864107ca844/
+#PUT https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/e233b0a6-ca6a-449f-8045-d008d77d990c/
 #accept: application/json
 #Content-Type: application/json
 #Authorization: Bearer {{access_token}}
@@ -67,56 +74,17 @@ Authorization: Bearer {{access_token}}
 #    "messaging_product": "whatsapp",
 #    "recipient_type": "individual",
 #    "to": "{{Recipient-Phone-Number}}",
-#    "type": "interactive",
-#    "interactive": {
-#        "type": "list",
-#        "header": {
-#            "type": "text",
-#            "text": "<HEADER_TEXT>"
-#        },
-#        "body": {
-#            "text": "<BODY_TEXT>"
-#        },
-#        "footer": {
-#            "text": "<FOOTER_TEXT>"
-#        },
-#        "action": {
-#            "button": "<BUTTON_TEXT>",
-#            "sections": [
-#                {
-#                    "title": "<s1>",
-#                    "rows": [
-#                        {
-#                            "id": "<a>",
-#                            "title": "<SECTION_1_ROW_1_TITLE>",
-#                            "description": "<SECTION_1_ROW_1_DESC>"
-#                        },
-#                        {
-#                            "id": "<b>",
-#                            "title": "<SECTION_1_ROW_2_TITLE>",
-#                            "description": "<SECTION_1_ROW_2_DESC>"
-#                        }
-#                    ]
-#                },
-#                {
-#                    "title": "<s2>",
-#                    "rows": [
-#                        {
-#                            "id": "<a>",
-#                            "title": "<SECTION_2_ROW_1_TITLE>",
-#                            "description": "<SECTION_2_ROW_1_DESC>"
-#                        },
-#                        {
-#                            "id": "<b>",
-#                            "title": "<SECTION_2_ROW_2_TITLE>",
-#                            "description": "<SECTION_2_ROW_2_DESC>"
-#                        }
-#                    ]
-#                }
-#            ]
-#        }
+#    "context": {
+#        "message_id": "<MSGID_OF_PREV_MSG>"
+#    },
+#    "type": "location",
+#    "location": {
+#        "latitude": "<LOCATION_LATITUDE>",
+#        "longitude": "<LOCATION_LONGITUDE>",
+#        "name": "<LOCATION_NAME>",
+#        "address": "<LOCATION_ADDRESS>"
 #    }
-#  },
+#},
 #  "option": "init",
 #  "template_id": "a24bc2a9-9f38-4eb7-858b-94a93d4a2de2"
 #}

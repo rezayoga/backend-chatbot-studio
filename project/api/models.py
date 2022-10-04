@@ -38,7 +38,7 @@ class Template(Base):
     division_id = Column(String(128), nullable=True)
     owner_id = Column(Integer, ForeignKey("users.id"))
     template_contents = relationship(
-        "Template_Content", backref="template_content")
+        "Template_Content", backref="template_content", cascade="all, delete-orphan")
     template_changelogs = relationship(
         "Template_Changelog", backref="template_changelog")
 

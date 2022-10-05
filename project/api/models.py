@@ -53,6 +53,8 @@ class Template_Content(Base):
     parent_id = Column(String, nullable=True, index=True)
     payload = Column(JSONB, nullable=True)
     option = Column(Text, nullable=True)
+    x = Column(Integer, nullable=True)
+    y = Column(Integer, nullable=True)
     created_at = Column(DateTime(timezone=True),
                         nullable=False, default=func.now())
 

@@ -7,6 +7,7 @@ from fastapi.responses import JSONResponse
 from fastapi_jwt_auth import AuthJWT
 from passlib.handlers.bcrypt import bcrypt
 from redis import Redis
+from sqlalchemy import and_
 
 from project.api.models import *
 from project.database import SessionLocal
@@ -375,7 +376,7 @@ async def get_template_content_by_template_content_id(template_content_id: str,
 
 	template = session.query(Template) \
 		.filter(Template.id == template_content.template_id) \
-		.filter(Template.owner_id == auth.get_jwt_subject()) \
+		.filter(and_(Template.owner_id == auth.get_jwt_subject())) \
 		.first()
 
 	logging.log(logging.INFO, template)

@@ -176,7 +176,7 @@ async def create_template(created_template: TemplateSchema, auth: AuthJWT = Depe
 
 	data = jsonable_encoder(template)
 
-	logging.log(logging.INFO, f"Create template: {data}")
+	logging.log(logging.INFO, data)
 	return JSONResponse(status_code=200, content={"message": "Template created successfully", "body": data})
 
 
@@ -254,11 +254,8 @@ async def update_template(template_id: str, updated_template: TemplateSchema, au
 	template.template_description = updated_template.template_description
 	template.division_id = updated_template.division_id
 	session.commit()
-
 	logging.log(logging.INFO, template)
-
 	data = jsonable_encoder(updated_template.from_orm(template).dict(exclude_none=True))
-
 	logging.log(logging.INFO, data)
 	return JSONResponse(status_code=200, content={"message": "Template updated successfully", "body": data})
 
@@ -325,7 +322,7 @@ async def create_template_content(created_template_content: Template_ContentSche
 
 	data = jsonable_encoder(template_content)
 
-	logging.log(logging.INFO, f"Create template_content: {data}")
+	logging.log(logging.INFO, data)
 
 	return JSONResponse(status_code=200, content={"message": "Template content created successfully", "body": data})
 
@@ -381,10 +378,6 @@ async def get_template_content_by_template_content_id(template_content_id: str,
 		.filter(and_(Template.owner_id == auth.get_jwt_subject())) \
 		.first()
 
-	logging.log(logging.INFO, template)
-	logging.log(logging.INFO, template_content)
-	logging.log(logging.INFO, auth.get_jwt_subject())
-
 	if template is None:
 		raise not_found_exception("Template not found")
 
@@ -427,11 +420,8 @@ async def update_template_content(template_content_id: str, updated_template_con
 	template_content.option_label = updated_template_content.option_label
 	template_content.option_position = updated_template_content.option_position
 	session.commit()
-
 	logging.log(logging.INFO, template_content)
-
 	data = jsonable_encoder(updated_template_content.from_orm(template_content).dict(exclude_none=True))
-
 	logging.log(logging.INFO, data)
 	return JSONResponse(status_code=200, content={"message": "Template content updated successfully", "body": data})
 

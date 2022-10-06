@@ -115,19 +115,19 @@ async def refresh_access_token(auth: AuthJWT = Depends()):
 	return {"access_token": new_access_token}
 
 
-@api_router.delete("/access/revoke", tags=["auth"])
+@api_router.delete("/access/revoke/", tags=["auth"])
 async def access_revoke(auth: AuthJWT = Depends()):
 	auth.jwt_required()
 	jti = auth.get_raw_jwt()['jti']
-	redis_config.setex(jti, settings.access_expires, 'true')
+	redis_config.setex(jti, settings.access_token_expires, 'true')
 	return {"message": "Access token revoked"}
 
 
-@api_router.delete("/refresh/revoke", tags=["auth"])
+@api_router.delete("/refresh/revoke/", tags=["auth"])
 async def refresh_revoke(auth: AuthJWT = Depends()):
 	auth.jwt_refresh_token_required()
 	jti = auth.get_raw_jwt()['jti']
-	redis_config.setex(jti, settings.refresh_expires, 'true')
+	redis_config.setex(jti, settings.refresh_token_expires, 'true')
 	return {"message": "Refresh token revoked"}
 
 

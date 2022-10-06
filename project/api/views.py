@@ -204,7 +204,7 @@ async def get_template_by_template_id(template_id: str, auth: AuthJWT = Depends(
 @api_router.get("/templates/", tags=["templates"], response_model=List[TemplateSchema])
 async def get_templates():
 	templates = session.query(Template).all()
-	if templates is None:
+	if templates is None or len(templates) == 0:
 		raise not_found_exception("Templates not found")
 	return JSONResponse(status_code=200, content=jsonable_encoder(templates))
 
@@ -216,16 +216,15 @@ async def get_templates_by_user_id(auth: AuthJWT = Depends()):
 		.filter(User.id == auth.get_jwt_subject()) \
 		.first()
 
-	logging.log(logging.INFO, f"Get templates by user id: {auth.get_jwt_subject()}")
-
 	if user is None:
 		raise get_user_exception()
-
-	logging.log(logging.INFO, f"Get templates by user id: {auth.get_jwt_subject()}")
 
 	templates = session.query(Template) \
 		.filter(Template.owner_id == auth.get_jwt_subject()) \
 		.all()
+
+	if templates is None or len(templates) == 0:
+		raise not_found_exception("Templates not found")
 
 	return JSONResponse(status_code=200, content=jsonable_encoder(templates))
 
@@ -353,7 +352,7 @@ async def get_template_contents_by_template_id(template_id: str, auth: AuthJWT =
 		.filter(Template_Content.template_id == template_id) \
 		.all()
 
-	if template_contents is None:
+	if template_contents is None or len(template_contents) == 0:
 		raise not_found_exception("Template contents not found")
 
 	return template_contents

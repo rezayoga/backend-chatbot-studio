@@ -80,11 +80,11 @@ redis_connection = Redis(host='localhost', port=6379, db=0, decode_responses=Tru
 
 # A storage engine to save revoked tokens. in production,
 # you can use Redis for storage system
-deny_list = set()
+denylist = set()
 
 
 # For this example, we are just checking if the tokens jti
-# (unique identifier) is in the deny_list set. This could
+# (unique identifier) is in the denylist set. This could
 # be made more complex, for example storing the token in Redis
 # with the value true if revoked and false if not revoked
 @AuthJWT.token_in_denylist_loader
@@ -120,7 +120,7 @@ async def refresh_access_token(auth: AuthJWT = Depends()):
 async def access_revoke(auth: AuthJWT = Depends()):
 	auth.jwt_required()
 	jti = auth.get_raw_jwt()['jti']
-	# deny_list.add(jti)
+	# denylist.add(jti)
 	redis_connection.setex(jti, settings.access_token_expires, 'true')
 	return {"message": "Access token revoked"}
 
@@ -129,7 +129,7 @@ async def access_revoke(auth: AuthJWT = Depends()):
 async def refresh_revoke(auth: AuthJWT = Depends()):
 	auth.jwt_refresh_token_required()
 	jti = auth.get_raw_jwt()['jti']
-	# deny_list.add(jti)
+	# denylist.add(jti)
 	redis_connection.setex(jti, settings.refresh_token_expires, 'true')
 	return {"message": "Refresh token revoked"}
 

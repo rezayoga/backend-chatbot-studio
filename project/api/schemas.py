@@ -255,6 +255,14 @@ class MessageObject(BaseModel):
 		orm_mode = True
 
 
+class ParentIdObject(BaseModel):
+	parent_id: str = Field(title="parent_id", description="The parent_id of the message")
+	option: str = Field(title="option", description="The option of the message")
+
+	class Config:
+		orm_mode = True
+
+
 class User_Login(BaseModel):
 	username: str = Field(title="username", description="The username of the user")
 	password: str = Field(title="password", description="The password of the user")
@@ -287,7 +295,7 @@ class Template(BaseModel):
 
 
 class Template_Content(BaseModel):
-	parent_id: constr(min_length=1) = Field(title="parent_id", description="Fill '-' if no parent")
+	parent_id: List[ParentIdObject] = Field(title="parent_id", description="The list of template_content's parent_id")
 	payload: MessageObject = Field(title="payload", description="The payload of the template content")
 	option: constr(min_length=1) = Field(title="option", description="The option of the template content")
 	template_id: constr(min_length=1) = Field(title="template_id",
@@ -301,7 +309,7 @@ class Template_Content(BaseModel):
 		orm_mode = True
 
 
-# set deny_list enabled to True
+# set denylist enabled to True
 # you can set to check access or refresh token or even both of them
 class JWT_Settings(BaseModel):
 	authjwt_secret_key: str = "d4d2b169f9c91008caf5cb68c9e4125a16bf139469de01f98fe8ac03ed8f8d0a"

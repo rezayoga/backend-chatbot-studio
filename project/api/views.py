@@ -81,7 +81,7 @@ redis_connection = Redis(host='localhost', port=6379, db=0, decode_responses=Tru
 
 # A storage engine to save revoked tokens. in production,
 # you can use Redis for storage system
-denylist = set()
+# denylist = set()
 
 
 # For this example, we are just checking if the tokens jti

@@ -378,6 +378,8 @@ async def get_template_content_by_template_content_id(template_content_id: str,
 		.filter(Template.owner_id == auth.get_jwt_subject()) \
 		.first()
 
+	logging.log(logging.INFO, template)
+
 	if template is None:
 		raise not_found_exception("Template not found")
 

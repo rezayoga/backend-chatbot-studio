@@ -90,7 +90,8 @@ deny_list = set()
 @AuthJWT.token_in_denylist_loader
 def check_if_token_in_denylist(decrypted_token):
 	jti = decrypted_token['jti']
-	return jti in deny_list
+	entry = redis_connection.get(jti)
+	return entry and entry == 'true'
 
 
 @api_router.post("/token/", tags=["auth"])
@@ -119,7 +120,7 @@ async def refresh_access_token(auth: AuthJWT = Depends()):
 async def access_revoke(auth: AuthJWT = Depends()):
 	auth.jwt_required()
 	jti = auth.get_raw_jwt()['jti']
-	deny_list.add(jti)
+	# deny_list.add(jti)
 	redis_connection.setex(jti, settings.access_token_expires, 'true')
 	return {"message": "Access token revoked"}
 
@@ -128,7 +129,7 @@ async def access_revoke(auth: AuthJWT = Depends()):
 async def refresh_revoke(auth: AuthJWT = Depends()):
 	auth.jwt_refresh_token_required()
 	jti = auth.get_raw_jwt()['jti']
-	deny_list.add(jti)
+	# deny_list.add(jti)
 	redis_connection.setex(jti, settings.refresh_token_expires, 'true')
 	return {"message": "Refresh token revoked"}
 

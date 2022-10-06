@@ -313,6 +313,8 @@ async def create_template_content(created_template_content: Template_ContentSche
 	template_content.option = created_template_content.option
 	template_content.x = created_template_content.x
 	template_content.y = created_template_content.y
+	template_content.option_label = created_template_content.option_label
+	template_content.option_position = created_template_content.option_position
 	session.add(template_content)
 	session.commit()
 
@@ -386,6 +388,8 @@ async def update_template_content(template_content_id: str, updated_template_con
 	template_content.option = updated_template_content.option
 	template_content.x = updated_template_content.x
 	template_content.y = updated_template_content.y
+	template_content.option_label = updated_template_content.option_label
+	template_content.option_position = updated_template_content.option_position
 	session.commit()
 
 	logging.log(logging.INFO, template_content)

@@ -294,6 +294,8 @@ class Template_Content(BaseModel):
 	                                          description="The template_id of the template content")
 	x: Optional[int] = 0
 	y: Optional[int] = 0
+	option_label: Optional[str] = None
+	option_position: Optional[str] = None
 
 	class Config:
 		orm_mode = True

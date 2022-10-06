@@ -55,6 +55,8 @@ class Template_Content(Base):
     option = Column(Text, nullable=True)
     x = Column(Integer, nullable=True)
     y = Column(Integer, nullable=True)
+    option_label = Column(Text, nullable=True)
+    option_position = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True),
                         nullable=False, default=func.now())
 

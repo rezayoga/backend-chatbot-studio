@@ -164,7 +164,7 @@ async def create_template(created_template: TemplateSchema, auth: AuthJWT = Depe
 	template.template_name = created_template.template_name
 	template.template_description = created_template.template_description
 	template.division_id = created_template.division_id
-	template.owner_id = user.get('id')
+	template.owner_id = auth.get_jwt_subject()
 	session.add(template)
 	session.commit()
 
@@ -188,7 +188,7 @@ async def get_template_by_template_id(template_id: str, auth: AuthJWT = Depends(
 
 	template = session.query(Template) \
 		.filter(Template.id == template_id) \
-		.filter(Template.owner_id == user.get('id')) \
+		.filter(Template.owner_id == auth.get_jwt_subject()) \
 		.first()
 
 	if template is None:
@@ -212,15 +212,15 @@ async def get_templates_by_user_id(auth: AuthJWT = Depends()):
 		.filter(User.id == auth.get_jwt_subject()) \
 		.first()
 
-	logging.log(logging.INFO, f"Get templates by user id: {user.get('id')}")
+	logging.log(logging.INFO, f"Get templates by user id: {auth.get_jwt_subject()}")
 
 	if user is None:
 		raise get_user_exception()
 
-	logging.log(logging.INFO, f"Get templates by user id: {user.get('id')}")
+	logging.log(logging.INFO, f"Get templates by user id: {auth.get_jwt_subject()}")
 
 	templates = session.query(Template) \
-		.filter(Template.owner_id == user.get('id')) \
+		.filter(Template.owner_id == auth.get_jwt_subject()) \
 		.all()
 
 	return JSONResponse(status_code=200, content=jsonable_encoder(templates))
@@ -238,7 +238,7 @@ async def update_template(template_id: str, updated_template: TemplateSchema, au
 
 	template = session.query(Template) \
 		.filter(Template.id == template_id) \
-		.filter(Template.owner_id == user.get('id')) \
+		.filter(Template.owner_id == auth.get_jwt_subject()) \
 		.first()
 
 	if template is None:
@@ -272,7 +272,7 @@ async def delete_template(template_id: str, auth: AuthJWT = Depends()):
 
 	template = session.query(Template) \
 		.filter(Template.id == template_id) \
-		.filter(Template.owner_id == user.get('id')) \
+		.filter(Template.owner_id == auth.get_jwt_subject()) \
 		.first()
 
 	if template is None:
@@ -337,7 +337,7 @@ async def get_template_contents_by_template_id(template_id: str, auth: AuthJWT =
 
 	template = session.query(Template) \
 		.filter(Template.id == template_id) \
-		.filter(Template.owner_id == user.get('id')) \
+		.filter(Template.owner_id == auth.get_jwt_subject()) \
 		.first()
 
 	if template is None:
@@ -366,7 +366,7 @@ async def update_template_content(template_content_id: str, updated_template_con
 
 	template = session.query(Template) \
 		.filter(Template.id == updated_template_content.template_id) \
-		.filter(Template.owner_id == user.get('id')) \
+		.filter(Template.owner_id == auth.get_jwt_subject()) \
 		.first()
 
 	if template is None:

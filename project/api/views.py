@@ -78,6 +78,7 @@ def get_config():
 
 redis_connection = Redis(host='localhost', port=6379, db=0, decode_responses=True)
 
+
 # A storage engine to save revoked tokens. in production,
 # you can use Redis for storage system
 denylist = set()
@@ -89,6 +90,10 @@ denylist = set()
 # with the value true if revoked and false if not revoked
 @AuthJWT.token_in_denylist_loader
 def check_if_token_in_denylist(decrypted_token):
+	if redis_connection.ping():
+		logging.log(logging.INFO, "1 Redis is connected")
+	else:
+		logging.log(logging.ERROR, "1 Redis is failed to connect")
 	jti = decrypted_token['jti']
 	entry = redis_connection.get(jti)
 	return entry and entry == 'true'
@@ -96,6 +101,11 @@ def check_if_token_in_denylist(decrypted_token):
 
 @api_router.post("/token/", tags=["auth"])
 async def login(user: User_LoginSchema, auth: AuthJWT = Depends()):
+	if redis_connection.ping():
+		logging.log(logging.INFO, "2 Redis is connected")
+	else:
+		logging.log(logging.ERROR, "2 Redis is failed to connect")
+
 	# Check if username and password match
 	user = authenticate_user(user.username, user.password)
 	if not user:

@@ -119,7 +119,7 @@ async def refresh_access_token(auth: AuthJWT = Depends()):
 async def access_revoke(auth: AuthJWT = Depends()):
 	auth.jwt_required()
 	jti = auth.get_raw_jwt()['jti']
-	deny_list.add(jti)
+	redis_config.setex(jti, settings.access_expires, 'true')
 	return {"message": "Access token revoked"}
 
 
@@ -127,7 +127,7 @@ async def access_revoke(auth: AuthJWT = Depends()):
 async def refresh_revoke(auth: AuthJWT = Depends()):
 	auth.jwt_refresh_token_required()
 	jti = auth.get_raw_jwt()['jti']
-	deny_list.add(jti)
+	redis_config.setex(jti, settings.refresh_expires, 'true')
 	return {"message": "Refresh token revoked"}
 
 
@@ -149,6 +149,7 @@ async def create_user(created_user: UserSchema):
 
 @api_router.post("/templates/", tags=["templates"])
 async def create_template(created_template: TemplateSchema, auth: AuthJWT = Depends()):
+	auth.jwt_required()
 	user = session.query(User) \
 		.filter(User.id == auth.get_jwt_subject()) \
 		.first()
@@ -177,6 +178,7 @@ async def create_template(created_template: TemplateSchema, auth: AuthJWT = Depe
 
 @api_router.get("/templates/{template_id}/", tags=["templates"])
 async def get_template_by_template_id(template_id: str, auth: AuthJWT = Depends()):
+	auth.jwt_required()
 	user = session.query(User) \
 		.filter(User.id == auth.get_jwt_subject()) \
 		.first()
@@ -205,6 +207,7 @@ async def get_templates():
 
 @api_router.get("/user/templates/", tags=["templates"])
 async def get_templates_by_user_id(auth: AuthJWT = Depends()):
+	auth.jwt_required()
 	user = session.query(User) \
 		.filter(User.id == auth.get_jwt_subject()) \
 		.first()
@@ -225,6 +228,7 @@ async def get_templates_by_user_id(auth: AuthJWT = Depends()):
 
 @api_router.put("/templates/{template_id}/", tags=["templates"])
 async def update_template(template_id: str, updated_template: TemplateSchema, auth: AuthJWT = Depends()):
+	auth.jwt_required()
 	user = session.query(User) \
 		.filter(User.id == auth.get_jwt_subject()) \
 		.first()
@@ -258,6 +262,7 @@ async def update_template(template_id: str, updated_template: TemplateSchema, au
 
 @api_router.delete("/templates/{template_id}/", tags=["templates"])
 async def delete_template(template_id: str, auth: AuthJWT = Depends()):
+	auth.jwt_required()
 	user = session.query(User) \
 		.filter(User.id == auth.get_jwt_subject()) \
 		.first()
@@ -285,6 +290,7 @@ async def delete_template(template_id: str, auth: AuthJWT = Depends()):
 @api_router.post("/template-contents/", tags=["template-contents"])
 async def create_template_content(created_template_content: Template_ContentSchema,
                                   auth: AuthJWT = Depends()):
+	auth.jwt_required()
 	user = session.query(User) \
 		.filter(User.id == auth.get_jwt_subject()) \
 		.first()
@@ -321,6 +327,7 @@ async def create_template_content(created_template_content: Template_ContentSche
 
 @api_router.get("/template-contents/{template_id}/", tags=["template-contents"])
 async def get_template_contents_by_template_id(template_id: str, auth: AuthJWT = Depends()):
+	auth.jwt_required()
 	user = session.query(User) \
 		.filter(User.id == auth.get_jwt_subject()) \
 		.first()
@@ -349,6 +356,7 @@ async def get_template_contents_by_template_id(template_id: str, auth: AuthJWT =
 @api_router.put("/template-contents/{template_content_id}/", tags=["template-contents"])
 async def update_template_content(template_content_id: str, updated_template_content: Template_ContentSchema,
                                   auth: AuthJWT = Depends()):
+	auth.jwt_required()
 	user = session.query(User) \
 		.filter(User.id == auth.get_jwt_subject()) \
 		.first()
@@ -390,6 +398,7 @@ async def update_template_content(template_content_id: str, updated_template_con
 
 @api_router.delete("/template-contents/{template_content_id}/", tags=["template-contents"])
 async def delete_template_content(template_content_id: str, auth: AuthJWT = Depends()):
+	auth.jwt_required()
 	user = session.query(User) \
 		.filter(User.id == auth.get_jwt_subject()) \
 		.first()

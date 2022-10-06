@@ -1,24 +1,20 @@
-import json
 import logging
-from datetime import timedelta
 from typing import List
 
-from fastapi import HTTPException, Depends, Request
+from fastapi import HTTPException, Depends
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
+from fastapi_jwt_auth import AuthJWT
 from passlib.handlers.bcrypt import bcrypt
+from redis import Redis
 
 from project.api.models import *
 from project.database import SessionLocal
 from . import api_router
+from .schemas import JWT_Settings as JWT_SettingsSchema
 from .schemas import Template as TemplateSchema
 from .schemas import Template_Content as Template_ContentSchema
 from .schemas import User as UserSchema
-from .schemas import JWT_Settings as JWT_SettingsSchema
-
-from fastapi_jwt_auth import AuthJWT
-from fastapi_jwt_auth.exceptions import AuthJWTException
-from redis import Redis
 
 logger = logging.getLogger(__name__)
 session = SessionLocal()
@@ -77,14 +73,6 @@ def authenticate_user(username: str, password: str):
 @AuthJWT.load_config
 def get_config():
 	return settings
-
-
-@api_router.exception_handler(AuthJWTException)
-def authjwt_exception_handler(request: Request, exc: AuthJWTException):
-	return JSONResponse(
-		status_code=exc.status_code,
-		content={"detail": exc.message}
-	)
 
 
 redis_config = Redis(host='localhost', port=6379, db=0, decode_responses=True)

@@ -373,6 +373,14 @@ async def get_template_content_by_template_content_id(template_content_id: str,
 		.filter(Template_Content.id == template_content_id) \
 		.first()
 
+	template = session.query(Template) \
+		.filter(Template.id == template_content.template_id) \
+		.filter(Template.owner_id == auth.get_jwt_subject()) \
+		.first()
+
+	if template is None:
+		raise not_found_exception("Template not found")
+
 	if template_content is None:
 		raise not_found_exception("Template content not found")
 

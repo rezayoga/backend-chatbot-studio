@@ -358,7 +358,7 @@ async def get_template_contents_by_template_id(template_id: str, auth: AuthJWT =
 	return template_contents
 
 
-@api_router.get("/template-contents/{template_content_id}/", tags=["template-contents"])
+@api_router.get("/template/template-contents/{template_content_id}/", tags=["template-contents"])
 async def get_template_content_by_template_content_id(template_content_id: str,
                                                       auth: AuthJWT = Depends()):
 	auth.jwt_required()

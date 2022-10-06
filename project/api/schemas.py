@@ -1,7 +1,7 @@
 from datetime import date, timedelta
 from typing import Optional, List, Dict, Any
 
-from pydantic import constr, BaseModel, Field
+from pydantic import constr, BaseModel, Field, EmailStr
 
 
 class NameObject(BaseModel):
@@ -255,9 +255,17 @@ class MessageObject(BaseModel):
 		orm_mode = True
 
 
+class User_Login(BaseModel):
+	username: str = Field(title="username", description="The username of the user")
+	password: str = Field(title="password", description="The password of the user")
+
+	class Config:
+		orm_mode = True
+
+
 class User(BaseModel):
 	username: constr(min_length=1)
-	email: constr(min_length=1)
+	email: EmailStr = None
 	password: constr(min_length=1) = Field(title="password", description="The password of the user")
 	name: constr(min_length=1)
 	is_active: Optional[bool] = True

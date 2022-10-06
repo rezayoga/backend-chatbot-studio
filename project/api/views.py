@@ -15,6 +15,7 @@ from .schemas import JWT_Settings as JWT_SettingsSchema
 from .schemas import Template as TemplateSchema
 from .schemas import Template_Content as Template_ContentSchema
 from .schemas import User as UserSchema
+from .schemas import User_Login as User_LoginSchema
 
 logger = logging.getLogger(__name__)
 session = SessionLocal()
@@ -93,7 +94,7 @@ def check_if_token_in_denylist(decrypted_token):
 
 
 @api_router.post("/token/", tags=["auth"])
-async def login(user: UserSchema, auth: AuthJWT = Depends()):
+async def login(user: User_LoginSchema, auth: AuthJWT = Depends()):
 	# Check if username and password match
 	user = authenticate_user(user.username, user.password)
 	if not user:

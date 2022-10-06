@@ -101,9 +101,9 @@ def check_if_token_in_denylist(decrypted_token):
 @api_router.post("/token/", tags=["auth"])
 async def login(user: User_LoginSchema, auth: AuthJWT = Depends()):
 	if redis_connection.ping():
-		logging.log(logging.INFO, "2 Redis is connected")
+		logging.log(logging.INFO, "2a Redis is connected")
 	else:
-		logging.log(logging.ERROR, "2 Redis is failed to connect")
+		logging.log(logging.ERROR, "2a Redis is failed to connect")
 
 	# Check if username and password match
 	user = authenticate_user(user.username, user.password)

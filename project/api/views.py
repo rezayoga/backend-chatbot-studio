@@ -89,10 +89,6 @@ denylist = set()
 # with the value true if revoked and false if not revoked
 @AuthJWT.token_in_denylist_loader
 def check_if_token_in_denylist(decrypted_token):
-	if redis_connection.ping():
-		logging.log(logging.INFO, "1 Redis is connected")
-	else:
-		logging.log(logging.ERROR, "1 Redis is failed to connect")
 	jti = decrypted_token['jti']
 	entry = redis_connection.get(jti)
 	return entry and entry == 'true'
@@ -100,11 +96,6 @@ def check_if_token_in_denylist(decrypted_token):
 
 @api_router.post("/token/", tags=["auth"])
 async def login(user: User_LoginSchema, auth: AuthJWT = Depends()):
-	if redis_connection.ping():
-		logging.log(logging.INFO, "2a Redis is connected")
-	else:
-		logging.log(logging.ERROR, "2a Redis is failed to connect")
-
 	# Check if username and password match
 	user = authenticate_user(user.username, user.password)
 	if not user:
@@ -365,6 +356,27 @@ async def get_template_contents_by_template_id(template_id: str, auth: AuthJWT =
 		raise not_found_exception("Template contents not found")
 
 	return template_contents
+
+
+@api_router.get("/template-contents/{template_content_id}/", tags=["template-contents"])
+async def get_template_content_by_template_content_id(template_content_id: str,
+                                                      auth: AuthJWT = Depends()):
+	auth.jwt_required()
+	user = session.query(User) \
+		.filter(User.id == auth.get_jwt_subject()) \
+		.first()
+
+	if user is None:
+		raise get_user_exception()
+
+	template_content = session.query(Template_Content) \
+		.filter(Template_Content.id == template_content_id) \
+		.first()
+
+	if template_content is None:
+		raise not_found_exception("Template content not found")
+
+	return template_content
 
 
 @api_router.put("/template-contents/{template_content_id}/", tags=["template-contents"])

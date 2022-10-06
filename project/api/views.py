@@ -76,7 +76,7 @@ def get_config():
 	return settings
 
 
-redis_connection = Redis(host='redis', port=6379, db=0, decode_responses=True)
+redis_connection = Redis(host='localhost', port=6379, db=0, decode_responses=True)
 
 
 # A storage engine to save revoked tokens. in production,

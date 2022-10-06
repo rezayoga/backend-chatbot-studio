@@ -1,14 +1,12 @@
 import json
 import logging
-from datetime import datetime, timedelta
-from typing import List, Optional
+from datetime import timedelta
+from typing import List
 
-from fastapi import HTTPException, Depends
+from fastapi import HTTPException, Depends, Request
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
-from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
-from jose import JWTError, jwt
-from passlib.context import CryptContext
+from passlib.handlers.bcrypt import bcrypt
 
 from project.api.models import *
 from project.database import SessionLocal
@@ -16,271 +14,280 @@ from . import api_router
 from .schemas import Template as TemplateSchema
 from .schemas import Template_Content as Template_ContentSchema
 from .schemas import User as UserSchema
+from .schemas import JWT_Settings as JWT_SettingsSchema
 
-SECRET_KEY: str = "d4d2b169f9c91008caf5cb68c9e4125a16bf139469de01f98fe8ac03ed8f8d0a"
-ALGORITHM: str = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES: int = 30  # 30 minutes
-REFRESH_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
-
-oauth_bearer = OAuth2PasswordBearer(tokenUrl="/api/v1/token")
-
-bcrypt = CryptContext(schemes=["bcrypt"], deprecated="auto")
+from fastapi_jwt_auth import AuthJWT
+from fastapi_jwt_auth.exceptions import AuthJWTException
+from redis import Redis
 
 logger = logging.getLogger(__name__)
 session = SessionLocal()
+settings = JWT_SettingsSchema()
 
-
-def get_password_hash(password: str):
-    return bcrypt.hash(password)
-
-
-def verify_password(plain_password, hashed_password):
-    return bcrypt.verify(plain_password, hashed_password)
-
-
-def authenticate_user(username: str, password: str):
-    user = session.query(User) \
-        .filter(User.username == username) \
-        .first()
-    if not user:
-        return False
-    if not verify_password(password, user.hashed_password):
-        return False
-    return user
-
-
-def create_access_token(username: str, id: int, expires_delta: Optional[timedelta] = None):
-    encode = {"sub": username, "id": id}
-    if expires_delta:
-        expire = datetime.utcnow() + expires_delta
-    else:
-        expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    encode.update({"exp": expire})
-    return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
-
-
-def create_refresh_token(username: str, id: int, expires_delta: Optional[timedelta] = None):
-    encode = {"sub": username, "id": id}
-    if expires_delta:
-        expire = datetime.utcnow() + expires_delta
-    else:
-        expire = datetime.utcnow() + timedelta(minutes=REFRESH_TOKEN_EXPIRE_MINUTES)
-    encode.update({"exp": expire})
-    return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
-
-
-# Exception
-def get_user_exception():
-    credentials_exception = HTTPException(
-        status_code=401,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    return credentials_exception
-
-
-def token_exception():
-    token_exception_response = HTTPException(
-        status_code=401,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    return token_exception_response
+""" Exception Handler """
 
 
 def not_found_exception(message: str):
-    not_found_exception_response = HTTPException(
-        status_code=404,
-        detail=message,
-    )
-    return not_found_exception_response
+	not_found_exception_response = HTTPException(
+		status_code=404,
+		detail=message,
+	)
+	return not_found_exception_response
 
 
 def incorrect_request_exception(message: str):
-    incorrect_request_exception_response = HTTPException(
-        status_code=400,
-        detail=message,
-    )
-    return incorrect_request_exception_response
+	incorrect_request_exception_response = HTTPException(
+		status_code=400,
+		detail=message,
+	)
+	return incorrect_request_exception_response
 
 
-async def get_current_user(token: str = Depends(oauth_bearer)):
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
-        id_: int = payload.get("id")
-        if username is None or id_ is None:
-            raise get_user_exception()
-        return {"username": username, "id": id_}
-    except JWTError:
-        raise get_user_exception()
+def get_user_exception():
+	credentials_exception = HTTPException(
+		status_code=401,
+		detail="Could not validate credentials",
+		headers={"WWW-Authenticate": "Bearer"},
+	)
+	return credentials_exception
 
 
 """ auth """
 
 
-@api_router.post("/token/", tags=["auth"])
-async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = authenticate_user(form_data.username, form_data.password)
-    if not user:
-        raise HTTPException(
-            status_code=400, detail="Incorrect username or password"
-        )
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(user.username, user.id, access_token_expires)
+def get_password_hash(password: str):
+	return bcrypt.hash(password)
 
-    refresh_token_expires = timedelta(minutes=REFRESH_TOKEN_EXPIRE_MINUTES)
-    refresh_token = create_refresh_token(user.username, user.id, refresh_token_expires)
-    return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer",
-            "expires_in": ACCESS_TOKEN_EXPIRE_MINUTES}
+
+def verify_password(plain_password, hashed_password):
+	return bcrypt.verify(plain_password, hashed_password)
+
+
+def authenticate_user(username: str, password: str):
+	user = session.query(User) \
+		.filter(User.username == username) \
+		.first()
+	if not user:
+		return False
+	if not verify_password(password, user.hashed_password):
+		return False
+	return user
+
+
+@AuthJWT.load_config
+def get_config():
+	return settings
+
+
+@api_router.exception_handler(AuthJWTException)
+def authjwt_exception_handler(request: Request, exc: AuthJWTException):
+	return JSONResponse(
+		status_code=exc.status_code,
+		content={"detail": exc.message}
+	)
+
+
+redis_config = Redis(host='localhost', port=6379, db=0, decode_responses=True)
+
+# A storage engine to save revoked tokens. in production,
+# you can use Redis for storage system
+deny_list = set()
+
+
+# For this example, we are just checking if the tokens jti
+# (unique identifier) is in the deny_list set. This could
+# be made more complex, for example storing the token in Redis
+# with the value true if revoked and false if not revoked
+@AuthJWT.token_in_denylist_loader
+def check_if_token_in_denylist(decrypted_token):
+	jti = decrypted_token['jti']
+	return jti in deny_list
+
+
+@api_router.post("/token/", tags=["auth"])
+async def login(user: UserSchema, auth: AuthJWT = Depends()):
+	# Check if username and password match
+	user = authenticate_user(user.username, user.password)
+	if not user:
+		raise incorrect_request_exception("Incorrect username or password")
+	access_token = auth.create_access_token(subject=user.id)
+	refresh_token = auth.create_refresh_token(subject=user.id)
+	return {
+		"access_token": access_token,
+		"refresh_token": refresh_token
+	}
 
 
 @api_router.post("/token/refresh/", tags=["auth"])
-async def refresh_token(refresh_token: str):
-    try:
-        payload = jwt.decode(refresh_token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
-        id_: int = payload.get("id")
-        if username is None or id_ is None:
-            raise token_exception()
-        user = session.query(User) \
-            .filter(User.username == username) \
-            .first()
-        if not user:
-            raise token_exception()
-        access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-        access_token = create_access_token(user.username, user.id, access_token_expires)
-        return {"access_token": access_token, "token_type": "bearer", "expires_in": ACCESS_TOKEN_EXPIRE_MINUTES}
-    except JWTError:
-        raise token_exception()
+async def refresh_access_token(auth: AuthJWT = Depends()):
+	auth.jwt_refresh_token_required()
+	current_user = auth.get_jwt_subject()
+	new_access_token = auth.create_access_token(subject=current_user)
+	return {"access_token": new_access_token}
+
+
+@api_router.delete("/access/revoke", tags=["auth"])
+async def access_revoke(auth: AuthJWT = Depends()):
+	auth.jwt_required()
+	jti = auth.get_raw_jwt()['jti']
+	deny_list.add(jti)
+	return {"message": "Access token revoked"}
+
+
+@api_router.delete("/refresh/revoke", tags=["auth"])
+async def refresh_revoke(auth: AuthJWT = Depends()):
+	auth.jwt_refresh_token_required()
+	jti = auth.get_raw_jwt()['jti']
+	deny_list.add(jti)
+	return {"message": "Refresh token revoked"}
 
 
 @api_router.post("/users/", tags=["auth"])
 async def create_user(created_user: UserSchema):
-    user = User()
-    user.username = created_user.username
-    user.email = created_user.email
-    user.name = created_user.name
-    user.hashed_password = get_password_hash(created_user.password)
-    user.is_active = True
-    session.add(user)
-    session.commit()
-    return JSONResponse(status_code=200, content={"message": "User created successfully"})
+	user = User()
+	user.username = created_user.username
+	user.email = created_user.email
+	user.name = created_user.name
+	user.hashed_password = get_password_hash(created_user.password)
+	user.is_active = True
+	session.add(user)
+	session.commit()
+	return JSONResponse(status_code=200, content={"message": "User created successfully"})
 
 
 """ templates """
 
 
 @api_router.post("/templates/", tags=["templates"])
-async def create_template(created_template: TemplateSchema, user: dict = Depends(get_current_user)):
-    if user is None:
-        raise get_user_exception()
+async def create_template(created_template: TemplateSchema, auth: AuthJWT = Depends()):
+	user = session.query(User) \
+		.filter(User.id == auth.get_jwt_subject()) \
+		.first()
 
-    template = Template()
-    template.client = created_template.client
-    template.channel = created_template.channel
-    template.channel_account_alias = created_template.channel_account_alias
-    template.template_name = created_template.template_name
-    template.template_description = created_template.template_description
-    template.division_id = created_template.division_id
-    template.owner_id = user.get('id')
-    session.add(template)
-    session.commit()
+	if user is None:
+		raise get_user_exception()
 
-    logging.log(logging.INFO, template)
+	template = Template()
+	template.client = created_template.client
+	template.channel = created_template.channel
+	template.channel_account_alias = created_template.channel_account_alias
+	template.template_name = created_template.template_name
+	template.template_description = created_template.template_description
+	template.division_id = created_template.division_id
+	template.owner_id = user.get('id')
+	session.add(template)
+	session.commit()
 
-    data = jsonable_encoder(template)
+	logging.log(logging.INFO, template)
 
-    logging.log(logging.INFO, f"Create template: {data}")
-    return JSONResponse(status_code=200, content={"message": "Template created successfully", "body": data})
+	data = jsonable_encoder(template)
+
+	logging.log(logging.INFO, f"Create template: {data}")
+	return JSONResponse(status_code=200, content={"message": "Template created successfully", "body": data})
 
 
 @api_router.get("/templates/{template_id}/", tags=["templates"])
-async def get_template_by_template_id(template_id: str, user: dict = Depends(get_current_user)):
-    if user is None:
-        raise get_user_exception()
+async def get_template_by_template_id(template_id: str, auth: AuthJWT = Depends()):
+	user = session.query(User) \
+		.filter(User.id == auth.get_jwt_subject()) \
+		.first()
 
-    template = session.query(Template) \
-        .filter(Template.id == template_id) \
-        .filter(Template.owner_id == user.get('id')) \
-        .first()
+	if user is None:
+		raise get_user_exception()
 
-    if template is None:
-        raise not_found_exception("Template not found")
+	template = session.query(Template) \
+		.filter(Template.id == template_id) \
+		.filter(Template.owner_id == user.get('id')) \
+		.first()
 
-    return JSONResponse(status_code=200, content=jsonable_encoder(template))
+	if template is None:
+		raise not_found_exception("Template not found")
+
+	return JSONResponse(status_code=200, content=jsonable_encoder(template))
 
 
 @api_router.get("/templates/", tags=["templates"], response_model=List[TemplateSchema])
 async def get_templates():
-    templates = session.query(Template).all()
-    if templates is None:
-        raise not_found_exception("Templates not found")
-    return JSONResponse(status_code=200, content=jsonable_encoder(templates))
+	templates = session.query(Template).all()
+	if templates is None:
+		raise not_found_exception("Templates not found")
+	return JSONResponse(status_code=200, content=jsonable_encoder(templates))
 
 
 @api_router.get("/user/templates/", tags=["templates"])
-async def get_templates_by_user_id(user: dict = Depends(get_current_user)):
-    logging.log(logging.INFO, f"Get templates by user id: {user.get('id')}")
+async def get_templates_by_user_id(auth: AuthJWT = Depends()):
+	user = session.query(User) \
+		.filter(User.id == auth.get_jwt_subject()) \
+		.first()
 
-    if user is None:
-        raise get_user_exception()
+	logging.log(logging.INFO, f"Get templates by user id: {user.get('id')}")
 
-    logging.log(logging.INFO, f"Get templates by user id: {user.get('id')}")
+	if user is None:
+		raise get_user_exception()
 
-    templates = session.query(Template) \
-        .filter(Template.owner_id == user.get('id')) \
-        .all()
+	logging.log(logging.INFO, f"Get templates by user id: {user.get('id')}")
 
-    return JSONResponse(status_code=200, content=jsonable_encoder(templates))
+	templates = session.query(Template) \
+		.filter(Template.owner_id == user.get('id')) \
+		.all()
+
+	return JSONResponse(status_code=200, content=jsonable_encoder(templates))
 
 
 @api_router.put("/templates/{template_id}/", tags=["templates"])
-async def update_template(template_id: str, updated_template: TemplateSchema, user: dict = Depends(get_current_user)):
-    if user is None:
-        raise get_user_exception()
+async def update_template(template_id: str, updated_template: TemplateSchema, auth: AuthJWT = Depends()):
+	user = session.query(User) \
+		.filter(User.id == auth.get_jwt_subject()) \
+		.first()
 
-    template = session.query(Template) \
-        .filter(Template.id == template_id) \
-        .filter(Template.owner_id == user.get('id')) \
-        .first()
+	if user is None:
+		raise get_user_exception()
 
-    if template is None:
-        raise not_found_exception("Template not found")
+	template = session.query(Template) \
+		.filter(Template.id == template_id) \
+		.filter(Template.owner_id == user.get('id')) \
+		.first()
 
-    template.client = updated_template.client
-    template.channel = updated_template.channel
-    template.channel_account_alias = updated_template.channel_account_alias
-    template.template_name = updated_template.template_name
-    template.template_description = updated_template.template_description
-    template.division_id = updated_template.division_id
-    session.commit()
+	if template is None:
+		raise not_found_exception("Template not found")
 
-    logging.log(logging.INFO, template)
+	template.client = updated_template.client
+	template.channel = updated_template.channel
+	template.channel_account_alias = updated_template.channel_account_alias
+	template.template_name = updated_template.template_name
+	template.template_description = updated_template.template_description
+	template.division_id = updated_template.division_id
+	session.commit()
 
-    data = jsonable_encoder(updated_template.from_orm(template).dict(exclude_none=True))
+	logging.log(logging.INFO, template)
 
-    logging.log(logging.INFO, data)
-    return JSONResponse(status_code=200, content={"message": "Template updated successfully", "body": data})
+	data = jsonable_encoder(updated_template.from_orm(template).dict(exclude_none=True))
+
+	logging.log(logging.INFO, data)
+	return JSONResponse(status_code=200, content={"message": "Template updated successfully", "body": data})
 
 
 @api_router.delete("/templates/{template_id}/", tags=["templates"])
-async def delete_template(template_id: str, user: dict = Depends(get_current_user)):
-    if user is None:
-        raise get_user_exception()
+async def delete_template(template_id: str, auth: AuthJWT = Depends()):
+	user = session.query(User) \
+		.filter(User.id == auth.get_jwt_subject()) \
+		.first()
 
-    template = session.query(Template) \
-        .filter(Template.id == template_id) \
-        .filter(Template.owner_id == user.get('id')) \
-        .first()
+	if user is None:
+		raise get_user_exception()
 
-    if template is None:
-        raise not_found_exception("Template not found")
+	template = session.query(Template) \
+		.filter(Template.id == template_id) \
+		.filter(Template.owner_id == user.get('id')) \
+		.first()
 
-    session.delete(template)
-    session.commit()
+	if template is None:
+		raise not_found_exception("Template not found")
 
-    return JSONResponse(status_code=200, content={"message": "Template deleted successfully"})
+	session.delete(template)
+	session.commit()
+
+	return JSONResponse(status_code=200, content={"message": "Template deleted successfully"})
 
 
 """ template contents """
@@ -288,109 +295,129 @@ async def delete_template(template_id: str, user: dict = Depends(get_current_use
 
 @api_router.post("/template-contents/", tags=["template-contents"])
 async def create_template_content(created_template_content: Template_ContentSchema,
-                                  user: dict = Depends(get_current_user)):
-    if user is None:
-        raise get_user_exception()
+                                  auth: AuthJWT = Depends()):
+	user = session.query(User) \
+		.filter(User.id == auth.get_jwt_subject()) \
+		.first()
 
-    template = session.query(Template) \
-        .filter(Template.id == created_template_content.template_id) \
-        .first()
+	if user is None:
+		raise get_user_exception()
 
-    if template is None:
-        raise not_found_exception("Template not found")
+	template = session.query(Template) \
+		.filter(Template.id == created_template_content.template_id) \
+		.first()
 
-    payload = jsonable_encoder(created_template_content.payload.dict(exclude_none=True))
-    template_content = Template_Content()
-    template_content.template_id = created_template_content.template_id
-    template_content.parent_id = created_template_content.parent_id
-    template_content.payload = payload
-    template_content.option = created_template_content.option
-    session.add(template_content)
-    session.commit()
+	if template is None:
+		raise not_found_exception("Template not found")
 
-    logging.log(logging.INFO, template_content)
+	payload = jsonable_encoder(created_template_content.payload.dict(exclude_none=True))
+	template_content = Template_Content()
+	template_content.template_id = created_template_content.template_id
+	template_content.parent_id = created_template_content.parent_id
+	template_content.payload = payload
+	template_content.option = created_template_content.option
+	template_content.x = created_template_content.x
+	template_content.y = created_template_content.y
+	session.add(template_content)
+	session.commit()
 
-    data = jsonable_encoder(template_content)
+	logging.log(logging.INFO, template_content)
 
-    logging.log(logging.INFO, f"Create template_content: {data}")
+	data = jsonable_encoder(template_content)
 
-    return JSONResponse(status_code=200, content={"message": "Template content created successfully", "body": data})
+	logging.log(logging.INFO, f"Create template_content: {data}")
+
+	return JSONResponse(status_code=200, content={"message": "Template content created successfully", "body": data})
 
 
 @api_router.get("/template-contents/{template_id}/", tags=["template-contents"])
-async def get_template_contents_by_template_id(template_id: str, user: dict = Depends(get_current_user)):
-    if user is None:
-        raise get_user_exception()
+async def get_template_contents_by_template_id(template_id: str, auth: AuthJWT = Depends()):
+	user = session.query(User) \
+		.filter(User.id == auth.get_jwt_subject()) \
+		.first()
 
-    template = session.query(Template) \
-        .filter(Template.id == template_id) \
-        .filter(Template.owner_id == user.get('id')) \
-        .first()
+	if user is None:
+		raise get_user_exception()
 
-    if template is None:
-        raise not_found_exception("Template not found")
+	template = session.query(Template) \
+		.filter(Template.id == template_id) \
+		.filter(Template.owner_id == user.get('id')) \
+		.first()
 
-    template_contents = session.query(Template_Content) \
-        .filter(Template_Content.template_id == template_id) \
-        .all()
+	if template is None:
+		raise not_found_exception("Template not found")
 
-    if template_contents is None:
-        raise not_found_exception("Template contents not found")
+	template_contents = session.query(Template_Content) \
+		.filter(Template_Content.template_id == template_id) \
+		.all()
 
-    return template_contents
+	if template_contents is None:
+		raise not_found_exception("Template contents not found")
+
+	return template_contents
 
 
 @api_router.put("/template-contents/{template_content_id}/", tags=["template-contents"])
 async def update_template_content(template_content_id: str, updated_template_content: Template_ContentSchema,
-                                  user: dict = Depends(get_current_user)):
-    if user is None:
-        raise get_user_exception()
+                                  auth: AuthJWT = Depends()):
+	user = session.query(User) \
+		.filter(User.id == auth.get_jwt_subject()) \
+		.first()
 
-    template = session.query(Template) \
-        .filter(Template.id == updated_template_content.template_id) \
-        .filter(Template.owner_id == user.get('id')) \
-        .first()
+	if user is None:
+		raise get_user_exception()
 
-    if template is None:
-        raise not_found_exception("Template not found")
+	template = session.query(Template) \
+		.filter(Template.id == updated_template_content.template_id) \
+		.filter(Template.owner_id == user.get('id')) \
+		.first()
 
-    template_content = session.query(Template_Content) \
-        .filter(Template_Content.id == template_content_id) \
-        .first()
+	if template is None:
+		raise not_found_exception("Template not found")
 
-    if template_content is None:
-        raise not_found_exception("Template content not found")
+	template_content = session.query(Template_Content) \
+		.filter(Template_Content.id == template_content_id) \
+		.first()
 
-    payload = jsonable_encoder(updated_template_content.payload)
-    template_content.template_id = updated_template_content.template_id
-    template_content.parent_id = updated_template_content.parent_id
-    template_content.payload = payload
-    template_content.option = updated_template_content.option
-    session.commit()
+	if template_content is None:
+		raise not_found_exception("Template content not found")
 
-    logging.log(logging.INFO, template_content)
+	payload = jsonable_encoder(updated_template_content.payload)
+	template_content.template_id = updated_template_content.template_id
+	template_content.parent_id = updated_template_content.parent_id
+	template_content.payload = payload
+	template_content.option = updated_template_content.option
+	template_content.x = updated_template_content.x
+	template_content.y = updated_template_content.y
+	session.commit()
 
-    data = jsonable_encoder(updated_template_content.from_orm(template_content).dict(exclude_none=True))
+	logging.log(logging.INFO, template_content)
 
-    logging.log(logging.INFO, data)
-    return JSONResponse(status_code=200, content={"message": "Template content updated successfully", "body": data})
+	data = jsonable_encoder(updated_template_content.from_orm(template_content).dict(exclude_none=True))
+
+	logging.log(logging.INFO, data)
+	return JSONResponse(status_code=200, content={"message": "Template content updated successfully", "body": data})
 
 
 @api_router.delete("/template-contents/{template_content_id}/", tags=["template-contents"])
-async def delete_template_content(template_content_id: str, user: dict = Depends(get_current_user)):
-    if user is None:
-        raise get_user_exception()
+async def delete_template_content(template_content_id: str, auth: AuthJWT = Depends()):
+	user = session.query(User) \
+		.filter(User.id == auth.get_jwt_subject()) \
+		.first()
 
-    template_content = session.query(Template_Content) \
-        .filter(Template_Content.id == template_content_id) \
-        .first()
+	if user is None:
+		raise get_user_exception()
 
-    if template_content is None:
-        raise not_found_exception("Template content not found")
+	template_content = session.query(Template_Content) \
+		.filter(Template_Content.id == template_content_id) \
+		.first()
 
-    session.delete(template_content)
-    session.commit()
-    return JSONResponse(status_code=200, content={"message": "Template content deleted successfully"})
+	if template_content is None:
+		raise not_found_exception("Template content not found")
+
+	session.delete(template_content)
+	session.commit()
+	return JSONResponse(status_code=200, content={"message": "Template content deleted successfully"})
 
 
 """ users """
@@ -398,7 +425,7 @@ async def delete_template_content(template_content_id: str, user: dict = Depends
 
 @api_router.get("/users/", tags=["users"], response_model=List[UserSchema])
 async def get_users():
-    users = session.query(User).all()
-    if users is None:
-        raise not_found_exception("Empty users")
-    return JSONResponse(status_code=200, content=jsonable_encoder(users))
+	users = session.query(User).all()
+	if users is None:
+		raise not_found_exception("Empty users")
+	return JSONResponse(status_code=200, content=jsonable_encoder(users))

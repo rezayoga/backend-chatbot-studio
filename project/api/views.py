@@ -78,7 +78,6 @@ def get_config():
 
 redis_connection = Redis(host='localhost', port=6379, db=0, decode_responses=True)
 
-
 # A storage engine to save revoked tokens. in production,
 # you can use Redis for storage system
 denylist = set()

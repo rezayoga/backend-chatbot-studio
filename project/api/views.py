@@ -14,6 +14,7 @@ from project.database import SessionLocal
 from . import api_router
 from .schemas import JWT_Settings as JWT_SettingsSchema
 from .schemas import Template as TemplateSchema
+from .schemas import Template_Update as Template_UpdateSchema
 from .schemas import Template_Content as Template_ContentSchema
 from .schemas import User as UserSchema
 from .schemas import User_Login as User_LoginSchema
@@ -106,7 +107,9 @@ async def login(user: User_LoginSchema, auth: AuthJWT = Depends()):
 	refresh_token = auth.create_refresh_token(subject=user.id)
 	return {
 		"access_token": access_token,
-		"refresh_token": refresh_token
+		"refresh_token": refresh_token,
+		"token_type": "bearer",
+		"expires_in": settings.access_token_expires
 	}
 
 
@@ -231,7 +234,7 @@ async def get_templates_by_user_id(auth: AuthJWT = Depends()):
 
 
 @api_router.put("/templates/{template_id}/", tags=["templates"])
-async def update_template(template_id: str, updated_template: TemplateSchema, auth: AuthJWT = Depends()):
+async def update_template(template_id: str, updated_template: Template_UpdateSchema, auth: AuthJWT = Depends()):
 	auth.jwt_required()
 	user = session.query(User) \
 		.filter(User.id == auth.get_jwt_subject()) \
@@ -249,7 +252,6 @@ async def update_template(template_id: str, updated_template: TemplateSchema, au
 		raise not_found_exception("Template not found")
 
 	template.client = updated_template.client
-	# template.channel = updated_template.channel
 	template.channel_account_alias = updated_template.channel_account_alias
 	template.template_name = updated_template.template_name
 	template.template_description = updated_template.template_description

@@ -237,7 +237,7 @@ class MessageObject(BaseModel):
 	interactive: Optional[InteractiveObject] = None
 	location: Optional[LocationObject] = None
 	messaging_product: Optional[str] = Field(title="messaging_product",
-	                               description="The messaging product to use for this message")
+	                                         description="The messaging product to use for this message")
 	preview_url: Optional[bool] = None
 	recipient_type: Optional[str] = None
 	status: Optional[str] = None
@@ -285,6 +285,17 @@ class User(BaseModel):
 class Template(BaseModel):
 	client: Optional[str] = None
 	channel: constr(min_length=1)
+	channel_account_alias: Optional[str] = None
+	template_name: constr(min_length=1)
+	template_description: constr(min_length=1)
+	division_id: Optional[str] = None
+
+	class Config:
+		orm_mode = True
+
+
+class Template_Update(BaseModel):
+	client: Optional[str] = None
 	channel_account_alias: Optional[str] = None
 	template_name: constr(min_length=1)
 	template_description: constr(min_length=1)

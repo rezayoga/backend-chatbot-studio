@@ -236,7 +236,7 @@ class MessageObject(BaseModel):
 	image: Optional[MediaObject] = None
 	interactive: Optional[InteractiveObject] = None
 	location: Optional[LocationObject] = None
-	messaging_product: str = Field(title="messaging_product",
+	messaging_product: Optional[str] = Field(title="messaging_product",
 	                               description="The messaging product to use for this message")
 	preview_url: Optional[bool] = None
 	recipient_type: Optional[str] = None

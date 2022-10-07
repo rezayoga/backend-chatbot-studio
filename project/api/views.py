@@ -79,6 +79,7 @@ def get_config():
 
 redis_connection = Redis(host='localhost', port=6379, db=0, decode_responses=True)
 
+
 # A storage engine to save revoked tokens. in production,
 # you can use Redis for storage system
 # denylist = set()
@@ -248,7 +249,7 @@ async def update_template(template_id: str, updated_template: TemplateSchema, au
 		raise not_found_exception("Template not found")
 
 	template.client = updated_template.client
-	#template.channel = updated_template.channel
+	# template.channel = updated_template.channel
 	template.channel_account_alias = updated_template.channel_account_alias
 	template.template_name = updated_template.template_name
 	template.template_description = updated_template.template_description

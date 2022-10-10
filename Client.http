@@ -82,13 +82,19 @@ Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "client": "1",
-  "channel": "1",
-  "channel_account_alias": "1",
-  "template_name": "Template 1",
-  "template_description": "Desc Template 1",
-  "division_id": "1?"
+  "client": "4",
+  "channel_account_alias": "4",
+  "template_name": "Template 4",
+  "template_description": "Desc Template 4",
+  "division_id": "4?"
 }
+
+###
+
+GET https://chatbotstudio.rezayogaswara.dev/api/v1/templates/a24bc2a9-9f38-4eb7-858b-94a93d4a2de2/
+accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
 ###
 

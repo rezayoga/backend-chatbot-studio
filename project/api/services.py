@@ -54,6 +54,12 @@ async def get_templates(session: AsyncSession) -> list[Template]:
 	return templates.scalars().all()
 
 
+async def get_template_by_template_id(template_id: int, session: AsyncSession) -> Template:
+	t = session.execute(select(Template).where(Template.id == template_id))
+	template = t.scalars().first()
+	return template
+
+
 def create_template(user_id: int, created_template: TemplateSchema, session: AsyncSession) -> Template:
 	template = Template()
 	template.owner_id = user_id

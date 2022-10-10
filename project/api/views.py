@@ -109,7 +109,7 @@ def check_if_token_in_denylist(decrypted_token):
 @api_router.post("/token/", tags=["auth"])
 async def login(user: User_LoginSchema, auth: AuthJWT = Depends(), session: AsyncSession = Depends(get_session)):
 	# Check if username and password match
-	user = authenticate_user(user.username, user.password, session)
+	user = await authenticate_user(user.username, user.password, session)
 	if not user:
 		raise incorrect_request_exception("Incorrect username or password")
 

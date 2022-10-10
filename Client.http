@@ -133,10 +133,10 @@ Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "client": "qcs",
-  "channel": "qcs",
-  "channel_account_alias": "qcs",
-  "template_name": "Template qcs",
-  "template_description": "Desc Template qcs",
-  "division_id": "qcs?"
+  "client": "iecs",
+  "channel": "iecs",
+  "channel_account_alias": "iecs",
+  "template_name": "Template iecs",
+  "template_description": "Desc Template iecs",
+  "division_id": "iecs?"
 }

@@ -159,9 +159,11 @@ async def create_template(created_template: TemplateSchema, auth: AuthJWT = Depe
                           session: AsyncSession = Depends(get_session)):
 	auth.jwt_required()
 	user = await services.auth_user_by_user_id(auth.get_jwt_subject(), session)
+
 	if user is None:
 		raise get_user_exception()
-	template = services.create_template(created_template, session)
+
+	template = services.create_template(user.id, created_template, session)
 	try:
 		await session.commit()
 		return JSONResponse(status_code=200, content={"message": "Template created successfully", \

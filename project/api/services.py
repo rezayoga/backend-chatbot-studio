@@ -48,8 +48,9 @@ def create_user(created_user: UserSchema, session: AsyncSession) -> User:
 	return user
 
 
-def create_template(created_template: TemplateSchema, session: AsyncSession) -> Template:
+def create_template(user_id: int, created_template: TemplateSchema, session: AsyncSession) -> Template:
 	template = Template()
+	template.owner_id = user_id
 	template.client = created_template.client
 	template.channel = created_template.channel
 	template.channel_account_alias = created_template.channel_account_alias

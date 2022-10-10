@@ -24,6 +24,14 @@ async def auth_user(username: str, password: str, session: AsyncSession) -> User
 	return user
 
 
+async def auth_user_by_user_id(user_id: int, session: AsyncSession) -> User:
+	u = await session.execute(select(User).where(User.id == user_id))
+	user = u.scalars().first()
+	if not user:
+		return False
+	return user
+
+
 async def get_users(session: AsyncSession) -> list[User]:
 	users = await session.execute(select(User))
 	return users.scalars().all()
@@ -38,6 +46,18 @@ def create_user(created_user: UserSchema, session: AsyncSession) -> User:
 	user.is_active = True
 	session.add(user)
 	return user
+
+
+def create_template(created_template: Template, session: AsyncSession) -> Template:
+	template = Template()
+	template.client = created_template.client
+	template.channel = created_template.channel
+	template.channel_account_alias = created_template.channel_account_alias
+	template.template_name = created_template.template_name
+	template.template_description = created_template.template_description
+	template.division_id = created_template.division_id
+	session.add(template)
+	return template
 
 
 async def get_templates(session: AsyncSession) -> list[Template]:

@@ -150,38 +150,25 @@ async def create_user(created_user: UserSchema, session: AsyncSession = Depends(
 		await session.rollback()
 		raise incorrect_request_exception("Username already exists")
 
-#
-# """ templates """
-#
-#
-# @api_router.post("/templates/", tags=["templates"])
-# async def create_template(created_template: TemplateSchema, auth: AuthJWT = Depends()):
-# 	auth.jwt_required()
-# 	user = session.query(User) \
-# 		.filter(User.id == auth.get_jwt_subject()) \
-# 		.first()
-#
-# 	if user is None:
-# 		raise get_user_exception()
-#
-# 	template = Template()
-# 	template.client = created_template.client
-# 	template.channel = created_template.channel
-# 	template.channel_account_alias = created_template.channel_account_alias
-# 	template.template_name = created_template.template_name
-# 	template.template_description = created_template.template_description
-# 	template.division_id = created_template.division_id
-# 	template.owner_id = auth.get_jwt_subject()
-# 	session.add(template)
-# 	session.commit()
-#
-# 	logging.log(logging.INFO, template)
-#
-# 	data = jsonable_encoder(template)
-#
-# 	logging.log(logging.INFO, data)
-# 	return JSONResponse(status_code=200, content={"message": "Template created successfully", "body": data})
-#
+
+""" templates """
+
+
+@api_router.post("/templates/", tags=["templates"])
+async def create_template(created_template: TemplateSchema, auth: AuthJWT = Depends(),
+                          session: AsyncSession = Depends(get_session)):
+	auth.jwt_required()
+	user = await services.get_user(auth.get_jwt_subject())
+	if user is None:
+		raise get_user_exception()
+	template = services.create_template(created_template, user)
+	try:
+		await session.commit()
+		return JSONResponse(status_code=200, content={"message": "Template created successfully", "body": template})
+	except IntegrityError as ex:
+		await session.rollback()
+		raise incorrect_request_exception("Template already exists")
+
 #
 # @api_router.get("/templates/{template_id}/", tags=["templates"])
 # async def get_template_by_template_id(template_id: str, auth: AuthJWT = Depends()):

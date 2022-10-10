@@ -24,8 +24,8 @@ Content-Type: application/json
 
 {
   "username": "y",
-  "hashed_password": "y",
   "name": "Y",
+  "password": "y",
   "email": "reza.yoga@icloud.com",
   "is_active": true
 }

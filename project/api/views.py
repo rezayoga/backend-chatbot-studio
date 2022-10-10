@@ -142,7 +142,7 @@ async def get_users(session: AsyncSession = Depends(get_session)):
 
 @api_router.post("/users/", tags=["auth"])
 async def create_user(created_user: UserSchema, session: AsyncSession = Depends(get_session)):
-	user = await services.create_user(created_user, session)
+	user = services.create_user(created_user, session)
 	try:
 		await session.commit()
 		return user

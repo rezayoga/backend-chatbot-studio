@@ -16,11 +16,8 @@ def verify_password(plain_password, hashed_password):
 
 async def authenticate_user(username: str, password: str, session: AsyncSession) -> User:
 	user = await session.execute(select(User).where(User.username == username))
-
 	u = user.scalars().first()
-
-	logging.log(logging.INFO, user)
-	if not user:
+	if not u:
 		return False
 	if not verify_password(password, u.hashed_password):
 		return False

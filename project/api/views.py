@@ -8,9 +8,11 @@ from fastapi_jwt_auth import AuthJWT
 from passlib.handlers.bcrypt import bcrypt
 from redis import Redis
 from sqlalchemy import and_
+from sqlalchemy.ext.asyncio import AsyncSession, async_session
 
 from project.api.models import *
 from project.database import SessionLocal
+from project.api.services import *
 from . import api_router
 from .schemas import JWT_Settings as JWT_SettingsSchema
 from .schemas import Template as TemplateSchema
@@ -25,6 +27,10 @@ settings = JWT_SettingsSchema()
 
 """ Exception Handler """
 
+# Dependency
+async def get_session() -> AsyncSession:
+    async with async_session() as session:
+        yield session
 
 def not_found_exception(message: str):
 	not_found_exception_response = HTTPException(
@@ -54,23 +60,23 @@ def get_user_exception():
 """ auth """
 
 
-def get_password_hash(password: str):
-	return bcrypt.hash(password)
-
-
-def verify_password(plain_password, hashed_password):
-	return bcrypt.verify(plain_password, hashed_password)
-
-
-def authenticate_user(username: str, password: str):
-	user = session.query(User) \
-		.filter(User.username == username) \
-		.first()
-	if not user:
-		return False
-	if not verify_password(password, user.hashed_password):
-		return False
-	return user
+# def get_password_hash(password: str):
+# 	return bcrypt.hash(password)
+#
+#
+# def verify_password(plain_password, hashed_password):
+# 	return bcrypt.verify(plain_password, hashed_password)
+#
+#
+# def authenticate_user(username: str, password: str):
+# 	user = session.query(User) \
+# 		.filter(User.username == username) \
+# 		.first()
+# 	if not user:
+# 		return False
+# 	if not verify_password(password, user.hashed_password):
+# 		return False
+# 	return user
 
 
 @AuthJWT.load_config
@@ -103,6 +109,7 @@ async def login(user: User_LoginSchema, auth: AuthJWT = Depends()):
 	user = authenticate_user(user.username, user.password)
 	if not user:
 		raise incorrect_request_exception("Incorrect username or password")
+
 	access_token = auth.create_access_token(subject=user.id)
 	refresh_token = auth.create_refresh_token(subject=user.id)
 	return {
@@ -256,7 +263,7 @@ async def update_template(template_id: str, updated_template: Template_UpdateSch
 	template.template_name = updated_template.template_name
 	template.template_description = updated_template.template_description
 	template.division_id = updated_template.division_id
-	await session.commit()
+	session.commit()
 	logging.log(logging.INFO, template)
 	data = jsonable_encoder(updated_template.from_orm(template).dict(exclude_none=True))
 	logging.log(logging.INFO, data)

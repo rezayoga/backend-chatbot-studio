@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from .models import *
 from passlib.handlers.bcrypt import bcrypt
-from .schemas import User as UserSchema
+from .schemas import User as UserSchema, Template as TemplateSchema, Template_Content as Template_ContentSchema
 
 
 def get_password_hash(password: str):
@@ -48,7 +48,7 @@ def create_user(created_user: UserSchema, session: AsyncSession) -> User:
 	return user
 
 
-def create_template(created_template: Template, session: AsyncSession) -> Template:
+def create_template(created_template: TemplateSchema, session: AsyncSession) -> Template:
 	template = Template()
 	template.client = created_template.client
 	template.channel = created_template.channel

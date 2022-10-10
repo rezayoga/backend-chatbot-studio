@@ -3,7 +3,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from .models import *
 from passlib.handlers.bcrypt import bcrypt
-from .schemas import User as UserSchema, Template as TemplateSchema, Template_Content as Template_ContentSchema
+from .schemas import User as UserSchema, Template as TemplateSchema, Template_Update as Template_UpdateSchema, \
+	Template_Content as Template_ContentSchema
 
 
 def get_password_hash(password: str):
@@ -66,7 +67,7 @@ def create_template(user_id: int, created_template: TemplateSchema, session: Asy
 	return template
 
 
-async def update_template(user_id: int, template_id: int, updated_template: TemplateSchema,
+async def update_template(user_id: int, template_id: int, updated_template: Template_UpdateSchema,
                           session: AsyncSession) -> Template:
 	t = await session.execute(select(Template).where(Template.id == template_id).where(Template.owner_id == user_id))
 	template = t.scalars().first()
@@ -74,7 +75,6 @@ async def update_template(user_id: int, template_id: int, updated_template: Temp
 	if not template:
 		return False
 
-	template.channel = updated_template.channel
 	template.client = updated_template.client
 	template.channel_account_alias = updated_template.channel_account_alias
 	template.template_name = updated_template.template_name

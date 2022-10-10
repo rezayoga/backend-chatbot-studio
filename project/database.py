@@ -11,7 +11,7 @@ engine = create_async_engine(
     settings.DATABASE_URL, connect_args=settings.DATABASE_CONNECT_DICT, echo=True
 )
 Base = declarative_base()
-SessionLocal = sessionmaker(
+async_session = sessionmaker(
     engine, class_=AsyncSession, expire_on_commit=False
 )
 

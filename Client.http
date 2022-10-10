@@ -56,19 +56,19 @@ Content-Type: application/json
 
 ###
 
-PUT https://chatbotstudio.rezayogaswara.dev/api/v1/templates/7d35a93d-7900-4465-b561-349bac978422/
-accept: application/json
-Content-Type: application/json
-Authorization: Bearer {{access_token}}
-
-{
-  "client": "y1",
-  "channel": "y1",
-  "channel_account_alias": "y1",
-  "template_name": "Template y1",
-  "template_description": "Desc Template y1",
-  "division_id": "y1?"
-}
+#PUT https://chatbotstudio.rezayogaswara.dev/api/v1/templates/7d35a93d-7900-4465-b561-349bac978422/
+#accept: application/json
+#Content-Type: application/json
+#Authorization: Bearer {{access_token}}
+#
+#{
+#  "client": "y1",
+#  "channel": "y1",
+#  "channel_account_alias": "y1",
+#  "template_name": "Template y1",
+#  "template_description": "Desc Template y1",
+#  "division_id": "y1?"
+#}
 
 ###
 

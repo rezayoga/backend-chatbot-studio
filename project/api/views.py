@@ -8,10 +8,10 @@ from fastapi_jwt_auth import AuthJWT
 from passlib.handlers.bcrypt import bcrypt
 from redis import Redis
 from sqlalchemy import and_
-from sqlalchemy.ext.asyncio import AsyncSession, async_session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from project.api.models import *
-from project.database import SessionLocal
+# from project.database import SessionLocal
 from project.api.services import *
 from . import api_router
 from .schemas import JWT_Settings as JWT_SettingsSchema
@@ -20,6 +20,7 @@ from .schemas import Template_Update as Template_UpdateSchema
 from .schemas import Template_Content as Template_ContentSchema
 from .schemas import User as UserSchema
 from .schemas import User_Login as User_LoginSchema
+from ..database import async_session
 
 logger = logging.getLogger(__name__)
 # session = SessionLocal()

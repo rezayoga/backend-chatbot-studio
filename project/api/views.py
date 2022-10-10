@@ -232,7 +232,7 @@ async def update_template(template_id: str, updated_template: Template_UpdateSch
 	if user is None:
 		raise get_user_exception()
 
-	template = services.update_template(user.id, template_id, updated_template, session)
+	template = await services.update_template(user.id, template_id, updated_template, session)
 
 	try:
 		await session.commit()

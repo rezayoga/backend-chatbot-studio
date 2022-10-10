@@ -15,13 +15,16 @@ def verify_password(plain_password, hashed_password):
 
 
 async def authenticate_user(username: str, password: str, session: AsyncSession) -> User:
-	user = await session.execute(select(User).filter(User.username == username))
+	user = await session.execute(select(User).where(User.username == username))
+
+	u = user.scalars().first()
+
 	logging.log(logging.INFO, user)
 	if not user:
 		return False
-	if not verify_password(password, user.hashed_password):
+	if not verify_password(password, u.hashed_password):
 		return False
-	return user
+	return u
 
 
 async def get_users(session: AsyncSession) -> list[User]:

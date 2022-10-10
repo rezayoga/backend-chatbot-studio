@@ -83,11 +83,11 @@ Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "client": "vsjte",
-  "channel_account_alias": "vsjte",
-  "template_name": "Template vsjte",
-  "template_description": "Desc Template vsjte",
-  "division_id": "vsjte?"
+  "client": "iuy",
+  "channel_account_alias": "iuy",
+  "template_name": "Template iuy",
+  "template_description": "Desc Template iuy",
+  "division_id": "iuy?"
 }
 
 ###

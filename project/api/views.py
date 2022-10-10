@@ -158,7 +158,7 @@ async def create_user(created_user: UserSchema, session: AsyncSession = Depends(
 async def create_template(created_template: TemplateSchema, auth: AuthJWT = Depends(),
                           session: AsyncSession = Depends(get_session)):
 	auth.jwt_required()
-	user = await services.auth_user_by_user_id(auth.get_jwt_subject())
+	user = await services.auth_user_by_user_id(auth.get_jwt_subject(), session)
 	if user is None:
 		raise get_user_exception()
 	template = services.create_template(created_template, user)

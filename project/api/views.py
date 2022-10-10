@@ -12,7 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from project.api.models import *
 # from project.database import SessionLocal
-from project.api.services import *
+from project.api import services
 from . import api_router
 from .schemas import JWT_Settings as JWT_SettingsSchema
 from .schemas import Template as TemplateSchema
@@ -71,7 +71,7 @@ def get_user_exception():
 # 	return bcrypt.verify(plain_password, hashed_password)
 #
 #
-# def service_user_auth(username: str, password: str):
+# def auth_user(username: str, password: str):
 # 	user = session.query(User) \
 # 		.filter(User.username == username) \
 # 		.first()
@@ -135,7 +135,7 @@ async def refresh_revoke(auth: AuthJWT = Depends()):
 @api_router.post("/token/", tags=["auth"])
 async def login(user: User_LoginSchema, auth: AuthJWT = Depends(), session: AsyncSession = Depends(get_session)):
 	# Check if username and password match
-	user = await service_user_auth(user.username, user.password, session)
+	user = await services.auth_user(user.username, user.password, session)
 	if not user:
 		raise incorrect_request_exception("Incorrect username or password")
 
@@ -153,8 +153,8 @@ async def login(user: User_LoginSchema, auth: AuthJWT = Depends(), session: Asyn
 
 
 @api_router.get("/users/", tags=["users"])
-async def service_get_users(session: AsyncSession = Depends(get_session)):
-	users = await service_get_users(session)
+async def get_users(session: AsyncSession = Depends(get_session)):
+	users = await services.get_users(session)
 	return users
 
 #

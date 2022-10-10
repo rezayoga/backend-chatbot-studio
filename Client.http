@@ -5,7 +5,7 @@ Content-Type: application/json
 
 {
   "username": "reza",
-  "password": "rezad"
+  "password": "reza"
 }
 
 > {% client.global.set("access_token", response.body.access_token); %}

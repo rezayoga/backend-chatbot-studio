@@ -14,7 +14,7 @@ def verify_password(plain_password, hashed_password):
 	return bcrypt.verify(plain_password, hashed_password)
 
 
-async def service_user_auth(username: str, password: str, session: AsyncSession) -> User:
+async def auth_user(username: str, password: str, session: AsyncSession) -> User:
 	u = await session.execute(select(User).where(User.username == username))
 	user = u.scalars().first()
 	if not user:
@@ -24,7 +24,7 @@ async def service_user_auth(username: str, password: str, session: AsyncSession)
 	return user
 
 
-async def service_get_users(session: AsyncSession) -> list[User]:
+async def get_users(session: AsyncSession) -> list[User]:
 	users = await session.execute(select(User)).scalars().all()
 	return users
 

@@ -1,5 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+import logging
+
 from .models import *
 from passlib.handlers.bcrypt import bcrypt
 
@@ -13,9 +15,8 @@ def verify_password(plain_password, hashed_password):
 
 
 async def authenticate_user(username: str, password: str, session: AsyncSession) -> User:
-	user = await session.query(User) \
-		.filter(User.username == username) \
-		.first()
+	user = await session.execute(select(User).filter(User.username == username)).scalar().all()
+	logging.log(logging.INFO, user)
 	if not user:
 		return False
 	if not verify_password(password, user.hashed_password):

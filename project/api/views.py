@@ -170,7 +170,7 @@ async def create_template(created_template: TemplateSchema, auth: AuthJWT = Depe
 		                                              "body": jsonable_encoder(template)})
 	except IntegrityError as ex:
 		await session.rollback()
-		raise incorrect_request_exception("Failed to create template")
+		raise incorrect_request_exception("Incorrect request")
 
 
 #
@@ -240,7 +240,7 @@ async def update_template(template_id: str, updated_template: Template_UpdateSch
 		                                              "body": jsonable_encoder(template)})
 	except IntegrityError as ex:
 		await session.rollback()
-		raise incorrect_request_exception("Failed to update template")
+		raise incorrect_request_exception("Incorrect request")
 
 #
 # @api_router.delete("/templates/{template_id}/", tags=["templates"])

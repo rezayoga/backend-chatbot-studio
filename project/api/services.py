@@ -74,6 +74,7 @@ async def update_template(user_id: int, template_id: int, updated_template: Temp
 	if not template:
 		return False
 
+	template.channel = updated_template.channel
 	template.client = updated_template.client
 	template.channel_account_alias = updated_template.channel_account_alias
 	template.template_name = updated_template.template_name

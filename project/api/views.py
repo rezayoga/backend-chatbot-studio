@@ -174,7 +174,7 @@ async def create_template(created_template: TemplateSchema, auth: AuthJWT = Depe
 
 
 @api_router.get("/templates/{template_id}/", tags=["templates"])
-async def get_template_by_template_id(template_id: int, auth: AuthJWT = Depends(),
+async def get_template_by_template_id(template_id: str, auth: AuthJWT = Depends(),
                                       session: AsyncSession = Depends(get_session)):
 	auth.jwt_required()
 	user = await services.auth_user_by_user_id(auth.get_jwt_subject(), session)

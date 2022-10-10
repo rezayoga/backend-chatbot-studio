@@ -306,7 +306,6 @@ class User(BaseModel):
 		orm_mode = True
 
 
-
 class Template(BaseModel):
 	client: Optional[str] = None
 	channel: constr(min_length=1)
@@ -314,6 +313,7 @@ class Template(BaseModel):
 	template_name: constr(min_length=1)
 	template_description: constr(min_length=1)
 	division_id: Optional[str] = None
+	is_deleted: Optional[bool] = False
 
 	class Config:
 		orm_mode = True
@@ -325,6 +325,7 @@ class Template_Update(BaseModel):
 	template_name: constr(min_length=1)
 	template_description: constr(min_length=1)
 	division_id: Optional[str] = None
+	is_deleted: Optional[bool] = False
 
 	class Config:
 		orm_mode = True
@@ -340,6 +341,7 @@ class Template_Content(BaseModel):
 	y: Optional[int] = 0
 	option_label: Optional[str] = None
 	option_position: Optional[str] = None
+	is_deleted: Optional[bool] = False
 
 	class Config:
 		orm_mode = True

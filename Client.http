@@ -12,11 +12,11 @@ Content-Type: application/json
 
 
 ####
-#
-#GET https://chatbotstudio.rezayogaswara.dev/api/v1/users/
-#accept: application/json
-#Content-Type: application/json
-#
+
+GET https://chatbotstudio.rezayogaswara.dev/api/v1/users/
+accept: application/json
+Content-Type: application/json
+
 ####
 #
 #POST https://chatbotstudio.rezayogaswara.dev/api/v1/users/
@@ -33,10 +33,10 @@ Content-Type: application/json
 
 ###
 
-#GET https://chatbotstudio.rezayogaswara.dev/api/v1/templates/5ae749fb-a61e-4747-ba9d-f5400a826829/
-#accept: application/json
-#Content-Type: application/json
-#Authorization: Bearer {{access_token}}
+GET https://chatbotstudio.rezayogaswara.dev/api/v1/templates/5ae749fb-a61e-4747-ba9d-f5400a826829/
+accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
 ###
 #
@@ -83,11 +83,11 @@ Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "client": "823",
-  "channel_account_alias": "823",
-  "template_name": "Template 823",
-  "template_description": "Desc Template 823",
-  "division_id": "823?"
+  "client": "vsjte",
+  "channel_account_alias": "vsjte",
+  "template_name": "Template vsjte",
+  "template_description": "Desc Template vsjte",
+  "division_id": "vsjte?"
 }
 
 ###

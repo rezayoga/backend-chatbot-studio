@@ -12,6 +12,9 @@ class NameObject(BaseModel):
 	suffix: Optional[str] = None
 	prefix: Optional[str] = None
 
+	class Config:
+		orm_mode = True
+
 
 class AddressObject(BaseModel):
 	street_address: Optional[str] = None
@@ -22,10 +25,16 @@ class AddressObject(BaseModel):
 	country_code: Optional[str] = None
 	type: Optional[str] = None
 
+	class Config:
+		orm_mode = True
+
 
 class EmailObject(BaseModel):
 	email: Optional[str] = None
 	type: Optional[str] = None
+
+	class Config:
+		orm_mode = True
 
 
 class OrgObject(BaseModel):
@@ -33,16 +42,25 @@ class OrgObject(BaseModel):
 	department: Optional[str] = None
 	company: Optional[str] = None
 
+	class Config:
+		orm_mode = True
+
 
 class PhoneObject(BaseModel):
 	phone: Optional[str] = None
 	type: Optional[str] = None
 	wa_id: Optional[str] = None
 
+	class Config:
+		orm_mode = True
+
 
 class UrlObject(BaseModel):
 	url: Optional[str] = None
 	type: Optional[str] = None
+
+	class Config:
+		orm_mode = True
 
 
 class ContactObject(BaseModel):
@@ -115,6 +133,9 @@ class SectionObject(BaseModel):
 	product_items: Optional[List[ProductObject]] = None
 	rows: Optional[List[RowObject]] = None
 	title: Optional[str] = None
+
+	class Config:
+		orm_mode = True
 
 
 class ActionObject(BaseModel):
@@ -197,6 +218,9 @@ class ButtonParameterObject(BaseModel):
 	type: str = Field(title="type", description="The type of the button parameter")
 	payload: Optional[str] = None
 	text: Optional[str] = None
+
+	class Config:
+		orm_mode = True
 
 
 class ComponentsObject(BaseModel):

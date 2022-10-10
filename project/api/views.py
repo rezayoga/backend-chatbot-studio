@@ -256,7 +256,7 @@ async def update_template(template_id: str, updated_template: Template_UpdateSch
 	template.template_name = updated_template.template_name
 	template.template_description = updated_template.template_description
 	template.division_id = updated_template.division_id
-	session.commit()
+	await session.commit()
 	logging.log(logging.INFO, template)
 	data = jsonable_encoder(updated_template.from_orm(template).dict(exclude_none=True))
 	logging.log(logging.INFO, data)

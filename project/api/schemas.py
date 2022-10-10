@@ -306,6 +306,7 @@ class User(BaseModel):
 		orm_mode = True
 
 
+
 class Template(BaseModel):
 	client: Optional[str] = None
 	channel: constr(min_length=1)

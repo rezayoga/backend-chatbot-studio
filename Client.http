@@ -76,19 +76,19 @@ Content-Type: application/json
 
 ###
 
-#PUT https://chatbotstudio.rezayogaswara.dev/api/v1/templates/7d35a93d-7900-4465-b561-349bac978422/
-#accept: application/json
-#Content-Type: application/json
-#Authorization: Bearer {{access_token}}
-#
-#{
-#  "client": "y1",
-#  "channel": "y1",
-#  "channel_account_alias": "y1",
-#  "template_name": "Template y1",
-#  "template_description": "Desc Template y1",
-#  "division_id": "y1?"
-#}
+PUT https://chatbotstudio.rezayogaswara.dev/api/v1/templates/888567fc-2f83-46f2-82b6-7917f9a2c0c3/
+accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "client": "1",
+  "channel": "1",
+  "channel_account_alias": "1",
+  "template_name": "Template 1",
+  "template_description": "Desc Template 1",
+  "division_id": "1?"
+}
 
 ###
 
@@ -127,16 +127,16 @@ Content-Type: application/json
 
 ###
 
-POST https://chatbotstudio.rezayogaswara.dev/api/v1/templates/
-accept: application/json
-Content-Type: application/json
-Authorization: Bearer {{access_token}}
-
-{
-  "client": "iecs",
-  "channel": "iecs",
-  "channel_account_alias": "iecs",
-  "template_name": "Template iecs",
-  "template_description": "Desc Template iecs",
-  "division_id": "iecs?"
-}
+#POST https://chatbotstudio.rezayogaswara.dev/api/v1/templates/
+#accept: application/json
+#Content-Type: application/json
+#Authorization: Bearer {{access_token}}
+#
+#{
+#  "client": "wqgv",
+#  "channel": "wqgv",
+#  "channel_account_alias": "wqgv",
+#  "template_name": "Template wqgv",
+#  "template_description": "Desc Template wqgv",
+#  "division_id": "wqgv?"
+#}

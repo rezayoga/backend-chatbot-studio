@@ -170,7 +170,8 @@ async def create_template(created_template: TemplateSchema, auth: AuthJWT = Depe
 		                                              "body": jsonable_encoder(template)})
 	except IntegrityError as ex:
 		await session.rollback()
-		raise incorrect_request_exception("Template already exists")
+		raise incorrect_request_exception("Failed to create template")
+
 
 #
 # @api_router.get("/templates/{template_id}/", tags=["templates"])
@@ -222,35 +223,25 @@ async def create_template(created_template: TemplateSchema, auth: AuthJWT = Depe
 # 	return JSONResponse(status_code=200, content=jsonable_encoder(templates))
 #
 #
-# @api_router.put("/templates/{template_id}/", tags=["templates"])
-# async def update_template(template_id: str, updated_template: Template_UpdateSchema, auth: AuthJWT = Depends()):
-# 	auth.jwt_required()
-# 	user = session.query(User) \
-# 		.filter(User.id == auth.get_jwt_subject()) \
-# 		.first()
-#
-# 	if user is None:
-# 		raise get_user_exception()
-#
-# 	template = session.query(Template) \
-# 		.filter(Template.id == template_id) \
-# 		.filter(Template.owner_id == auth.get_jwt_subject()) \
-# 		.first()
-#
-# 	if template is None:
-# 		raise not_found_exception("Template not found")
-#
-# 	template.client = updated_template.client
-# 	template.channel_account_alias = updated_template.channel_account_alias
-# 	template.template_name = updated_template.template_name
-# 	template.template_description = updated_template.template_description
-# 	template.division_id = updated_template.division_id
-# 	session.commit()
-# 	logging.log(logging.INFO, template)
-# 	data = jsonable_encoder(updated_template.from_orm(template).dict(exclude_none=True))
-# 	logging.log(logging.INFO, data)
-# 	return JSONResponse(status_code=200, content={"message": "Template updated successfully", "body": data})
-#
+@api_router.put("/templates/{template_id}/", tags=["templates"])
+async def update_template(template_id: str, updated_template: Template_UpdateSchema, auth: AuthJWT = Depends(),
+                          session: AsyncSession = Depends(get_session)):
+	auth.jwt_required()
+	user = await services.auth_user_by_user_id(auth.get_jwt_subject(), session)
+
+	if user is None:
+		raise get_user_exception()
+
+	template = services.update_template(user.id, template_id, updated_template, session)
+
+	try:
+		await session.commit()
+		return JSONResponse(status_code=200, content={"message": "Template updated successfully", \
+		                                              "body": jsonable_encoder(template)})
+	except IntegrityError as ex:
+		await session.rollback()
+		raise incorrect_request_exception("Failed to update template")
+
 #
 # @api_router.delete("/templates/{template_id}/", tags=["templates"])
 # async def delete_template(template_id: str, auth: AuthJWT = Depends()):

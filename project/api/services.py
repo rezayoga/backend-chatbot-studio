@@ -48,6 +48,11 @@ def create_user(created_user: UserSchema, session: AsyncSession) -> User:
 	return user
 
 
+async def get_templates(session: AsyncSession) -> list[Template]:
+	templates = await session.execute(select(User))
+	return templates.scalars().all()
+
+
 def create_template(user_id: int, created_template: TemplateSchema, session: AsyncSession) -> Template:
 	template = Template()
 	template.owner_id = user_id
@@ -61,9 +66,21 @@ def create_template(user_id: int, created_template: TemplateSchema, session: Asy
 	return template
 
 
-async def get_templates(session: AsyncSession) -> list[Template]:
-	templates = await session.execute(select(User))
-	return templates.scalars().all()
+def update_template(user_id: int, template_id: int, updated_template: TemplateSchema,
+                    session: AsyncSession) -> Template:
+	t = session.execute(select(Template).where(Template.id == template_id).and_(Template.owner_id == user_id))
+	template = t.scalars().first()
+
+	if not template:
+		return False
+
+	template.client = updated_template.client
+	template.channel_account_alias = updated_template.channel_account_alias
+	template.template_name = updated_template.template_name
+	template.template_description = updated_template.template_description
+	template.division_id = updated_template.division_id
+	session.add(template)
+	return template
 
 
 async def get_template_contents(session: AsyncSession) -> list[Template_Content]:

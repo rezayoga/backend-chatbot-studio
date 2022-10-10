@@ -152,12 +152,10 @@ async def login(user: User_LoginSchema, auth: AuthJWT = Depends(), session: Asyn
 """ users """
 
 
-@api_router.get("/users/", tags=["users"], response_model=List[UserSchema])
+@api_router.get("/users/", tags=["users"])
 async def service_get_users(session: AsyncSession = Depends(get_session)):
 	users = await service_get_users(session)
-	if users is None:
-		raise not_found_exception("Empty users")
-	return JSONResponse(status_code=200, content=jsonable_encoder(users))
+	return users
 
 #
 # @api_router.post("/users/", tags=["auth"])

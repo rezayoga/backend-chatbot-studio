@@ -1,24 +1,19 @@
 import logging
-from typing import List
 
 from fastapi import HTTPException, Depends
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from fastapi_jwt_auth import AuthJWT
-from passlib.handlers.bcrypt import bcrypt
 from redis import Redis
-from sqlalchemy import and_
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from project.api.models import *
 # from project.database import SessionLocal
-from project.api import services
+from project.api import dal
 from . import api_router
 from .schemas import JWT_Settings as JWT_SettingsSchema
 from .schemas import Template as TemplateSchema
 from .schemas import Template_Update as Template_UpdateSchema
-from .schemas import Template_Content as Template_ContentSchema
 from .schemas import User as UserSchema
 from .schemas import User_Login as User_LoginSchema
 from ..database import get_session
@@ -114,7 +109,7 @@ async def refresh_revoke(auth: AuthJWT = Depends()):
 @api_router.post("/token/", tags=["auth"])
 async def login(user: User_LoginSchema, auth: AuthJWT = Depends(), session: AsyncSession = Depends(get_session)):
 	# Check if username and password match
-	user = await services.auth_user(user.username, user.password, session)
+	user = await dal.auth_user(user.username, user.password, session)
 	if not user:
 		raise incorrect_request_exception("Incorrect username or password")
 
@@ -133,13 +128,13 @@ async def login(user: User_LoginSchema, auth: AuthJWT = Depends(), session: Asyn
 
 @api_router.get("/users/", tags=["users"])
 async def get_users(session: AsyncSession = Depends(get_session)):
-	users = await services.get_users(session)
+	users = await dal.get_users(session)
 	return users
 
 
 @api_router.post("/users/", tags=["auth"])
 async def create_user(created_user: UserSchema, session: AsyncSession = Depends(get_session)):
-	user = services.create_user(created_user, session)
+	user = dal.create_user(created_user, session)
 	try:
 		await session.commit()
 		return user
@@ -155,12 +150,12 @@ async def create_user(created_user: UserSchema, session: AsyncSession = Depends(
 async def create_template(created_template: TemplateSchema, auth: AuthJWT = Depends(),
                           session: AsyncSession = Depends(get_session)):
 	auth.jwt_required()
-	user = await services.auth_user_by_user_id(auth.get_jwt_subject(), session)
+	user = await dal.auth_user_by_user_id(auth.get_jwt_subject(), session)
 
 	if user is None:
 		raise get_user_exception()
 
-	template = services.create_template(user.id, created_template, session)
+	template = dal.create_template(user.id, created_template, session)
 	try:
 		await session.commit()
 		return JSONResponse(status_code=200, content={"message": "Template created successfully", \
@@ -174,12 +169,12 @@ async def create_template(created_template: TemplateSchema, auth: AuthJWT = Depe
 async def get_template_by_template_id(template_id: str, auth: AuthJWT = Depends(),
                                       session: AsyncSession = Depends(get_session)):
 	auth.jwt_required()
-	user = await services.auth_user_by_user_id(auth.get_jwt_subject(), session)
+	user = await dal.auth_user_by_user_id(auth.get_jwt_subject(), session)
 
 	if user is None:
 		raise get_user_exception()
 
-	template = await services.get_template_by_template_id(template_id, session)
+	template = await dal.get_template_by_template_id(template_id, session)
 
 	if template is None:
 		raise not_found_exception("Template not found")
@@ -219,12 +214,12 @@ async def get_template_by_template_id(template_id: str, auth: AuthJWT = Depends(
 async def update_template(template_id: str, updated_template: Template_UpdateSchema, auth: AuthJWT = Depends(),
                           session: AsyncSession = Depends(get_session)):
 	auth.jwt_required()
-	user = await services.auth_user_by_user_id(auth.get_jwt_subject(), session)
+	user = await dal.auth_user_by_user_id(auth.get_jwt_subject(), session)
 
 	if user is None:
 		raise get_user_exception()
 
-	template = await services.update_template(user.id, template_id, updated_template, session)
+	template = await dal.update_template(user.id, template_id, updated_template, session)
 
 	if template is None:
 		raise not_found_exception("Template not found")

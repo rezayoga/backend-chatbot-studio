@@ -7,6 +7,10 @@ from .schemas import User as UserSchema, Template as TemplateSchema, Template_Up
 	Template_Content as Template_ContentSchema
 
 
+###
+# Data Access Layer (DAL) for all service endpoints
+###
+
 def get_password_hash(password: str):
 	return bcrypt.hash(password)
 

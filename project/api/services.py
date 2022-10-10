@@ -68,7 +68,7 @@ def create_template(user_id: int, created_template: TemplateSchema, session: Asy
 
 def update_template(user_id: int, template_id: int, updated_template: TemplateSchema,
                     session: AsyncSession) -> Template:
-	t = session.execute(select(Template).where(Template.id == template_id).where(Template.owner_id == user_id))
+	t = await session.execute(select(Template).where(Template.id == template_id).where(Template.owner_id == user_id))
 	template = t.scalars().first()
 
 	if not template:

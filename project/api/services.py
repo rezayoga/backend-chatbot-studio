@@ -14,18 +14,18 @@ def verify_password(plain_password, hashed_password):
 	return bcrypt.verify(plain_password, hashed_password)
 
 
-async def authenticate_user(username: str, password: str, session: AsyncSession) -> User:
-	user = await session.execute(select(User).where(User.username == username))
-	u = user.scalars().first()
-	if not u:
+async def service_user_auth(username: str, password: str, session: AsyncSession) -> User:
+	u = await session.execute(select(User).where(User.username == username))
+	user = u.scalars().first()
+	if not user:
 		return False
-	if not verify_password(password, u.hashed_password):
+	if not verify_password(password, user.hashed_password):
 		return False
-	return u
+	return user
 
 
-async def get_users(session: AsyncSession) -> list[User]:
-	users = await session.query(User).all()
+async def service_get_users(session: AsyncSession) -> list[User]:
+	users = await session.execute(select(User)).scalars().all()
 	return users
 
 

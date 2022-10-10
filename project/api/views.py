@@ -71,7 +71,7 @@ def get_user_exception():
 # 	return bcrypt.verify(plain_password, hashed_password)
 #
 #
-# def authenticate_user(username: str, password: str):
+# def service_user_auth(username: str, password: str):
 # 	user = session.query(User) \
 # 		.filter(User.username == username) \
 # 		.first()
@@ -106,23 +106,6 @@ def check_if_token_in_denylist(decrypted_token):
 	return entry and entry == 'true'
 
 
-@api_router.post("/token/", tags=["auth"])
-async def login(user: User_LoginSchema, auth: AuthJWT = Depends(), session: AsyncSession = Depends(get_session)):
-	# Check if username and password match
-	user = await authenticate_user(user.username, user.password, session)
-	if not user:
-		raise incorrect_request_exception("Incorrect username or password")
-
-	access_token = auth.create_access_token(subject=user.id)
-	refresh_token = auth.create_refresh_token(subject=user.id)
-	return {
-		"access_token": access_token,
-		"refresh_token": refresh_token,
-		"token_type": "bearer",
-		"expires_in": settings.access_token_expires
-	}
-
-
 @api_router.post("/token/refresh/", tags=["auth"])
 async def refresh_access_token(auth: AuthJWT = Depends()):
 	auth.jwt_refresh_token_required()
@@ -147,6 +130,34 @@ async def refresh_revoke(auth: AuthJWT = Depends()):
 	# denylist.add(jti)
 	redis_connection.setex(jti, settings.refresh_token_expires, 'true')
 	return {"message": "Refresh token revoked"}
+
+
+@api_router.post("/token/", tags=["auth"])
+async def login(user: User_LoginSchema, auth: AuthJWT = Depends(), session: AsyncSession = Depends(get_session)):
+	# Check if username and password match
+	user = await service_user_auth(user.username, user.password, session)
+	if not user:
+		raise incorrect_request_exception("Incorrect username or password")
+
+	access_token = auth.create_access_token(subject=user.id)
+	refresh_token = auth.create_refresh_token(subject=user.id)
+	return {
+		"access_token": access_token,
+		"refresh_token": refresh_token,
+		"token_type": "bearer",
+		"expires_in": settings.access_token_expires
+	}
+
+
+""" users """
+
+
+@api_router.get("/users/", tags=["users"], response_model=List[UserSchema])
+async def service_get_users(session: AsyncSession = Depends(get_session)):
+	users = await service_get_users(session)
+	if users is None:
+		raise not_found_exception("Empty users")
+	return JSONResponse(status_code=200, content=jsonable_encoder(users))
 
 #
 # @api_router.post("/users/", tags=["auth"])
@@ -459,14 +470,3 @@ async def refresh_revoke(auth: AuthJWT = Depends()):
 # 	session.delete(template_content)
 # 	session.commit()
 # 	return JSONResponse(status_code=200, content={"message": "Template content deleted successfully"})
-#
-#
-# """ users """
-#
-#
-# @api_router.get("/users/", tags=["users"], response_model=List[UserSchema])
-# async def get_users():
-# 	users = session.query(User).all()
-# 	if users is None:
-# 		raise not_found_exception("Empty users")
-# 	return JSONResponse(status_code=200, content=jsonable_encoder(users))

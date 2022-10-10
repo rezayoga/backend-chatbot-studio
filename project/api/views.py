@@ -122,9 +122,7 @@ async def login(user: User_LoginSchema, auth: AuthJWT = Depends(), session: Asyn
 	# 	"expires_in": settings.access_token_expires
 	# }
 
-	logging.log(logging.INFO, user)
-
-	return user
+	return await user
 
 
 @api_router.post("/token/refresh/", tags=["auth"])

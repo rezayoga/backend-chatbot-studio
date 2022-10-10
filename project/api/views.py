@@ -164,7 +164,8 @@ async def create_template(created_template: TemplateSchema, auth: AuthJWT = Depe
 	template = services.create_template(created_template, session)
 	try:
 		await session.commit()
-		return JSONResponse(status_code=200, content={"message": "Template created successfully", "body": template})
+		return JSONResponse(status_code=200, content={"message": "Template created successfully", \
+		                                              "body": jsonable_encoder(template)})
 	except IntegrityError as ex:
 		await session.rollback()
 		raise incorrect_request_exception("Template already exists")

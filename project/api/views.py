@@ -113,8 +113,8 @@ async def login(user: User_LoginSchema, auth: AuthJWT = Depends(), session: Asyn
 	if not user:
 		raise incorrect_request_exception("Incorrect username or password")
 
-	access_token = await auth.create_access_token(subject=user.id)
-	refresh_token = await auth.create_refresh_token(subject=user.id)
+	access_token = auth.create_access_token(subject=user.id)
+	refresh_token = auth.create_refresh_token(subject=user.id)
 	return {
 		"access_token": access_token,
 		"refresh_token": refresh_token,

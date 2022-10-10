@@ -27,10 +27,12 @@ settings = JWT_SettingsSchema()
 
 """ Exception Handler """
 
+
 # Dependency
 async def get_session() -> AsyncSession:
-    async with async_session() as session:
-        yield session
+	async with async_session() as session:
+		yield session
+
 
 def not_found_exception(message: str):
 	not_found_exception_response = HTTPException(

@@ -5,7 +5,7 @@ Content-Type: application/json
 
 {
   "username": "reza",
-  "password": "reza"
+  "password": "r4eza"
 }
 
 > {% client.global.set("access_token", response.body.access_token); %}
@@ -18,6 +18,19 @@ Content-Type: application/json
 
 ###
 
+POST https://chatbotstudio.rezayogaswara.dev/api/v1/users/
+accept: application/json
+Content-Type: application/json
+
+{
+  "username": "y",
+  "hashed_password": "y",
+  "name": "Y",
+  "email": "reza.yoga@icloud.com",
+  "is_active": true
+}
+
+###
 
 #GET https://chatbotstudio.rezayogaswara.dev/api/v1/templates/5ae749fb-a61e-4747-ba9d-f5400a826829/
 #accept: application/json

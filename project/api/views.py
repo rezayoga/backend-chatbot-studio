@@ -8,6 +8,7 @@ from fastapi_jwt_auth import AuthJWT
 from passlib.handlers.bcrypt import bcrypt
 from redis import Redis
 from sqlalchemy import and_
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from project.api.models import *
@@ -61,25 +62,6 @@ def get_user_exception():
 
 
 """ auth """
-
-
-# def get_password_hash(password: str):
-# 	return bcrypt.hash(password)
-#
-#
-# def verify_password(plain_password, hashed_password):
-# 	return bcrypt.verify(plain_password, hashed_password)
-#
-#
-# def auth_user(username: str, password: str):
-# 	user = session.query(User) \
-# 		.filter(User.username == username) \
-# 		.first()
-# 	if not user:
-# 		return False
-# 	if not verify_password(password, user.hashed_password):
-# 		return False
-# 	return user
 
 
 @AuthJWT.load_config
@@ -157,19 +139,17 @@ async def get_users(session: AsyncSession = Depends(get_session)):
 	users = await services.get_users(session)
 	return users
 
-#
-# @api_router.post("/users/", tags=["auth"])
-# async def create_user(created_user: UserSchema):
-# 	user = User()
-# 	user.username = created_user.username
-# 	user.email = created_user.email
-# 	user.name = created_user.name
-# 	user.hashed_password = get_password_hash(created_user.password)
-# 	user.is_active = True
-# 	session.add(user)
-# 	session.commit()
-# 	return JSONResponse(status_code=200, content={"message": "User created successfully"})
-#
+
+@api_router.post("/users/", tags=["auth"])
+async def create_user(created_user: UserSchema, session: AsyncSession = Depends(get_session)):
+	user = await services.create_user(created_user, session)
+	try:
+		await session.commit()
+		return user
+	except IntegrityError as ex:
+		await session.rollback()
+		raise incorrect_request_exception("Username already exists")
+
 #
 # """ templates """
 #

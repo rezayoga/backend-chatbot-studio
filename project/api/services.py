@@ -55,7 +55,7 @@ async def get_templates(session: AsyncSession) -> list[Template]:
 
 
 async def get_template_by_template_id(template_id: str, session: AsyncSession) -> Template:
-	t = session.execute(select(Template).where(Template.id == template_id))
+	t = await session.execute(select(Template).where(Template.id == template_id))
 	template = t.scalars().first()
 	return template
 

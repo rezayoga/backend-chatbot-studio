@@ -82,11 +82,11 @@ Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "client": "4",
-  "channel_account_alias": "4",
-  "template_name": "Template 4",
-  "template_description": "Desc Template 4",
-  "division_id": "4?"
+  "client": "5",
+  "channel_account_alias": "5",
+  "template_name": "Template 5",
+  "template_description": "Desc Template 5",
+  "division_id": "5?"
 }
 
 ###

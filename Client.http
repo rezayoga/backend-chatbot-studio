@@ -10,25 +10,26 @@ Content-Type: application/json
 
 > {% client.global.set("access_token", response.body.access_token); %}
 
-###
 
-GET https://chatbotstudio.rezayogaswara.dev/api/v1/users/
-accept: application/json
-Content-Type: application/json
-
-###
-
-POST https://chatbotstudio.rezayogaswara.dev/api/v1/users/
-accept: application/json
-Content-Type: application/json
-
-{
-  "username": "efcd",
-  "name": "efcd",
-  "password": "efcd",
-  "email": "reza.yoga@live.com",
-  "is_active": false
-}
+####
+#
+#GET https://chatbotstudio.rezayogaswara.dev/api/v1/users/
+#accept: application/json
+#Content-Type: application/json
+#
+####
+#
+#POST https://chatbotstudio.rezayogaswara.dev/api/v1/users/
+#accept: application/json
+#Content-Type: application/json
+#
+#{
+#  "username": "efcd",
+#  "name": "efcd",
+#  "password": "efcd",
+#  "email": "reza.yoga@live.com",
+#  "is_active": false
+#}
 
 ###
 
@@ -82,16 +83,16 @@ Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "client": "5",
-  "channel_account_alias": "5",
-  "template_name": "Template 5",
-  "template_description": "Desc Template 5",
-  "division_id": "5?"
+  "client": "823",
+  "channel_account_alias": "823",
+  "template_name": "Template 823",
+  "template_description": "Desc Template 823",
+  "division_id": "823?"
 }
 
 ###
 
-GET https://chatbotstudio.rezayogaswara.dev/api/v1/templates/a24bc2a9-9f38-4eb7-858b-94a93d4a2de2/
+GET https://chatbotstudio.rezayogaswara.dev/api/v1/templates/888567fc-2f83-46f2-82b6-7917f9a2c0c3/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}

@@ -36,6 +36,7 @@ class Template(Base):
     template_name = Column(Text, nullable=False)
     template_description = Column(Text, nullable=True)
     division_id = Column(String(128), nullable=True)
+    is_deleted = Column(Boolean, default=False)
     owner_id = Column(Integer, ForeignKey("users.id"))
     template_contents = relationship(
         "Template_Content", backref="template_content", cascade="all, delete-orphan")
@@ -57,6 +58,7 @@ class Template_Content(Base):
     y = Column(Integer, nullable=True)
     option_label = Column(Text, nullable=True)
     option_position = Column(Text, nullable=True)
+    is_deleted = Column(Boolean, default=False)
     created_at = Column(DateTime(timezone=True),
                         nullable=False, default=func.now())
 
@@ -80,6 +82,7 @@ class Template_Changelog(Base):
     action = Column(String(128), nullable=True)
     payload = Column(JSONB, nullable=True)
     template_id = Column(String, ForeignKey("templates.id"))
+    is_deleted = Column(Boolean, default=False)
 
     def __repr__(self) -> str:
         return f"<Template: {self.id} -  {self.template_id} -  {self.user_id} -  {self.action}>"

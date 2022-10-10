@@ -21,7 +21,7 @@ from .schemas import Template_Update as Template_UpdateSchema
 from .schemas import Template_Content as Template_ContentSchema
 from .schemas import User as UserSchema
 from .schemas import User_Login as User_LoginSchema
-from ..database import async_session
+from ..database import get_session
 
 logger = logging.getLogger(__name__)
 # session = SessionLocal()
@@ -31,9 +31,6 @@ settings = JWT_SettingsSchema()
 
 
 # Dependency
-async def get_session() -> AsyncSession:
-	async with async_session() as session:
-		yield session
 
 
 def not_found_exception(message: str):

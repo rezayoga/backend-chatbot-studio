@@ -1,6 +1,5 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-import logging
 
 from .models import *
 from passlib.handlers.bcrypt import bcrypt
@@ -25,8 +24,8 @@ async def auth_user(username: str, password: str, session: AsyncSession) -> User
 
 
 async def get_users(session: AsyncSession) -> list[User]:
-	users = await session.execute(select(User)).scalars().all()
-	return users
+	users = await session.execute(select(User))
+	return users.scalars().all()
 
 
 async def get_templates(session: AsyncSession) -> list[Template]:

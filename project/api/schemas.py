@@ -311,7 +311,7 @@ class Template(BaseModel):
 	channel: constr(min_length=1)
 	channel_account_alias: Optional[str] = None
 	template_name: constr(min_length=1) = None
-	template_description: constr(min_length=1) = None
+	template_description: Optional[str] = None
 	division_id: Optional[str] = None
 	is_deleted: Optional[bool] = False
 

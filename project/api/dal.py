@@ -20,7 +20,7 @@ def verify_password(plain_password, hashed_password):
 
 
 async def auth_user(username: str, password: str, session: AsyncSession) -> User:
-	u = await session.execute(select(User).where(User.username == username))
+	u = await session.execute(select(User).where(User.username == username).where(User.is_active == True))
 	user = u.scalars().first()
 	if not user:
 		return False
@@ -30,7 +30,7 @@ async def auth_user(username: str, password: str, session: AsyncSession) -> User
 
 
 async def auth_user_by_user_id(user_id: int, session: AsyncSession) -> User:
-	u = await session.execute(select(User).where(User.id == user_id))
+	u = await session.execute(select(User).where(User.id == user_id).where(User.is_active == True))
 	user = u.scalars().first()
 	if not user:
 		return False
@@ -54,18 +54,20 @@ def create_user(created_user: UserSchema, session: AsyncSession) -> User:
 
 
 async def get_templates(session: AsyncSession) -> list[Template]:
-	templates = await session.execute(select(Template))
+	templates = await session.execute(select(Template).where(Template.is_deleted == False))
 	return templates.scalars().all()
 
 
 async def get_template_by_template_id(user_id: str, template_id: str, session: AsyncSession) -> Template:
-	t = await session.execute(select(Template).where(Template.id == template_id).where(Template.owner_id == user_id))
+	t = await session.execute(
+		select(Template).where(Template.id == template_id).where(Template.owner_id == user_id).where(
+			Template.is_deleted == False))
 	template = t.scalars().first()
 	return template
 
 
 async def get_template_by_user_id(user_id: int, session: AsyncSession) -> Template:
-	t = await session.execute(select(Template).where(Template.owner_id == user_id))
+	t = await session.execute(select(Template).where(Template.owner_id == user_id).where(Template.is_deleted == False))
 	template = t.scalars().all()
 	return template
 
@@ -85,7 +87,8 @@ def create_template(user_id: int, created_template: TemplateSchema, session: Asy
 
 async def update_template(user_id: int, template_id: int, updated_template: Template_UpdateSchema,
                           session: AsyncSession) -> Template:
-	t = await session.execute(select(Template).where(Template.id == template_id).where(Template.owner_id == user_id))
+	t = await session.execute(select(Template).where(Template.id == template_id).where(Template.owner_id == user_id) \
+	                          .where(Template.is_deleted == False))
 	template = t.scalars().first()
 
 	if not template:
@@ -100,7 +103,8 @@ async def update_template(user_id: int, template_id: int, updated_template: Temp
 
 
 async def delete_template(user_id: int, template_id: int, session: AsyncSession) -> Template:
-	t = await session.execute(select(Template).where(Template.id == template_id).where(Template.owner_id == user_id))
+	t = await session.execute(select(Template).where(Template.id == template_id).where(Template.owner_id == user_id) \
+	                          .where(Template.is_deleted == False))
 	template = t.scalars().first()
 
 	if not template:

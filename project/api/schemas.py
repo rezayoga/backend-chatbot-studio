@@ -121,9 +121,9 @@ class ProductObject(BaseModel):
 
 
 class RowObject(BaseModel):
-	id: constr(max_length=24)
-	title: constr(max_length=200)
-	description: constr(max_length=72)
+	id: constr(max_length=128)
+	title: constr(max_length=256)
+	description: constr(max_length=256)
 
 	class Config:
 		orm_mode = True
@@ -332,7 +332,8 @@ class Template_Update(BaseModel):
 
 
 class Template_Content(BaseModel):
-	parent_id: Optional[List[ParentIdObject]] = Field(title="parent_id", description="The list of template_content's parent_id")
+	parent_id: Optional[List[ParentIdObject]] = Field(title="parent_id", \
+	                                                  description="The list of template_content's parent_id")
 	payload: MessageObject = Field(title="payload", description="The payload of the template content")
 	option: constr(min_length=1) = Field(title="option", description="The option of the template content")
 	template_id: constr(min_length=1) = Field(title="template_id",

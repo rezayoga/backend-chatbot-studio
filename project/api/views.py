@@ -159,7 +159,7 @@ async def create_template(created_template: TemplateSchema, auth: AuthJWT = Depe
 	template = Template_DAL.create_template(user.id, created_template, session)
 	try:
 		await session.commit()
-		return JSONResponse(status_code=200, content={"message": "Template created successfully", \
+		return JSONResponse(status_code=200, content={"message": "Template created successfully",
 		                                              "body": jsonable_encoder(template)})
 	except IntegrityError as ex:
 		await session.rollback()
@@ -222,7 +222,7 @@ async def update_template(template_id: str, updated_template: Template_UpdateSch
 
 	try:
 		await session.commit()
-		return JSONResponse(status_code=200, content={"message": "Template updated successfully", \
+		return JSONResponse(status_code=200, content={"message": "Template updated successfully",
 		                                              "body": jsonable_encoder(template)})
 	except IntegrityError as ex:
 		await session.rollback()
@@ -245,7 +245,7 @@ async def delete_template(template_id: str, auth: AuthJWT = Depends(),
 
 	try:
 		await session.commit()
-		return JSONResponse(status_code=200, content={"message": "Template deleted successfully", \
+		return JSONResponse(status_code=200, content={"message": "Template deleted successfully",
 		                                              "body": jsonable_encoder(template)})
 	except IntegrityError as ex:
 		await session.rollback()
@@ -275,7 +275,7 @@ async def create_template_content(created_template_content: Template_ContentSche
 		raise get_user_exception()
 
 	template = await Template_DAL.get_template_by_template_id(user.id, created_template_content.template_id,
-	                                                 session)
+	                                                          session)
 
 	if template is None or template == False:
 		raise not_found_exception("Template not found")
@@ -283,7 +283,7 @@ async def create_template_content(created_template_content: Template_ContentSche
 	template_content = Template_Content_DAL.create_template_content(user.id, created_template_content, session)
 	try:
 		await session.commit()
-		return JSONResponse(status_code=200, content={"message": "Template content created successfully", \
+		return JSONResponse(status_code=200, content={"message": "Template content created successfully",
 		                                              "body": jsonable_encoder(template_content)})
 	except IntegrityError as ex:
 		await session.rollback()

@@ -279,9 +279,22 @@ class MessageObject(BaseModel):
 		orm_mode = True
 
 
-class ParentIdObject(BaseModel):
+### Application Schemas ###
+
+class Option_Position(BaseModel):
+	x: int = Field(title="x", description="The x position of the option")
+	y: int = Field(title="y", description="The y position of the option")
+
+	class config:
+		orm_mode = True
+
+
+class Parent_Id(BaseModel):
 	parent_id: str = Field(title="parent_id", description="The parent_id of the message")
 	option: str = Field(title="option", description="The option of the message")
+	option_label: str = Field(title="option_label", description="The option_label of the message")
+	option_position: Option_Position = Field(title="option_position",
+	                                         description="The option_position of the message")
 
 	class Config:
 		orm_mode = True
@@ -332,16 +345,14 @@ class Template_Update(BaseModel):
 
 
 class Template_Content(BaseModel):
-	parent_id: Optional[List[ParentIdObject]] = Field(title="parent_id", \
-	                                                  description="The list of template_content's parent_id")
+	parent_id: Optional[List[Parent_Id]] = Field(title="parent_id",
+	                                             description="The list of template_content's parent_id")
 	payload: MessageObject = Field(title="payload", description="The payload of the template content")
 	option: constr(min_length=1) = Field(title="option", description="The option of the template content")
 	template_id: constr(min_length=1) = Field(title="template_id",
 	                                          description="The template_id of the template content")
-	x: Optional[int] = 0
-	y: Optional[int] = 0
 	option_label: Optional[str] = None
-	option_position: Optional[str] = None
+	option_position: Optional[Option_Position] = None
 	is_deleted: Optional[bool] = False
 
 	class Config:

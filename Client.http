@@ -33,7 +33,7 @@ Content-Type: application/json
 
 ###
 
-GET https://chatbotstudio.rezayogaswara.dev/api/v1/templates/5ae749fb-a61e-4747-ba9d-f5400a826829/
+GET https://chatbotstudio.rezayogaswara.dev/api/v1/templates/46e04028-11ea-49bb-9f26-638bdb1bcf31/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}

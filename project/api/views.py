@@ -175,7 +175,7 @@ async def get_template_by_template_id(template_id: str, auth: AuthJWT = Depends(
 	if user is None:
 		raise get_user_exception()
 
-	template = await dal.get_template_by_template_id(template_id, session)
+	template = await dal.get_template_by_template_id(auth.get_jwt_subject(), template_id, session)
 
 	if template is None:
 		raise not_found_exception("Template not found")

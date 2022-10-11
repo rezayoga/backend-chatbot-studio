@@ -217,7 +217,7 @@ async def update_template(template_id: str, updated_template: Template_UpdateSch
 
 	template = await dal.update_template(user.id, template_id, updated_template, session)
 
-	if template is None:
+	if template is None or template == False:
 		raise not_found_exception("Template not found")
 
 	try:

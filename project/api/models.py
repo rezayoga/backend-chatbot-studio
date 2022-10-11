@@ -51,7 +51,8 @@ class Template_Content(Base):
     __tablename__ = "template_contents"
 
     id = Column(String, primary_key=True, default=func.uuid_generate_v4())
-    parent_id = Column(String, nullable=True)
+    parent_id = Column(JSONB, nullable=True)
+    x = Column(Integer, nullable=True)
     payload = Column(JSONB, nullable=True)
     option = Column(Text, nullable=True)
     x = Column(Integer, nullable=True)

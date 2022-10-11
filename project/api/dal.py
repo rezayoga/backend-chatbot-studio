@@ -59,7 +59,7 @@ def create_user(created_user: UserSchema, session: AsyncSession) -> User:
 ### Template operations ###
 
 async def get_templates(session: AsyncSession) -> list[Template]:
-	templates = await session.execute(select(Template).where(Template.is_deleted == False))
+	templates = await session.execute(select(Template))
 	if not templates:
 		return False
 	return templates.scalars().all()
@@ -128,7 +128,7 @@ async def delete_template(user_id: int, template_id: int, session: AsyncSession)
 ### Template Content operations ###
 
 async def get_template_contents(session: AsyncSession) -> list[Template_Content]:
-	template_contents = await session.execute(select(Template_Content).where(Template_Content.is_deleted == False))
+	template_contents = await session.execute(select(Template_Content))
 	if not template_contents:
 		return False
 

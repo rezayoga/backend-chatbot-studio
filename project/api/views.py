@@ -256,7 +256,7 @@ async def delete_template(template_id: str, auth: AuthJWT = Depends(),
 
 
 @api_router.get("/template_contents/", tags=["template-contents"], response_model=List[Template_ContentSchema])
-async def get_template_contents_by_template_id(session: AsyncSession = Depends(get_session)):
+async def get_template_contents(session: AsyncSession = Depends(get_session)):
 	template_contents = await dal.get_template_contents(session)
 
 	if template_contents is None or template_contents == False:

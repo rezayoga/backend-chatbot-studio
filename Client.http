@@ -70,10 +70,10 @@ Authorization: Bearer {{access_token}}
 
 ###
 
-#DELETE https://chatbotstudio.rezayogaswara.dev/api/v1/templates/2589349e-0877-49ef-9edc-fbe05d0c3d2c/
-#accept: application/json
-#Content-Type: application/json
-#Authorization: Bearer {{access_token}}
+DELETE https://chatbotstudio.rezayogaswara.dev/api/v1/templates/0e4b19bf-5280-4970-a96d-79d5c2b7d5dd/
+accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
 ###
 
@@ -83,11 +83,11 @@ Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "client": "xcvb",
-  "channel_account_alias": "xcvb",
-  "template_name": "Template xcvb",
-  "template_description": "Desc Template xcvb",
-  "division_id": "xcvb?"
+  "client": "oiu1",
+  "channel_account_alias": "oiu1",
+  "template_name": "Template oiu1",
+  "template_description": "Desc Template oiu1",
+  "division_id": "oiu1?"
 }
 
 ###

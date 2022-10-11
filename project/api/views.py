@@ -238,7 +238,7 @@ async def delete_template(template_id: str, auth: AuthJWT = Depends(),
 	if user is None:
 		raise get_user_exception()
 
-	template = await dal.delete_template(user.id, template_id, template_id, session)
+	template = await dal.delete_template(user.id, template_id, session)
 
 	if template is None:
 		raise not_found_exception("Template not found")

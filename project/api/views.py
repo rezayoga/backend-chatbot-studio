@@ -184,8 +184,8 @@ async def get_template_by_template_id(template_id: str, auth: AuthJWT = Depends(
 
 
 @api_router.get("/templates/", tags=["templates"], response_model=List[TemplateSchema])
-async def get_templates():
-	templates = await dal.get_templates()
+async def get_templates(session: AsyncSession = Depends(get_session)):
+	templates = await dal.get_templates(session)
 
 	if templates is None or templates == False:
 		raise not_found_exception("Templates not found")

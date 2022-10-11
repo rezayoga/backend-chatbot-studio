@@ -4,8 +4,8 @@ accept: application/json
 Content-Type: application/json
 
 {
-  "username": "reza",
-  "password": "reza"
+  "username": "a",
+  "password": "a"
 }
 
 > {% client.global.set("access_token", response.body.access_token); %}
@@ -18,6 +18,13 @@ accept: application/json
 Content-Type: application/json
 
 ####
+
+GET https://chatbotstudio.rezayogaswara.dev/api/v1/templates/
+accept: application/json
+Content-Type: application/json
+
+####
+
 #
 #POST https://chatbotstudio.rezayogaswara.dev/api/v1/users/
 #accept: application/json
@@ -70,29 +77,36 @@ Authorization: Bearer {{access_token}}
 
 ###
 
-DELETE https://chatbotstudio.rezayogaswara.dev/api/v1/templates/0e4b19bf-5280-4970-a96d-79d5c2b7d5dd/
+DELETE https://chatbotstudio.rezayogaswara.dev/api/v1/templates/eb207d41-9674-4e46-b4be-f2e35cc03ca6/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 ###
 
-PUT https://chatbotstudio.rezayogaswara.dev/api/v1/templates/0e4b19bf-5280-4970-a96d-79d5c2b7d5dd/
+PUT https://chatbotstudio.rezayogaswara.dev/api/v1/templates/0cccf76d-5741-4cfb-b5c0-4feccc580d12/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "client": "oiu1",
-  "channel_account_alias": "oiu1",
-  "template_name": "Template oiu1",
-  "template_description": "Desc Template oiu1",
-  "division_id": "oiu1?"
+  "client": "wsx",
+  "channel_account_alias": "wsx",
+  "template_name": "Template wsx",
+  "template_description": "Desc Template wsx",
+  "division_id": "wsx?"
 }
 
 ###
 
-GET https://chatbotstudio.rezayogaswara.dev/api/v1/templates/0e4b19bf-5280-4970-a96d-79d5c2b7d5dd/
+GET https://chatbotstudio.rezayogaswara.dev/api/v1/templates/0cccf76d-5741-4cfb-b5c0-4feccc580d12/
+accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+###
+
+GET https://chatbotstudio.rezayogaswara.dev/api/v1/user/templates/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}

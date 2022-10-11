@@ -132,7 +132,7 @@ async def get_template_contents(session: AsyncSession) -> list[Template_Content]
 	if not template_contents:
 		return False
 
-	return template_contents
+	return template_contents.scalars().all()
 
 
 async def create_template_content(created_template_content: Template_ContentSchema,

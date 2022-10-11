@@ -10,7 +10,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 # from project.database import SessionLocal
-from project.api import dal
+from project.api.dal import *
 from . import api_router
 from .schemas import JWT_Settings as JWT_SettingsSchema
 from .schemas import Template as TemplateSchema
@@ -110,7 +110,7 @@ async def refresh_revoke(auth: AuthJWT = Depends()):
 @api_router.post("/token/", tags=["auth"])
 async def login(user: User_LoginSchema, auth: AuthJWT = Depends(), session: AsyncSession = Depends(get_session)):
 	# Check if username and password match
-	user = await dal.auth_user(user.username, user.password, session)
+	user = await User_DAL.auth_user(user.username, user.password, session)
 	if not user:
 		raise incorrect_request_exception("Incorrect username or password")
 
@@ -129,13 +129,13 @@ async def login(user: User_LoginSchema, auth: AuthJWT = Depends(), session: Asyn
 
 @api_router.get("/users/", tags=["users"])
 async def get_users(session: AsyncSession = Depends(get_session)):
-	users = await dal.get_users(session)
+	users = await User_DAL.get_users(session)
 	return users
 
 
 @api_router.post("/users/", tags=["auth"])
 async def create_user(created_user: UserSchema, session: AsyncSession = Depends(get_session)):
-	user = dal.create_user(created_user, session)
+	user = User_DAL.create_user(created_user, session)
 	try:
 		await session.commit()
 		return user
@@ -151,12 +151,12 @@ async def create_user(created_user: UserSchema, session: AsyncSession = Depends(
 async def create_template(created_template: TemplateSchema, auth: AuthJWT = Depends(),
                           session: AsyncSession = Depends(get_session)):
 	auth.jwt_required()
-	user = await dal.auth_user_by_user_id(auth.get_jwt_subject(), session)
+	user = await User_DAL.auth_user_by_user_id(auth.get_jwt_subject(), session)
 
 	if user is None:
 		raise get_user_exception()
 
-	template = dal.create_template(user.id, created_template, session)
+	template = Template_DAL.create_template(user.id, created_template, session)
 	try:
 		await session.commit()
 		return JSONResponse(status_code=200, content={"message": "Template created successfully", \
@@ -170,12 +170,12 @@ async def create_template(created_template: TemplateSchema, auth: AuthJWT = Depe
 async def get_template_by_template_id(template_id: str, auth: AuthJWT = Depends(),
                                       session: AsyncSession = Depends(get_session)):
 	auth.jwt_required()
-	user = await dal.auth_user_by_user_id(auth.get_jwt_subject(), session)
+	user = await User_DAL.auth_user_by_user_id(auth.get_jwt_subject(), session)
 
 	if user is None:
 		raise get_user_exception()
 
-	template = await dal.get_template_by_template_id(auth.get_jwt_subject(), template_id, session)
+	template = await Template_DAL.get_template_by_template_id(auth.get_jwt_subject(), template_id, session)
 
 	if template is None or template == False:
 		raise not_found_exception("Template not found")
@@ -185,7 +185,7 @@ async def get_template_by_template_id(template_id: str, auth: AuthJWT = Depends(
 
 @api_router.get("/templates/", tags=["templates"], response_model=List[TemplateSchema])
 async def get_templates(session: AsyncSession = Depends(get_session)):
-	templates = await dal.get_templates(session)
+	templates = await Template_DAL.get_templates(session)
 
 	if templates is None or templates == False:
 		raise not_found_exception("Templates not found")
@@ -198,7 +198,7 @@ async def get_templates_by_user_id(auth: AuthJWT = Depends(),
                                    session: AsyncSession = Depends(get_session)):
 	auth.jwt_required()
 
-	templates = await dal.get_template_by_user_id(auth.get_jwt_subject(), session)
+	templates = await Template_DAL.get_template_by_user_id(auth.get_jwt_subject(), session)
 
 	if templates is None or templates == False:
 		raise not_found_exception("Templates not found")
@@ -210,12 +210,12 @@ async def get_templates_by_user_id(auth: AuthJWT = Depends(),
 async def update_template(template_id: str, updated_template: Template_UpdateSchema, auth: AuthJWT = Depends(),
                           session: AsyncSession = Depends(get_session)):
 	auth.jwt_required()
-	user = await dal.auth_user_by_user_id(auth.get_jwt_subject(), session)
+	user = await User_DAL.auth_user_by_user_id(auth.get_jwt_subject(), session)
 
 	if user is None:
 		raise get_user_exception()
 
-	template = await dal.update_template(user.id, template_id, updated_template, session)
+	template = await Template_DAL.update_template(user.id, template_id, updated_template, session)
 
 	if template is None or template == False:
 		raise not_found_exception("Template not found")
@@ -233,12 +233,12 @@ async def update_template(template_id: str, updated_template: Template_UpdateSch
 async def delete_template(template_id: str, auth: AuthJWT = Depends(),
                           session: AsyncSession = Depends(get_session)):
 	auth.jwt_required()
-	user = await dal.auth_user_by_user_id(auth.get_jwt_subject(), session)
+	user = await User_DAL.auth_user_by_user_id(auth.get_jwt_subject(), session)
 
 	if user is None:
 		raise get_user_exception()
 
-	template = await dal.delete_template(user.id, template_id, session)
+	template = await Template_DAL.delete_template(user.id, template_id, session)
 
 	if template is None or template == False:
 		raise not_found_exception("Template not found")
@@ -257,7 +257,7 @@ async def delete_template(template_id: str, auth: AuthJWT = Depends(),
 
 @api_router.get("/template_contents/", tags=["template-contents"], response_model=List[Template_ContentSchema])
 async def get_template_contents(session: AsyncSession = Depends(get_session)):
-	template_contents = await dal.get_template_contents(session)
+	template_contents = await Template_Content_DAL.get_template_contents(session)
 
 	if template_contents is None or template_contents == False:
 		raise not_found_exception("Template contents not found")
@@ -269,18 +269,18 @@ async def get_template_contents(session: AsyncSession = Depends(get_session)):
 async def create_template_content(created_template_content: Template_ContentSchema,
                                   auth: AuthJWT = Depends(), session: AsyncSession = Depends(get_session)):
 	auth.jwt_required()
-	user = await dal.auth_user_by_user_id(auth.get_jwt_subject(), session)
+	user = await User_DAL.auth_user_by_user_id(auth.get_jwt_subject(), session)
 
 	if user is None:
 		raise get_user_exception()
 
-	template = await dal.get_template_by_template_id(user.id, created_template_content.template_id,
+	template = await Template_DAL.get_template_by_template_id(user.id, created_template_content.template_id,
 	                                                 session)
 
 	if template is None or template == False:
 		raise not_found_exception("Template not found")
 
-	template_content = dal.create_template_content(user.id, created_template_content, session)
+	template_content = Template_Content_DAL.create_template_content(user.id, created_template_content, session)
 	try:
 		await session.commit()
 		return JSONResponse(status_code=200, content={"message": "Template content created successfully", \

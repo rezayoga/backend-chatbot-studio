@@ -139,3 +139,5 @@ alembic.ini
 alembic/
 
 .idea/
+
+migrations/

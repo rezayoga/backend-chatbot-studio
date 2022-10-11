@@ -1,4 +1,5 @@
 import logging
+from typing import List
 
 from fastapi import HTTPException, Depends
 from fastapi.encoders import jsonable_encoder
@@ -182,34 +183,29 @@ async def get_template_by_template_id(template_id: str, auth: AuthJWT = Depends(
 	return template
 
 
-# @api_router.get("/templates/", tags=["templates"], response_model=List[TemplateSchema])
-# async def get_templates():
-# 	templates = session.query(Template).all()
-# 	if templates is None or len(templates) == 0:
-# 		raise not_found_exception("Templates not found")
-# 	return JSONResponse(status_code=200, content=jsonable_encoder(templates))
-#
-#
-# @api_router.get("/user/templates/", tags=["templates"])
-# async def get_templates_by_user_id(auth: AuthJWT = Depends()):
-# 	auth.jwt_required()
-# 	user = session.query(User) \
-# 		.filter(User.id == auth.get_jwt_subject()) \
-# 		.first()
-#
-# 	if user is None:
-# 		raise get_user_exception()
-#
-# 	templates = session.query(Template) \
-# 		.filter(Template.owner_id == auth.get_jwt_subject()) \
-# 		.all()
-#
-# 	if templates is None or len(templates) == 0:
-# 		raise not_found_exception("Templates not found")
-#
-# 	return JSONResponse(status_code=200, content=jsonable_encoder(templates))
-#
-#
+@api_router.get("/templates/", tags=["templates"], response_model=List[TemplateSchema])
+async def get_templates():
+	templates = await dal.get_templates()
+
+	if templates is None or len(templates) == 0:
+		raise not_found_exception("Templates not found")
+
+	return templates
+
+
+@api_router.get("/user/templates/", tags=["templates"])
+async def get_templates_by_user_id(auth: AuthJWT = Depends(),
+                                   session: AsyncSession = Depends(get_session)):
+	auth.jwt_required()
+
+	templates = await dal.get_template_by_user_id(auth.get_jwt_subject(), session)
+
+	if templates is None or len(templates) == 0:
+		raise not_found_exception("Templates not found")
+
+	return templates
+
+
 @api_router.put("/templates/{template_id}/", tags=["templates"])
 async def update_template(template_id: str, updated_template: Template_UpdateSchema, auth: AuthJWT = Depends(),
                           session: AsyncSession = Depends(get_session)):
@@ -232,30 +228,29 @@ async def update_template(template_id: str, updated_template: Template_UpdateSch
 		await session.rollback()
 		raise incorrect_request_exception("Incorrect request")
 
-#
-# @api_router.delete("/templates/{template_id}/", tags=["templates"])
-# async def delete_template(template_id: str, auth: AuthJWT = Depends()):
-# 	auth.jwt_required()
-# 	user = session.query(User) \
-# 		.filter(User.id == auth.get_jwt_subject()) \
-# 		.first()
-#
-# 	if user is None:
-# 		raise get_user_exception()
-#
-# 	template = session.query(Template) \
-# 		.filter(Template.id == template_id) \
-# 		.filter(Template.owner_id == auth.get_jwt_subject()) \
-# 		.first()
-#
-# 	if template is None:
-# 		raise not_found_exception("Template not found")
-#
-# 	session.delete(template)
-# 	session.commit()
-#
-# 	return JSONResponse(status_code=200, content={"message": "Template deleted successfully"})
-#
+
+@api_router.delete("/templates/{template_id}/", tags=["templates"])
+async def delete_template(template_id: str, auth: AuthJWT = Depends(),
+                          session: AsyncSession = Depends(get_session)):
+	auth.jwt_required()
+	user = await dal.auth_user_by_user_id(auth.get_jwt_subject(), session)
+
+	if user is None:
+		raise get_user_exception()
+
+	template = await dal.delete_template(user.id, template_id, template_id, session)
+
+	if template is None:
+		raise not_found_exception("Template not found")
+
+	try:
+		await session.commit()
+		return JSONResponse(status_code=200, content={"message": "Template deleted successfully", \
+		                                              "body": jsonable_encoder(template)})
+	except IntegrityError as ex:
+		await session.rollback()
+		raise incorrect_request_exception("Incorrect request")
+
 #
 # """ template contents """
 #

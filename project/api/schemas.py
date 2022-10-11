@@ -332,7 +332,7 @@ class Template_Update(BaseModel):
 
 
 class Template_Content(BaseModel):
-	parent_id: List[ParentIdObject] = Field(title="parent_id", description="The list of template_content's parent_id")
+	parent_id: Optional[List[ParentIdObject]] = Field(title="parent_id", description="The list of template_content's parent_id")
 	payload: MessageObject = Field(title="payload", description="The payload of the template content")
 	option: constr(min_length=1) = Field(title="option", description="The option of the template content")
 	template_id: constr(min_length=1) = Field(title="template_id",

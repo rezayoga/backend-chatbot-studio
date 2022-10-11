@@ -33,7 +33,7 @@ Content-Type: application/json
 
 ###
 
-GET https://chatbotstudio.rezayogaswara.dev/api/v1/templates/46e04028-11ea-49bb-9f26-638bdb1bcf31/
+GET https://chatbotstudio.rezayogaswara.dev/api/v1/templates/0cccf76d-5741-4cfb-b5c0-4feccc580d12/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
@@ -77,22 +77,22 @@ Authorization: Bearer {{access_token}}
 
 ###
 
-PUT https://chatbotstudio.rezayogaswara.dev/api/v1/templates/888567fc-2f83-46f2-82b6-7917f9a2c0c3/
+PUT https://chatbotstudio.rezayogaswara.dev/api/v1/templates/0e4b19bf-5280-4970-a96d-79d5c2b7d5dd/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "client": "ytre",
-  "channel_account_alias": "ytre",
-  "template_name": "Template ytre",
-  "template_description": "Desc Template ytre",
-  "division_id": "ytre?"
+  "client": "xcvb",
+  "channel_account_alias": "xcvb",
+  "template_name": "Template xcvb",
+  "template_description": "Desc Template xcvb",
+  "division_id": "xcvb?"
 }
 
 ###
 
-GET https://chatbotstudio.rezayogaswara.dev/api/v1/templates/888567fc-2f83-46f2-82b6-7917f9a2c0c3/
+GET https://chatbotstudio.rezayogaswara.dev/api/v1/templates/0e4b19bf-5280-4970-a96d-79d5c2b7d5dd/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}

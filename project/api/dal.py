@@ -66,7 +66,7 @@ async def get_template_by_template_id(user_id: str, template_id: str, session: A
 
 async def get_template_by_user_id(user_id: int, session: AsyncSession) -> Template:
 	t = await session.execute(select(Template).where(Template.owner_id == user_id))
-	template = t.scalars().first()
+	template = t.scalars().all()
 	return template
 
 

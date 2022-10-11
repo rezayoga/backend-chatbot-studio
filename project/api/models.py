@@ -55,7 +55,6 @@ class Template_Content(Base):
     payload = Column(JSONB, nullable=True)
     option = Column(Text, nullable=True)
     option_label = Column(Text, nullable=True)
-    option_position = Column(JSONB, nullable=True)
     is_deleted = Column(Boolean, default=False)
     created_at = Column(DateTime(timezone=True),
                         nullable=False, default=func.now())

@@ -12,6 +12,8 @@ from .schemas import User as UserSchema, Template as TemplateSchema, Template_Up
 # Data Access Layer (DAL) for all service endpoints
 ###
 
+### Authentication & User operations ###
+
 def get_password_hash(password: str):
 	return bcrypt.hash(password)
 
@@ -53,6 +55,8 @@ def create_user(created_user: UserSchema, session: AsyncSession) -> User:
 	session.add(user)
 	return user
 
+
+### Template operations ###
 
 async def get_templates(session: AsyncSession) -> list[Template]:
 	templates = await session.execute(select(Template).where(Template.is_deleted == False))
@@ -121,8 +125,10 @@ async def delete_template(user_id: int, template_id: int, session: AsyncSession)
 	return template
 
 
+### Template Content operations ###
+
 async def get_template_contents(session: AsyncSession) -> list[Template_Content]:
-	template_contents = await session.query(Template_Content).all()
+	template_contents = await session.execute(select(Template_Content).where(Template_Content.is_deleted == False))
 	if not template_contents:
 		return False
 

@@ -1,3 +1,4 @@
+from fastapi.encoders import jsonable_encoder
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -122,4 +123,23 @@ async def delete_template(user_id: int, template_id: int, session: AsyncSession)
 
 async def get_template_contents(session: AsyncSession) -> list[Template_Content]:
 	template_contents = await session.query(Template_Content).all()
+	if not template_contents:
+		return False
+
 	return template_contents
+
+
+async def create_template_content(created_template_content: Template_ContentSchema,
+                                  session: AsyncSession) -> Template_Content:
+	payload = jsonable_encoder(created_template_content.payload.dict(exclude_none=True))
+	template_content = Template_Content()
+	template_content.template_id = created_template_content.template_id
+	template_content.parent_id = created_template_content.parent_id
+	template_content.payload = payload
+	template_content.option = created_template_content.option
+	template_content.x = created_template_content.x
+	template_content.y = created_template_content.y
+	template_content.option_label = created_template_content.option_label
+	template_content.option_position = created_template_content.option_position
+	session.add(template_content)
+	return template_content

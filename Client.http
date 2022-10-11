@@ -4,8 +4,8 @@ accept: application/json
 Content-Type: application/json
 
 {
-  "username": "a",
-  "password": "a"
+  "username": "reza",
+  "password": "reza"
 }
 
 > {% client.global.set("access_token", response.body.access_token); %}
@@ -77,7 +77,7 @@ Authorization: Bearer {{access_token}}
 
 ###
 
-DELETE https://chatbotstudio.rezayogaswara.dev/api/v1/templates/eb207d41-9674-4e46-b4be-f2e35cc03ca6/
+DELETE https://chatbotstudio.rezayogaswara.dev/api/v1/templates/0cccf76d-5741-4cfb-b5c0-4feccc580d12/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
@@ -90,11 +90,11 @@ Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "client": "wsx",
-  "channel_account_alias": "wsx",
-  "template_name": "Template wsx",
-  "template_description": "Desc Template wsx",
-  "division_id": "wsx?"
+  "client": "t",
+  "channel_account_alias": "t",
+  "template_name": "Template t",
+  "template_description": "Desc Template t",
+  "division_id": "t?"
 }
 
 ###

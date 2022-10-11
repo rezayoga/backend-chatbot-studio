@@ -14,7 +14,7 @@ from project.api import dal
 from . import api_router
 from .schemas import JWT_Settings as JWT_SettingsSchema
 from .schemas import Template as TemplateSchema
-from .schemas import Template_Update as Template_UpdateSchema
+from .schemas import Template_Update as Template_UpdateSchema, Template_Content as Template_ContentSchema
 from .schemas import User as UserSchema
 from .schemas import User_Login as User_LoginSchema
 from ..database import get_session
@@ -251,49 +251,44 @@ async def delete_template(template_id: str, auth: AuthJWT = Depends(),
 		await session.rollback()
 		raise incorrect_request_exception("Incorrect request")
 
-#
-# """ template contents """
-#
-#
-# @api_router.post("/template-contents/", tags=["template-contents"])
-# async def create_template_content(created_template_content: Template_ContentSchema,
-#                                   auth: AuthJWT = Depends()):
-# 	auth.jwt_required()
-# 	user = session.query(User) \
-# 		.filter(User.id == auth.get_jwt_subject()) \
-# 		.first()
-#
-# 	if user is None:
-# 		raise get_user_exception()
-#
-# 	template = session.query(Template) \
-# 		.filter(Template.id == created_template_content.template_id) \
-# 		.first()
-#
-# 	if template is None:
-# 		raise not_found_exception("Template not found")
-#
-# 	payload = jsonable_encoder(created_template_content.payload.dict(exclude_none=True))
-# 	template_content = Template_Content()
-# 	template_content.template_id = created_template_content.template_id
-# 	template_content.parent_id = created_template_content.parent_id
-# 	template_content.payload = payload
-# 	template_content.option = created_template_content.option
-# 	template_content.x = created_template_content.x
-# 	template_content.y = created_template_content.y
-# 	template_content.option_label = created_template_content.option_label
-# 	template_content.option_position = created_template_content.option_position
-# 	session.add(template_content)
-# 	session.commit()
-#
-# 	logging.log(logging.INFO, template_content)
-#
-# 	data = jsonable_encoder(template_content)
-#
-# 	logging.log(logging.INFO, data)
-#
-# 	return JSONResponse(status_code=200, content={"message": "Template content created successfully", "body": data})
-#
+
+""" template contents """
+
+
+@api_router.get("/template_contents/", tags=["template contents"], response_model=List[Template_ContentSchema])
+async def get_template_contents_by_template_id(session: AsyncSession = Depends(get_session)):
+	template_contents = await dal.get_template_contents(session)
+
+	if template_contents is None or template_contents == False:
+		raise not_found_exception("Template contents not found")
+
+	return template_contents
+
+
+@api_router.post("/template-contents/", tags=["template-contents"])
+async def create_template_content(created_template_content: Template_ContentSchema,
+                                  auth: AuthJWT = Depends(), session: AsyncSession = Depends(get_session)):
+	auth.jwt_required()
+	user = await dal.auth_user_by_user_id(auth.get_jwt_subject(), session)
+
+	if user is None:
+		raise get_user_exception()
+
+	template = await dal.get_template_by_template_id(user.id, created_template_content.template_id,
+	                                                 session)
+
+	if template is None or template == False:
+		raise not_found_exception("Template not found")
+
+	template_content = dal.create_template_content(user.id, created_template_content, session)
+	try:
+		await session.commit()
+		return JSONResponse(status_code=200, content={"message": "Template content created successfully", \
+		                                              "body": jsonable_encoder(template_content)})
+	except IntegrityError as ex:
+		await session.rollback()
+		raise incorrect_request_exception("Incorrect request")
+
 #
 # @api_router.get("/template-contents/{template_id}/", tags=["template-contents"])
 # async def get_template_contents_by_template_id(template_id: str, auth: AuthJWT = Depends()):

@@ -12,7 +12,7 @@ from .schemas import User as UserSchema, Template as TemplateSchema, Template_Up
 # Data Access Layer (DAL) for all service endpoints
 ###
 
-### Authentication & User operations ###
+### Authentication & User services ###
 
 def get_password_hash(password: str):
 	return bcrypt.hash(password)
@@ -58,7 +58,7 @@ class User_DAL:
 		return user
 
 
-### Template operations ###
+### Template services ###
 
 class Template_DAL:
 	@classmethod
@@ -130,7 +130,7 @@ class Template_DAL:
 		return template
 
 
-### Template Content operations ###
+### Template Content services ###
 
 class Template_Content_DAL:
 	@classmethod

@@ -30,8 +30,6 @@ jobs:
             echo ----------------------------------------------
             git pull origin main
             echo ----------------------------------------------
-            git log --all --decorate --oneline --graph
-            echo ----------------------------------------------
             source venv/bin/activate
             pip install --upgrade pip
             pip install -r requirements.txt

@@ -177,7 +177,7 @@ async def get_template_by_template_id(template_id: str, auth: AuthJWT = Depends(
 
 	template = await dal.get_template_by_template_id(auth.get_jwt_subject(), template_id, session)
 
-	if template is None:
+	if template is None or template == False:
 		raise not_found_exception("Template not found")
 
 	return template
@@ -187,7 +187,7 @@ async def get_template_by_template_id(template_id: str, auth: AuthJWT = Depends(
 async def get_templates():
 	templates = await dal.get_templates()
 
-	if templates is None or len(templates) == 0:
+	if templates is None or templates == False:
 		raise not_found_exception("Templates not found")
 
 	return templates
@@ -200,7 +200,7 @@ async def get_templates_by_user_id(auth: AuthJWT = Depends(),
 
 	templates = await dal.get_template_by_user_id(auth.get_jwt_subject(), session)
 
-	if templates is None or len(templates) == 0:
+	if templates is None or templates == False:
 		raise not_found_exception("Templates not found")
 
 	return templates
@@ -240,7 +240,7 @@ async def delete_template(template_id: str, auth: AuthJWT = Depends(),
 
 	template = await dal.delete_template(user.id, template_id, session)
 
-	if template is None:
+	if template is None or template == False:
 		raise not_found_exception("Template not found")
 
 	try:

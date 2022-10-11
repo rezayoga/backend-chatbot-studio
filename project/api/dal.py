@@ -55,6 +55,8 @@ def create_user(created_user: UserSchema, session: AsyncSession) -> User:
 
 async def get_templates(session: AsyncSession) -> list[Template]:
 	templates = await session.execute(select(Template).where(Template.is_deleted == False))
+	if not templates:
+		return False
 	return templates.scalars().all()
 
 
@@ -63,12 +65,16 @@ async def get_template_by_template_id(user_id: str, template_id: str, session: A
 		select(Template).where(Template.id == template_id).where(Template.owner_id == user_id).where(
 			Template.is_deleted == False))
 	template = t.scalars().first()
+	if not template:
+		return False
 	return template
 
 
 async def get_template_by_user_id(user_id: int, session: AsyncSession) -> Template:
 	t = await session.execute(select(Template).where(Template.owner_id == user_id).where(Template.is_deleted == False))
 	template = t.scalars().all()
+	if not template:
+		return False
 	return template
 
 

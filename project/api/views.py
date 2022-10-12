@@ -270,7 +270,7 @@ async def get_template_contents(session: AsyncSession = Depends(get_session)):
 async def get_template_contents_by_template_id(template_id: str, auth: AuthJWT = Depends(),
                                                session: AsyncSession = Depends(get_session)):
 	auth.jwt_required()
-	user = await User_DAL.auth_user_by_user_id(auth.get_jwt_subject())
+	user = await User_DAL.auth_user_by_user_id(auth.get_jwt_subject(), session)
 
 	if user is None:
 		raise get_user_exception()

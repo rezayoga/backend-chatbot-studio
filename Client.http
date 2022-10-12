@@ -245,10 +245,10 @@ Authorization: Bearer {{access_token}}
 
 ###
 
-#GET https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/a24bc2a9-9f38-4eb7-858b-94a93d4a2de2/
-#accept: application/json
-#Content-Type: application/json
-#Authorization: Bearer {{access_token}}
+GET https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/e6daf5a6-746f-4c22-a6e8-0e92f8476e88/
+accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
 ###
 

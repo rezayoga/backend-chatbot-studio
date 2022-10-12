@@ -189,7 +189,7 @@ class Template_Content_DAL:
 		if not template:
 			return False
 
-		logging.log(logging.INFO, f"template_content: {template_content} / template: {template}")
+		logging.log(logging.INFO, f"template_content: {type(template_content)} / template: {type(template)}")
 
 		return template_content
 

@@ -63,7 +63,7 @@ class Template_Content(Base):
 	template_id = Column(String, ForeignKey("templates.id"))
 
 	def __repr__(self) -> str:
-		return f"<Template Content: {self.id} -  {self.payload} -  {self.option}>"
+		return f"<Template Content: {self.id} -  {self.payloads} -  {self.updated_at}>"
 
 
 class Template_Changelog(Base):

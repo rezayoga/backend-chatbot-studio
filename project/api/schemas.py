@@ -349,11 +349,10 @@ class Template_Content(BaseModel):
 	                                              description="The list of template_content's parent_id")
 	payloads: Optional[List[MessageObjectPayload]] = Field(title="payloads",
 	                                                       description="The payloads of the template content")
-	option: constr(min_length=1) = Field(title="option", description="The option of the template content")
 	template_id: constr(min_length=1) = Field(title="template_id",
 	                                          description="The template_id of the template content")
-	option_label: Optional[str] = None
-	option_position: Optional[Option_Position] = None
+	label: Optional[str] = None
+	position: Optional[Option_Position] = None
 	is_deleted: Optional[bool] = False
 
 	class Config:

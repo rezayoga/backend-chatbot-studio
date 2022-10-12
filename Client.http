@@ -71,10 +71,30 @@ Authorization: Bearer {{access_token}}
     "messaging_product": "whatsapp",
     "recipient_type": "individual",
     "to": "{{Recipient-Phone-Number}}",
-    "type": "text",
-    "text": {
-        "preview_url": false,
-        "body": "text-message-content #1"
+    "type": "interactive",
+    "interactive": {
+        "type": "button",
+        "body": {
+            "text": "<BUTTON_TEXT>"
+        },
+        "action": {
+            "buttons": [
+                {
+                    "type": "reply",
+                    "reply": {
+                        "id": "<b1>",
+                        "title": "<BUTTON_TITLE_1>"
+                    }
+                },
+                {
+                    "type": "reply",
+                    "reply": {
+                        "id": "<b2>",
+                        "title": "<BUTTON_TITLE_2>"
+                    }
+                }
+            ]
+        }
     }
   },{
     "messaging_product": "whatsapp",
@@ -89,10 +109,54 @@ Authorization: Bearer {{access_token}}
     "messaging_product": "whatsapp",
     "recipient_type": "individual",
     "to": "{{Recipient-Phone-Number}}",
-    "type": "text",
-    "text": {
-        "preview_url": false,
-        "body": "text-message-content #3"
+    "type": "interactive",
+    "interactive": {
+        "type": "list",
+        "header": {
+            "type": "text",
+            "text": "<HEADER_TEXT>"
+        },
+        "body": {
+            "text": "<BODY_TEXT>"
+        },
+        "footer": {
+            "text": "<FOOTER_TEXT>"
+        },
+        "action": {
+            "button": "<BUTTON_TEXT>",
+            "sections": [
+                {
+                    "title": "<s1>",
+                    "rows": [
+                        {
+                            "id": "<a>",
+                            "title": "<SECTION_1_ROW_1_TITLE>",
+                            "description": "<SECTION_1_ROW_1_DESC>"
+                        },
+                        {
+                            "id": "<b>",
+                            "title": "<SECTION_1_ROW_2_TITLE>",
+                            "description": "<SECTION_1_ROW_2_DESC>"
+                        }
+                    ]
+                },
+                {
+                    "title": "<s2>",
+                    "rows": [
+                        {
+                            "id": "<c>",
+                            "title": "<SECTION_2_ROW_1_TITLE>",
+                            "description": "<SECTION_2_ROW_1_DESC>"
+                        },
+                        {
+                            "id": "<d>",
+                            "title": "<SECTION_2_ROW_2_TITLE>",
+                            "description": "<SECTION_2_ROW_2_DESC>"
+                        }
+                    ]
+                }
+            ]
+        }
     }
   }],
   "option": "Yaayyy",

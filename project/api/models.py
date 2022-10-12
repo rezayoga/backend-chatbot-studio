@@ -53,9 +53,8 @@ class Template_Content(Base):
 	id = Column(String, primary_key=True, default=func.uuid_generate_v4())
 	parent_ids = Column(JSONB, nullable=True)
 	payloads = Column(JSONB, nullable=True)
-	option = Column(Text, nullable=True)
-	option_label = Column(Text, nullable=True)
-	option_position = Column(JSONB, nullable=True)
+	label = Column(Text, nullable=True)
+	position = Column(JSONB, nullable=True)
 	is_deleted = Column(Boolean, default=False)
 	created_at = Column(DateTime(timezone=True),
 	                    nullable=False, default=func.now())

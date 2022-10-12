@@ -151,15 +151,15 @@ class Template_Content_DAL:
 		# {type(created_template_content.payloads)}")
 
 		for i in range(len(created_template_content.payloads)):
-			created_template_content.payloads[i] = created_template_content.payloads[i].dict(exclude_unset=True, exclude_none=True)
+			created_template_content.payloads[i] = created_template_content.payloads[i].dict(exclude_unset=True,
+			                                                                                 exclude_none=True)
 
 		payloads = jsonable_encoder(created_template_content.payloads)
 		template_content = Template_Content()
 		template_content.template_id = created_template_content.template_id
 		template_content.parent_ids = jsonable_encoder(created_template_content.parent_ids)
 		template_content.payloads = payloads
-		template_content.option = created_template_content.option
-		template_content.option_label = created_template_content.option_label
-		template_content.option_position = jsonable_encoder(created_template_content.option_position)
+		template_content.label = created_template_content.label
+		template_content.position = jsonable_encoder(created_template_content.position)
 		session.add(template_content)
 		return template_content

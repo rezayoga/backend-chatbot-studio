@@ -141,7 +141,15 @@ class Template_Content_DAL:
 		if not template_contents:
 			return False
 
-		return template_contents.scalars().all()
+		template_contents = template_contents.scalars().all()
+
+		template_contents_schema_list = Template_ContentSchema.from_orm(template_contents)
+		for i in range(len(template_contents_schema_list.payloads)):
+			template_contents_schema_list.payloads[i] = template_contents_schema_list.payloads[i].dict(exclude_unset=True,
+			                                                                                 exclude_none=True)
+
+		return template_contents_schema_list
+
 
 	@classmethod
 	async def create_template_content(cls, created_template_content: Template_ContentSchema,

@@ -48,7 +48,7 @@ Authorization: Bearer {{access_token}}
 
 ###
 
-GET https://chatbotstudio.rezayogaswara.dev/api/v1/template_contents/
+GET https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/
 accept: application/json
 Content-Type: application/json
 
@@ -168,7 +168,7 @@ Authorization: Bearer {{access_token}}
     }
   }],
   "label": "init",
-  "position": {"x": 76, "y": 44} ,
+  "position": {"x": 55, "y": 55} ,
   "template_id": "e6daf5a6-746f-4c22-a6e8-0e92f8476e88"
 }
 

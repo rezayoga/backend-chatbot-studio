@@ -280,8 +280,7 @@ async def create_template_content(created_template_content: Template_ContentSche
 	if template is None or template == False:
 		raise not_found_exception("Template not found")
 
-	template_content = await Template_Content_DAL.create_template_content(
-		created_template_content.dict(exclude_none=True, exclude_unset=True), session)
+	template_content = await Template_Content_DAL.create_template_content(created_template_content, session)
 	try:
 		await session.commit()
 		return JSONResponse(status_code=200, content={"message": "Template content created successfully",

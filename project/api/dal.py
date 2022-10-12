@@ -1,3 +1,5 @@
+import logging
+
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -144,6 +146,9 @@ class Template_Content_DAL:
 	@classmethod
 	async def create_template_content(cls, created_template_content: Template_ContentSchema,
 	                                  session: AsyncSession) -> Template_Content:
+
+		logging.log(logging.INFO, f"create_template_content: {created_template_content} / {type(created_template_content.payloads)}")
+
 		payloads = jsonable_encoder(created_template_content.payloads)
 		template_content = Template_Content()
 		template_content.template_id = created_template_content.template_id

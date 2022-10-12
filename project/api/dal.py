@@ -147,7 +147,11 @@ class Template_Content_DAL:
 	async def create_template_content(cls, created_template_content: Template_ContentSchema,
 	                                  session: AsyncSession) -> Template_Content:
 
-		logging.log(logging.INFO, f"create_template_content: {created_template_content} / {type(created_template_content.payloads)}")
+		# logging.log(logging.INFO, f"create_template_content: {created_template_content} /
+		# {type(created_template_content.payloads)}")
+
+		for i in range(len(created_template_content.payloads)):
+			created_template_content.payloads[i] = created_template_content.payloads[i].dict(exclude_unset=True, exclude_none=True)
 
 		payloads = jsonable_encoder(created_template_content.payloads)
 		template_content = Template_Content()

@@ -159,7 +159,9 @@ class Template_Content_DAL:
 		template = template.scalars().first()
 
 		template_contents = await session.execute(
-			select(Template_Content).where(Template_Content.template_id == template.id))
+			select(Template_Content).where(Template_Content.template_id == template.id)
+			.where(Template_Content.is_deleted == False))
+
 		if not template_contents:
 			return False
 
@@ -170,9 +172,6 @@ class Template_Content_DAL:
 	@classmethod
 	async def create_template_content(cls, created_template_content: Template_ContentSchema,
 	                                  session: AsyncSession) -> Template_Content:
-
-		# logging.log(logging.INFO, f"create_template_content: {created_template_content} /
-		# {type(created_template_content.payloads)}")
 
 		for i in range(len(created_template_content.payloads)):
 			created_template_content.payloads[i] = created_template_content.payloads[i].dict(exclude_unset=True,
@@ -186,4 +185,34 @@ class Template_Content_DAL:
 		template_content.label = created_template_content.label
 		template_content.position = jsonable_encoder(created_template_content.position)
 		session.add(template_content)
+		return template_content
+
+	@classmethod
+	async def update_template_content(cls, user_id: int, template_content_id: int,
+	                                  updated_template_content: Template_ContentSchema,
+	                                  session: AsyncSession) -> Template_Content:
+
+		template_content = await session.execute(
+			select(Template_Content).where(Template_Content.id == template_content_id).where(
+				Template_Content.is_deleted == False))
+
+		template_content = template_content.scalars().first()
+
+		if not template_content:
+			return False
+
+		template = await session.execute(
+			select(Template).where(Template.id == template_content.template_id).where(Template.owner_id == user_id)
+			.where(Template.is_deleted == False))
+
+		if not template:
+			return False
+
+		for i in range(len(updated_template_content.payloads)):
+			updated_template_content.payloads[i] = updated_template_content.payloads[i].dict(exclude_unset=True,
+			                                                                                 exclude_none=True)
+
+		template_content.payloads = jsonable_encoder(updated_template_content.payloads)
+		template_content.label = updated_template_content.label
+		template_content.position = jsonable_encoder(updated_template_content.position)
 		return template_content

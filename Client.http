@@ -40,7 +40,7 @@ Content-Type: application/json
 
 ###
 
-GET https://chatbotstudio.rezayogaswara.dev/api/v1/templates/0cccf76d-5741-4cfb-b5c0-4feccc580d12/
+GET https://chatbotstudio.rezayogaswara.dev/api/v1/templates/a194cdbd-0894-4828-afb3-d5273602b463/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
@@ -168,8 +168,8 @@ Authorization: Bearer {{access_token}}
     }
   }],
   "label": "init",
-  "position": {"x": 16, "y": 73} ,
-  "template_id": "e6daf5a6-746f-4c22-a6e8-0e92f8476e88"
+  "position": {"x": 13, "y": 22} ,
+  "template_id": "a194cdbd-0894-4828-afb3-d5273602b463"
 }
 
 ###
@@ -245,23 +245,23 @@ Authorization: Bearer {{access_token}}
 
 ###
 
-GET https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/e6daf5a6-746f-4c22-a6e8-0e92f8476e88/
+GET https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/a194cdbd-0894-4828-afb3-d5273602b463/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 ###
 
-#POST https://chatbotstudio.rezayogaswara.dev/api/v1/templates/
-#accept: application/json
-#Content-Type: application/json
-#Authorization: Bearer {{access_token}}
-#
-#{
-#  "client": "wqgv",
-#  "channel": "wqgv",
-#  "channel_account_alias": "wqgv",
-#  "template_name": "Template wqgv",
-#  "template_description": "Desc Template wqgv",
-#  "division_id": "wqgv?"
-#}
+POST https://chatbotstudio.rezayogaswara.dev/api/v1/templates/
+accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "client": "a b c d e f g h i j k l m n o p q r s t u v w x y z",
+  "channel": "a b c d e f g h i j k l m n o p q r s t u v w x y z",
+  "channel_account_alias": "a b c d e f g h i j k l m n o p q r s t u v w x y z",
+  "template_name": "Template a b c d e f g h i j k l m n o p q r s t u v w x y z",
+  "template_description": "Desc Template a b c d e f g h i j k l m n o p q r s t u v w x y z",
+  "division_id": "a b c d e f g h i j k l m n o p q r s t u v w x y z?"
+}

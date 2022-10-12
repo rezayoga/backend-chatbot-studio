@@ -282,6 +282,7 @@ async def get_template_contents_by_template_id(template_id: str, auth: AuthJWT =
 
 	return template_contents
 
+
 @api_router.post("/template-contents/", tags=["template-contents"])
 async def create_template_content(created_template_content: Template_ContentSchema,
                                   auth: AuthJWT = Depends(), session: AsyncSession = Depends(get_session)):
@@ -337,47 +338,30 @@ async def create_template_content(created_template_content: Template_ContentSche
 # 	return template_content
 #
 #
-# @api_router.put("/template-contents/{template_content_id}/", tags=["template-contents"])
-# async def update_template_content(template_content_id: str, updated_template_content: Template_ContentSchema,
-#                                   auth: AuthJWT = Depends()):
-# 	auth.jwt_required()
-# 	user = session.query(User) \
-# 		.filter(User.id == auth.get_jwt_subject()) \
-# 		.first()
-#
-# 	if user is None:
-# 		raise get_user_exception()
-#
-# 	template = session.query(Template) \
-# 		.filter(Template.id == updated_template_content.template_id) \
-# 		.filter(Template.owner_id == auth.get_jwt_subject()) \
-# 		.first()
-#
-# 	if template is None:
-# 		raise not_found_exception("Template not found")
-#
-# 	template_content = session.query(Template_Content) \
-# 		.filter(Template_Content.id == template_content_id) \
-# 		.first()
-#
-# 	if template_content is None:
-# 		raise not_found_exception("Template content not found")
-#
-# 	payload = jsonable_encoder(updated_template_content.payload)
-# 	template_content.template_id = updated_template_content.template_id
-# 	template_content.parent_id = updated_template_content.parent_id
-# 	template_content.payload = payload
-# 	template_content.option = updated_template_content.option
-# 	template_content.x = updated_template_content.x
-# 	template_content.y = updated_template_content.y
-# 	template_content.option_label = updated_template_content.option_label
-# 	template_content.option_position = updated_template_content.option_position
-# 	session.commit()
-# 	logging.log(logging.INFO, template_content)
-# 	data = jsonable_encoder(updated_template_content.from_orm(template_content).dict(exclude_none=True))
-# 	logging.log(logging.INFO, data)
-# 	return JSONResponse(status_code=200, content={"message": "Template content updated successfully", "body": data})
-#
+@api_router.put("/template-contents/{template_content_id}/", tags=["template-contents"])
+async def update_template_content(template_content_id: str, updated_template_content: Template_ContentSchema,
+                                  auth: AuthJWT = Depends(), session: AsyncSession = Depends(get_session)):
+	auth.jwt_required()
+	user = await User_DAL.auth_user_by_user_id(auth.get_jwt_subject(), session)
+
+	if user is None:
+		raise get_user_exception()
+
+	template_content = await Template_Content_DAL.update_template_content(user.id, template_content_id,
+	                                                                      updated_template_content,
+	                                                                      session)
+
+	if template_content is None or template_content == False:
+		raise not_found_exception("Template content not found")
+
+	try:
+		await session.commit()
+		return JSONResponse(status_code=200, content={"message": "Template content updated successfully",
+		                                              "body": jsonable_encoder(template_content)})
+	except IntegrityError as ex:
+		await session.rollback()
+		raise incorrect_request_exception("Incorrect request")
+
 #
 # @api_router.delete("/template-contents/{template_content_id}/", tags=["template-contents"])
 # async def delete_template_content(template_content_id: str, auth: AuthJWT = Depends()):

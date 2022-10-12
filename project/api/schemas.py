@@ -252,7 +252,7 @@ class ReactionObject(BaseModel):
 
 
 class MessageObjectPayload(BaseModel):
-	audio: Optional[MediaObject] = None
+	audio: Optional[MediaObject] = Field(title="audio", description="The audio of the message", exclude_none=True)
 	contacts: Optional[ContactObject] = None
 	context: Optional[ContextObject] = None
 	document: Optional[MediaObject] = None
@@ -277,7 +277,6 @@ class MessageObjectPayload(BaseModel):
 
 	class Config:
 		orm_mode = True
-		exclude_none = True
 
 
 ### Application Schemas ###

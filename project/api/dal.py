@@ -211,7 +211,7 @@ class Template_Content_DAL:
 		for i in range(len(updated_template_content.payloads)):
 			updated_template_content.payloads[i] = updated_template_content.payloads[i].dict(exclude_unset=True,
 			                                                                                 exclude_none=True)
-
+		template_content.parent_ids = jsonable_encoder(updated_template_content.parent_ids)
 		template_content.payloads = jsonable_encoder(updated_template_content.payloads)
 		template_content.label = updated_template_content.label
 		template_content.position = jsonable_encoder(updated_template_content.position)

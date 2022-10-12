@@ -170,6 +170,28 @@ class Template_Content_DAL:
 		return template_contents
 
 	@classmethod
+	async def get_template_content_by_template_content_id(cls, user_id: int, template_content_id: int,
+	                                                      session: AsyncSession) -> Template_Content:
+
+		template_content = await session.execute(
+			select(Template_Content).where(Template_Content.id == template_content_id)
+			.where(Template_Content.is_deleted == False))
+
+		if not template_content:
+			return False
+
+		template_content = template_content.scalars().first()
+
+		template = await session.execute(
+			select(Template).where(Template.id == template_content.id).where(Template.owner_id == user_id)
+			.where(Template.is_deleted == False))
+
+		if not template:
+			return False
+
+		return template_content
+
+	@classmethod
 	async def create_template_content(cls, created_template_content: Template_ContentSchema,
 	                                  session: AsyncSession) -> Template_Content:
 

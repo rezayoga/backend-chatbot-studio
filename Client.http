@@ -231,57 +231,34 @@ Authorization: Bearer {{access_token}}
   }],
   "payloads": [{
     "messaging_product": "whatsapp",
+    "recipient_type": "individual",
     "to": "{{Recipient-Phone-Number}}",
-    "type": "contacts",
-    "contacts": [
-        {
-            "addresses": [
+    "type": "interactive",
+    "interactive": {
+        "type": "button",
+        "body": {
+            "text": "<BUTTON_TEXT>"
+        },
+        "action": {
+            "buttons": [
                 {
-                    "street": "<ADDRESS_STREET>",
-                    "city": "<ADDRESS_CITY>",
-                    "state": "<ADDRESS_STATE>",
-                    "zip": "<ADDRESS_ZIP>",
-                    "country": "<ADDRESS_COUNTRY>",
-                    "country_code": "<ADDRESS_COUNTRY_CODE>",
-                    "type": "<HOME|WORK>"
-                }
-            ],
-            "birthday": "<CONTACT_BIRTHDAY>",
-            "emails": [
+                    "type": "reply",
+                    "reply": {
+                        "id": "<UNIQUE_BUTTON_ID_1>",
+                        "title": "<BUTTON_TITLE_1>"
+                    }
+                },
                 {
-                    "email": "<CONTACT_EMAIL>",
-                    "type": "<WORK|HOME>"
-                }
-            ],
-            "name": {
-                "formatted_name": "<CONTACT_FORMATTED_NAME>",
-                "first_name": "<CONTACT_FIRST_NAME>",
-                "last_name": "<CONTACT_LAST_NAME>",
-                "middle_name": "<CONTACT_MIDDLE_NAME>",
-                "suffix": "<CONTACT_SUFFIX>",
-                "prefix": "<CONTACT_PREFIX>"
-            },
-            "org": {
-                "company": "<CONTACT_ORG_COMPANY>",
-                "department": "<CONTACT_ORG_DEPARTMENT>",
-                "title": "<CONTACT_ORG_TITLE>"
-            },
-            "phones": [
-                {
-                    "phone": "<CONTACT_PHONE>",
-                    "wa_id": "<CONTACT_WA_ID>",
-                    "type": "<HOME|WORK>"
-                }
-            ],
-            "urls": [
-                {
-                    "url": "<CONTACT_URL>",
-                    "type": "<HOME|WORK>"
+                    "type": "reply",
+                    "reply": {
+                        "id": "<UNIQUE_BUTTON_ID_2>",
+                        "title": "<BUTTON_TITLE_2>"
+                    }
                 }
             ]
         }
-    ]
-  }],
+    }
+}],
   "label": "init",
   "position": {"x": 44, "y": 55},
   "template_id": "a24bc2a9-9f38-4eb7-858b-94a93d4a2de2"

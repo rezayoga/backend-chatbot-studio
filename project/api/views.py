@@ -308,36 +308,26 @@ async def create_template_content(created_template_content: Template_ContentSche
 		raise incorrect_request_exception("Incorrect request")
 
 
-#
-# @api_router.get("/template/template-contents/{template_content_id}/", tags=["template-contents"])
-# async def get_template_content_by_template_content_id(template_content_id: str,
-#                                                       auth: AuthJWT = Depends()):
-# 	auth.jwt_required()
-# 	user = session.query(User) \
-# 		.filter(User.id == auth.get_jwt_subject()) \
-# 		.first()
-#
-# 	if user is None:
-# 		raise get_user_exception()
-#
-# 	template_content = session.query(Template_Content) \
-# 		.filter(Template_Content.id == template_content_id) \
-# 		.first()
-#
-# 	if template_content is None:
-# 		raise not_found_exception("Template content not found")
-#
-# 	template = session.query(Template) \
-# 		.filter(Template.id == template_content.template_id) \
-# 		.filter(and_(Template.owner_id == auth.get_jwt_subject())) \
-# 		.first()
-#
-# 	if template is None:
-# 		raise not_found_exception("Template not found")
-#
-# 	return template_content
-#
-#
+@api_router.get("/template/template-contents/{template_content_id}/", tags=["template-contents"])
+async def get_template_content_by_template_content_id(template_content_id: str,
+                                                      auth: AuthJWT = Depends(),
+                                                      session: AsyncSession = Depends(get_session)):
+	auth.jwt_required()
+	user = await User_DAL.auth_user_by_user_id(auth.get_jwt_subject(), session)
+
+	if user is None:
+		raise get_user_exception()
+
+	template_content = await Template_Content_DAL.get_template_content_by_template_content_id(user.id,
+	                                                                                          template_content_id,
+	                                                                                          session)
+
+	if template_content is None or template_content == False:
+		raise not_found_exception("Template content not found")
+
+	return template_content
+
+
 @api_router.put("/template-contents/{template_content_id}/", tags=["template-contents"])
 async def update_template_content(template_content_id: str, updated_template_content: Template_ContentSchema,
                                   auth: AuthJWT = Depends(), session: AsyncSession = Depends(get_session)):

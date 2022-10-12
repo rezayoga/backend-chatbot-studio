@@ -143,16 +143,7 @@ class Template_Content_DAL:
 
 		template_contents = template_contents.scalars().all()
 
-		tc_list = []
-
-		for template_content in template_contents:
-			tc = Template_ContentSchema.from_orm(template_content)
-			for i in range(len(tc.payloads)):
-				tc.payloads[i] = tc.payloads[i].dict(exclude_unset=True,
-				                                     exclude_none=True)
-			tc_list.append(tc)
-
-		return tc_list
+		return template_contents
 
 	@classmethod
 	async def create_template_content(cls, created_template_content: Template_ContentSchema,

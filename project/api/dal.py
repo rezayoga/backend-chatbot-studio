@@ -143,6 +143,8 @@ class Template_Content_DAL:
 
 		template_contents = template_contents.scalars().all()
 
+		tc_list = []
+
 		for template_content in template_contents:
 			# logging.log(logging.INFO, f"template_content.content: {template_content.payloads} / type: "
 			#                           f"{type(template_content)}")
@@ -150,7 +152,12 @@ class Template_Content_DAL:
 			tc = Template_ContentSchema.from_orm(template_content)
 			logging.log(logging.INFO, f"tc.content: {tc.payloads} / type: {type(tc)}")
 
-		return template_contents
+			for i in range(len(tc.payloads)):
+				tc.payloads[i] = tc.payloads[i].dict(exclude_unset=True,
+				                                     exclude_none=True)
+			tc_list.append(tc)
+
+		return tc_list
 
 	@classmethod
 	async def create_template_content(cls, created_template_content: Template_ContentSchema,

@@ -174,6 +174,7 @@ class FooterObject(BaseModel):
 	class Config:
 		orm_mode = True
 
+
 class InteractiveObject(BaseModel):
 	action: ActionObject = Field(title="action", description="The action of the interactive object")
 	body: Optional[BodyObject] = None
@@ -251,7 +252,7 @@ class ReactionObject(BaseModel):
 
 
 class MessageObjectPayload(BaseModel):
-	audio: Optional[MediaObject] = Field(title="audio", description="The audio of the message", exclude_none=True)
+	audio: Optional[MediaObject] = Field(title="audio", description="The audio of the message")
 	contacts: Optional[ContactObject] = None
 	context: Optional[ContextObject] = None
 	document: Optional[MediaObject] = None

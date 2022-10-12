@@ -267,7 +267,8 @@ async def get_template_contents(session: AsyncSession = Depends(get_session)):
 
 @api_router.post("/template-contents/", tags=["template-contents"])
 async def create_template_content(created_template_content: Template_ContentSchema,
-                                  auth: AuthJWT = Depends(), session: AsyncSession = Depends(get_session)):
+                                  auth: AuthJWT = Depends(), session: AsyncSession = Depends(get_session),
+                                  response_model_exclude_none=True):
 	auth.jwt_required()
 	user = await User_DAL.auth_user_by_user_id(auth.get_jwt_subject(), session)
 

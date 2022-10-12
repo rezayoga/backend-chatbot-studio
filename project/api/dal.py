@@ -183,7 +183,7 @@ class Template_Content_DAL:
 		template_content = template_content.scalars().first()
 
 		template = await session.execute(
-			select(Template).where(Template.id == template_content.id).where(Template.owner_id == user_id)
+			select(Template).where(Template.id == template_content.template_id).where(Template.owner_id == user_id)
 			.where(Template.is_deleted == False))
 
 		if not template:

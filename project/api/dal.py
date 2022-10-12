@@ -142,8 +142,7 @@ class Template_Content_DAL:
 		return template_contents.scalars().all()
 
 	@classmethod
-	async def create_template_content(cls, created_template_content: Template_ContentSchema,
-	                                  session: AsyncSession) -> Template_Content:
+	async def create_template_content(cls, created_template_content: Template_ContentSchema, session: AsyncSession) -> Template_Content:
 		payload = jsonable_encoder(created_template_content.payload.dict(exclude_none=True))
 		template_content = Template_Content()
 		template_content.template_id = created_template_content.template_id

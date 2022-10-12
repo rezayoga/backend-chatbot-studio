@@ -174,7 +174,6 @@ class FooterObject(BaseModel):
 	class Config:
 		orm_mode = True
 
-
 class InteractiveObject(BaseModel):
 	action: ActionObject = Field(title="action", description="The action of the interactive object")
 	body: Optional[BodyObject] = None

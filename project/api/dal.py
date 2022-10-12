@@ -146,8 +146,7 @@ class Template_Content_DAL:
 		template_content = None
 		for i in range(len(template_contents)):
 			# template_contents[i].template_content = jsonable_encoder(template_contents[i].template_content)
-			template_content = template_contents[i]
-			for j in range(len(template_content.payloads)):
+			for j in range(len(template_contents[i].payloads)):
 				template_content.payloads[j] = template_content.payloads[j].dict(exclude_unset=True,
 				                                                                 exclude_none=True)
 			template_contents_.append(template_content)

@@ -144,9 +144,8 @@ class Template_Content_DAL:
 		template_contents = template_contents.scalars().all()
 
 		for template_content in template_contents:
-			template_content.content = jsonable_encoder(template_content.content)
-			logging.log(logging.INFO, f"template_content.content: {template_content.content} / type: "
-			                          f"{type(template_content.content)}")
+			logging.log(logging.INFO, f"template_content.content: {template_content.payloads} / type: "
+			                          f"{type(template_content)}")
 
 		return template_contents
 

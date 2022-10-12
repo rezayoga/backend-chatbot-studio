@@ -347,8 +347,8 @@ class Template_Update(BaseModel):
 class Template_Content(BaseModel):
 	parent_ids: Optional[List[Parent_Id]] = Field(title="parent_ids",
 	                                              description="The list of template_content's parent_id")
-	payloads: Optional[List[MessageObjectPayload]] = Field(title="payloads",
-	                                                       description="The payloads of the template content")
+	payloads: List[MessageObjectPayload] = Field(title="payloads",
+	                                             description="The payloads of the template content")
 	template_id: constr(min_length=1) = Field(title="template_id",
 	                                          description="The template_id of the template content")
 	label: Optional[str] = None

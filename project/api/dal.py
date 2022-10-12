@@ -146,12 +146,7 @@ class Template_Content_DAL:
 		tc_list = []
 
 		for template_content in template_contents:
-			# logging.log(logging.INFO, f"template_content.content: {template_content.payloads} / type: "
-			#                           f"{type(template_content)}")
-
 			tc = Template_ContentSchema.from_orm(template_content)
-			logging.log(logging.INFO, f"tc.content: {tc.payloads} / type: {type(tc)}")
-
 			for i in range(len(tc.payloads)):
 				tc.payloads[i] = tc.payloads[i].dict(exclude_unset=True,
 				                                     exclude_none=True)

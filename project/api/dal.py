@@ -142,11 +142,17 @@ class Template_Content_DAL:
 			return False
 
 		template_contents = template_contents.scalars().all()
+		template_contents_ = []
+		template_content = None
+		for i in range(len(template_contents)):
+			# template_contents[i].template_content = jsonable_encoder(template_contents[i].template_content)
+			template_content = template_contents[i]
+			for j in range(len(template_content.payloads)):
+				template_content.payloads[j] = template_content.payloads[j].dict(exclude_unset=True,
+				                                                                 exclude_none=True)
+			template_contents_.append(template_content)
 
-		logging.log(logging.INFO, f"template_contents: {template_contents} / {type(template_contents)}")
-
-		return template_contents
-
+		return template_contents_
 
 	@classmethod
 	async def create_template_content(cls, created_template_content: Template_ContentSchema,

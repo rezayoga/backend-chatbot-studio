@@ -144,8 +144,11 @@ class Template_Content_DAL:
 		template_contents = template_contents.scalars().all()
 
 		for template_content in template_contents:
-			logging.log(logging.INFO, f"template_content.content: {template_content.payloads} / type: "
-			                          f"{type(template_content)}")
+			# logging.log(logging.INFO, f"template_content.content: {template_content.payloads} / type: "
+			#                           f"{type(template_content)}")
+
+			tc = Template_ContentSchema.from_orm(template_content)
+			logging.log(logging.INFO, f"tc.content: {tc.payloads} / type: {type(tc)}")
 
 		return template_contents
 

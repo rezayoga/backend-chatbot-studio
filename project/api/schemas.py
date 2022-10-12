@@ -17,7 +17,7 @@ class NameObject(BaseModel):
 
 
 class AddressObject(BaseModel):
-	street_address: Optional[str] = None
+	street: Optional[str] = None
 	city: Optional[str] = None
 	state: Optional[str] = None
 	zip: Optional[str] = None
@@ -66,11 +66,11 @@ class UrlObject(BaseModel):
 class ContactObject(BaseModel):
 	addresses: Optional[AddressObject] = None
 	birthday: Optional[date] = None
-	emails: Optional[EmailObject] = None
+	emails: Optional[List[EmailObject]] = None
 	name: Optional[NameObject] = Field(title="name", description="Name of the contact")
-	phones: Optional[PhoneObject] = None
+	phones: Optional[List[PhoneObject]] = None
 	org: Optional[OrgObject] = None
-	urls: Optional[UrlObject] = None
+	urls: Optional[List[UrlObject]] = None
 
 	class Config:
 		orm_mode = True
@@ -253,7 +253,7 @@ class ReactionObject(BaseModel):
 
 class MessageObjectPayload(BaseModel):
 	audio: Optional[MediaObject] = Field(title="audio", description="The audio of the message")
-	contacts: Optional[ContactObject] = None
+	contacts: Optional[List[ContactObject]] = None
 	context: Optional[ContextObject] = None
 	document: Optional[MediaObject] = None
 	hsm: Optional[str] = None

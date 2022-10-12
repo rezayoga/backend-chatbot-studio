@@ -53,7 +53,7 @@ Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "parent_id": [
+  "parent_ids": [
         {
         "option": "Yes Ok",
         "parent_id": "2d6f9901-e6f5-42b3-be03-7a4986d0bac9",
@@ -67,16 +67,34 @@ Authorization: Bearer {{access_token}}
         "option_position": {"x": 22, "y": 64}
         }
    ],
-  "payload": {
+  "payloads": [{
     "messaging_product": "whatsapp",
     "recipient_type": "individual",
     "to": "{{Recipient-Phone-Number}}",
     "type": "text",
     "text": {
         "preview_url": false,
-        "body": "text-message-content"
+        "body": "text-message-content #1"
     }
-  },
+  },{
+    "messaging_product": "whatsapp",
+    "recipient_type": "individual",
+    "to": "{{Recipient-Phone-Number}}",
+    "type": "text",
+    "text": {
+        "preview_url": true,
+        "body": "text-message-content #2"
+    }
+  },{
+    "messaging_product": "whatsapp",
+    "recipient_type": "individual",
+    "to": "{{Recipient-Phone-Number}}",
+    "type": "text",
+    "text": {
+        "preview_url": false,
+        "body": "text-message-content #3"
+    }
+  }],
   "option": "Yaayyy",
   "option_label": "init",
   "option_position": {"x": 14, "y": 36} ,

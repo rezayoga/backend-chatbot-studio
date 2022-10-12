@@ -143,7 +143,7 @@ class Template_Content_DAL:
 
 		template_contents = template_contents.scalars().all()
 
-		logging.log(logging.INFO, f"template_contents: {template_contents}")
+		logging.log(logging.INFO, f"template_contents: {template_contents} / {type(template_contents)}")
 
 		return template_contents
 

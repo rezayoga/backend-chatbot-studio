@@ -267,8 +267,7 @@ async def get_template_contents(session: AsyncSession = Depends(get_session)):
 
 @api_router.post("/template-contents/", tags=["template-contents"])
 async def create_template_content(created_template_content: Template_ContentSchema,
-                                  auth: AuthJWT = Depends(), session: AsyncSession = Depends(get_session),
-                                  response_model_exclude_none=True):
+                                  auth: AuthJWT = Depends(), session: AsyncSession = Depends(get_session)):
 	auth.jwt_required()
 	user = await User_DAL.auth_user_by_user_id(auth.get_jwt_subject(), session)
 
@@ -281,7 +280,8 @@ async def create_template_content(created_template_content: Template_ContentSche
 	if template is None or template == False:
 		raise not_found_exception("Template not found")
 
-	template_content = await Template_Content_DAL.create_template_content(created_template_content, session)
+	template_content = await Template_Content_DAL.create_template_content(
+		created_template_content.dict(exclude_none=True, exclude_unset=True), session)
 	try:
 		await session.commit()
 		return JSONResponse(status_code=200, content={"message": "Template content created successfully",

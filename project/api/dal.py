@@ -189,8 +189,6 @@ class Template_Content_DAL:
 		if not template or not isinstance(template_content, Template_Content):
 			return False
 
-		logging.log(logging.INFO, f"template_content: {type(template_content)} / template: {type(template)}")
-
 		return template_content
 
 	@classmethod

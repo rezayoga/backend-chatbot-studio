@@ -146,10 +146,10 @@ class Template_Content_DAL:
 		payload = jsonable_encoder(created_template_content.payload.dict(exclude_none=True))
 		template_content = Template_Content()
 		template_content.template_id = created_template_content.template_id
-		template_content.parent_id = created_template_content.parent_id
+		template_content.parent_id = jsonable_encoder(created_template_content.parent_id)
 		template_content.payload = payload
 		template_content.option = created_template_content.option
 		template_content.option_label = created_template_content.option_label
-		template_content.option_position = created_template_content.option_position
+		template_content.option_position = jsonable_encoder(created_template_content.option_position)
 		session.add(template_content)
 		return template_content

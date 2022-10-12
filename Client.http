@@ -55,6 +55,13 @@ Content-Type: application/json
 
 ###
 
+GET https://chatbotstudio.rezayogaswara.dev/api/v1/template/template-contents/24b22911-4547-477e-949c-4b4264e383fa/
+accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+###
+
 POST https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/
 accept: application/json
 Content-Type: application/json

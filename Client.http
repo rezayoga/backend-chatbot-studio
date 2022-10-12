@@ -168,7 +168,7 @@ Authorization: Bearer {{access_token}}
     }
   }],
   "label": "init",
-  "position": {"x": 55, "y": 55} ,
+  "position": {"x": 16, "y": 73} ,
   "template_id": "e6daf5a6-746f-4c22-a6e8-0e92f8476e88"
 }
 

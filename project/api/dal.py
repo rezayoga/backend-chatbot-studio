@@ -143,12 +143,9 @@ class Template_Content_DAL:
 
 		template_contents = template_contents.scalars().all()
 
-		template_contents_schema_list = Template_ContentSchema.from_orm(template_contents)
-		for i in range(len(template_contents_schema_list.payloads)):
-			template_contents_schema_list.payloads[i] = template_contents_schema_list.payloads[i].dict(exclude_unset=True,
-			                                                                                 exclude_none=True)
+		logging.log(logging.INFO, f"template_contents: {template_contents}")
 
-		return template_contents_schema_list
+		return template_contents
 
 
 	@classmethod

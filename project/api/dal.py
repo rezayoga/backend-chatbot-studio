@@ -149,8 +149,6 @@ class Template_Content_DAL:
 		template_content.parent_id = created_template_content.parent_id
 		template_content.payload = payload
 		template_content.option = created_template_content.option
-		template_content.x = created_template_content.x
-		template_content.y = created_template_content.y
 		template_content.option_label = created_template_content.option_label
 		template_content.option_position = created_template_content.option_position
 		session.add(template_content)

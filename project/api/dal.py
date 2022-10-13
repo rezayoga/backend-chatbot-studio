@@ -46,7 +46,10 @@ class User_DAL:
 	@classmethod
 	async def get_users(cls, session: AsyncSession) -> list[User]:
 		users = await session.execute(select(User))
-		return users.scalars().all()
+		u = users.scalars().all()
+		if not u:
+			return False
+		return u
 
 	@classmethod
 	def create_user(cls, created_user: UserSchema, session: AsyncSession) -> User:
@@ -66,28 +69,29 @@ class Template_DAL:
 	@classmethod
 	async def get_templates(cls, session: AsyncSession) -> list[Template]:
 		templates = await session.execute(select(Template))
-		if not templates:
+		t = templates.scalars().all()
+		if not t:
 			return False
-		return templates.scalars().all()
+		return t
 
 	@classmethod
 	async def get_template_by_template_id(cls, user_id: str, template_id: str, session: AsyncSession) -> Template:
-		t = await session.execute(
+		template = await session.execute(
 			select(Template).where(Template.id == template_id).where(Template.owner_id == user_id).where(
 				Template.is_deleted == False))
-		template = t.scalars().first()
-		if not template:
+		t = template.scalars().first()
+		if not t:
 			return False
-		return template
+		return t
 
 	@classmethod
 	async def get_template_by_user_id(cls, user_id: int, session: AsyncSession) -> Template:
-		t = await session.execute(
+		template = await session.execute(
 			select(Template).where(Template.owner_id == user_id).where(Template.is_deleted == False))
-		template = t.scalars().all()
-		if not template:
+		t = template.scalars().all()
+		if not t:
 			return False
-		return template
+		return t
 
 	@classmethod
 	def create_template(cls, user_id: int, created_template: TemplateSchema, session: AsyncSession) -> Template:
@@ -105,31 +109,34 @@ class Template_DAL:
 	@classmethod
 	async def update_template(cls, user_id: int, template_id: int, updated_template: Template_UpdateSchema,
 	                          session: AsyncSession) -> Template:
-		t = await session.execute(select(Template).where(Template.id == template_id).where(Template.owner_id == user_id) \
-		                          .where(Template.is_deleted == False))
-		template = t.scalars().first()
+		template = await session.execute(select(Template).where(Template.id == template_id)
+		                                 .where(Template.owner_id == user_id)
+		                                 .where(Template.is_deleted == False))
+		t = template.scalars().first()
 
-		if not template:
+		if not t:
 			return False
 
-		template.client = updated_template.client
-		template.channel_account_alias = updated_template.channel_account_alias
-		template.template_name = updated_template.template_name
-		template.template_description = updated_template.template_description
-		template.division_id = updated_template.division_id
-		return template
+		t.client = updated_template.client
+		t.channel_account_alias = updated_template.channel_account_alias
+		t.template_name = updated_template.template_name
+		t.template_description = updated_template.template_description
+		t.division_id = updated_template.division_id
+
+		return t
 
 	@classmethod
 	async def delete_template(cls, user_id: int, template_id: int, session: AsyncSession) -> Template:
-		t = await session.execute(select(Template).where(Template.id == template_id).where(Template.owner_id == user_id) \
-		                          .where(Template.is_deleted == False))
-		template = t.scalars().first()
+		template = await session.execute(
+			select(Template).where(Template.id == template_id).where(Template.owner_id == user_id)
+			.where(Template.is_deleted == False))
+		t = template.scalars().first()
 
-		if not template:
+		if not t:
 			return False
 
-		template.is_deleted = True
-		return template
+		t.is_deleted = True
+		return t
 
 
 ### Template Content services ###
@@ -138,12 +145,12 @@ class Template_Content_DAL:
 	@classmethod
 	async def get_template_contents(cls, session: AsyncSession) -> list[Template_Content]:
 		template_contents = await session.execute(select(Template_Content))
-		if not template_contents:
+		tc = template_contents.scalars().all()
+
+		if not tc:
 			return False
 
-		template_contents = template_contents.scalars().all()
-
-		return template_contents
+		return tc
 
 	@classmethod
 	async def get_template_contents_by_template_id(cls, user_id: int, template_id: int,
@@ -153,21 +160,21 @@ class Template_Content_DAL:
 			select(Template).where(Template.id == template_id).where(Template.owner_id == user_id)
 			.where(Template.is_deleted == False))
 
-		if not template:
-			return False
+		t = template.scalars().first()
 
-		template = template.scalars().first()
+		if not t:
+			return False
 
 		template_contents = await session.execute(
-			select(Template_Content).where(Template_Content.template_id == template.id)
+			select(Template_Content).where(Template_Content.template_id == t.id)
 			.where(Template_Content.is_deleted == False))
 
-		if not template_contents:
+		tc = template_contents.scalars().all()
+
+		if not tc:
 			return False
 
-		template_contents = template_contents.scalars().all()
-
-		return template_contents
+		return tc
 
 	@classmethod
 	async def get_template_content_by_template_content_id(cls, user_id: int, template_content_id: int,
@@ -177,23 +184,33 @@ class Template_Content_DAL:
 			select(Template_Content).where(Template_Content.id == template_content_id)
 			.where(Template_Content.is_deleted == False))
 
-		if not template_content:
-			return False
+		tc = template_content.scalars().first()
 
-		template_content = template_content.scalars().first()
+		if not tc:
+			return False
 
 		template = await session.execute(
-			select(Template).where(Template.id == template_content.template_id).where(Template.owner_id == user_id)
+			select(Template).where(Template.id == tc.template_id).where(Template.owner_id == user_id)
 			.where(Template.is_deleted == False))
 
-		if not template:
+		t = template.scalars().first()
+
+		if not t:
 			return False
 
-		return template_content
+		return tc
 
 	@classmethod
-	async def create_template_content(cls, created_template_content: Template_ContentSchema,
+	async def create_template_content(cls, user_id: int, created_template_content: Template_ContentSchema,
 	                                  session: AsyncSession) -> Template_Content:
+
+		template = await session.execute(select(Template).where(Template.id == created_template_content.template_id)
+		                                 .where(Template.owner_id == user_id)
+		                                 .where(Template.is_deleted == False))
+		t = template.scalars().first()
+
+		if not t:
+			return False
 
 		for i in range(len(created_template_content.payloads)):
 			created_template_content.payloads[i] = created_template_content.payloads[i].dict(exclude_unset=True,
@@ -218,23 +235,48 @@ class Template_Content_DAL:
 			select(Template_Content).where(Template_Content.id == template_content_id).where(
 				Template_Content.is_deleted == False))
 
-		template_content = template_content.scalars().first()
+		tc = template_content.scalars().first()
 
-		if not template_content:
+		if not tc:
 			return False
 
 		template = await session.execute(
-			select(Template).where(Template.id == template_content.template_id).where(Template.owner_id == user_id)
+			select(Template).where(Template.id == tc.template_id).where(Template.owner_id == user_id)
 			.where(Template.is_deleted == False))
 
-		if not template:
+		t = template.scalars().first()
+
+		if not t:
 			return False
 
 		for i in range(len(updated_template_content.payloads)):
 			updated_template_content.payloads[i] = updated_template_content.payloads[i].dict(exclude_unset=True,
 			                                                                                 exclude_none=True)
-		template_content.parent_ids = jsonable_encoder(updated_template_content.parent_ids)
-		template_content.payloads = jsonable_encoder(updated_template_content.payloads)
-		template_content.label = updated_template_content.label
-		template_content.position = jsonable_encoder(updated_template_content.position)
-		return template_content
+		tc.parent_ids = jsonable_encoder(updated_template_content.parent_ids)
+		tc.payloads = jsonable_encoder(updated_template_content.payloads)
+		tc.label = updated_template_content.label
+		tc.position = jsonable_encoder(updated_template_content.position)
+		return tc
+
+	@classmethod
+	async def delete_template_content(cls, user_id: int, template_content_id: int, session: AsyncSession) -> Template_Content:
+		template_content = await session.execute(
+			select(Template_Content).where(Template_Content.id == template_content_id).where(
+				Template_Content.is_deleted == False))
+
+		tc = template_content.scalars().first()
+
+		if not tc:
+			return False
+
+		template = await session.execute(
+			select(Template).where(Template.id == tc.template_id).where(Template.owner_id == user_id)
+			.where(Template.is_deleted == False))
+
+		t = template.scalars().first()
+
+		if not t:
+			return False
+
+		tc.is_deleted = True
+		return tc

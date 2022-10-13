@@ -1,5 +1,5 @@
 ###
-POST https://chatbotstudio.rezayogaswara.dev/api/v1/token/
+POST http://localhost:8000/api/v1/token/
 accept: application/json
 Content-Type: application/json
 
@@ -13,20 +13,20 @@ Content-Type: application/json
 
 ####
 
-GET https://chatbotstudio.rezayogaswara.dev/api/v1/users/
+GET http://localhost:8000/api/v1/users/
 accept: application/json
 Content-Type: application/json
 
 ####
 
-GET https://chatbotstudio.rezayogaswara.dev/api/v1/templates/
+GET http://localhost:8000/api/v1/templates/
 accept: application/json
 Content-Type: application/json
 
 ####
 
 #
-#POST https://chatbotstudio.rezayogaswara.dev/api/v1/users/
+#POST http://localhost:8000/api/v1/users/
 #accept: application/json
 #Content-Type: application/json
 #
@@ -40,7 +40,7 @@ Content-Type: application/json
 
 ###
 
-GET https://chatbotstudio.rezayogaswara.dev/api/v1/templates/a194cdbd-0894-4828-afb3-d5273602b463/
+GET http://localhost:8000/api/v1/templates/a194cdbd-0894-4828-afb3-d5273602b463/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
@@ -48,21 +48,21 @@ Authorization: Bearer {{access_token}}
 
 ###
 
-GET https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/
+GET http://localhost:8000/api/v1/template-contents/
 accept: application/json
 Content-Type: application/json
 
 
 ###
 
-GET https://chatbotstudio.rezayogaswara.dev/api/v1/template/template-contents/24b22911-4547-477e-949c-4b4264e383fa/
+GET http://localhost:8000/api/v1/template/template-contents/d92c9539-13a0-4aa6-b8dd-2ab1ee88da82/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 ###
 
-POST https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/
+POST http://localhost:8000/api/v1/template-contents/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
@@ -176,55 +176,55 @@ Authorization: Bearer {{access_token}}
   }],
   "label": "init",
   "position": {"x": 13, "y": 22} ,
-  "template_id": "a194cdbd-0894-4828-afb3-d5273602b463"
+  "template_id": "dff780ba-1428-4f1d-b185-e475459289fa"
 }
 
 ###
 
-#DELETE https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/f9d1ca3a-4fd7-4450-8f57-0459a3d323a3/
-#accept: application/json
-#Content-Type: application/json
-#Authorization: Bearer {{access_token}}
-
-###
-
-DELETE https://chatbotstudio.rezayogaswara.dev/api/v1/templates/0cccf76d-5741-4cfb-b5c0-4feccc580d12/
+DELETE http://localhost:8000/api/v1/template-contents/d92c9539-13a0-4aa6-b8dd-2ab1ee88da82/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 ###
 
-PUT https://chatbotstudio.rezayogaswara.dev/api/v1/templates/0cccf76d-5741-4cfb-b5c0-4feccc580d12/
+DELETE http://localhost:8000/api/v1/templates/f99a6751-f44f-4f55-8d63-1dd0175bae9c/
+accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+###
+
+PUT http://localhost:8000/api/v1/templates/f99a6751-f44f-4f55-8d63-1dd0175bae9c/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "client": "t",
-  "channel_account_alias": "t",
-  "template_name": "Template t",
-  "template_description": "Desc Template t",
-  "division_id": "t?"
+  "client": " o p e n m e d i a ",
+  "channel_account_alias": " o p e n m e d i a ",
+  "template_name": "Template  o p e n m e d i a ",
+  "template_description": "Desc Template  o p e n m e d i a ",
+  "division_id": " o p e n m e d i a ?"
 }
 
 ###
 
-GET https://chatbotstudio.rezayogaswara.dev/api/v1/templates/0cccf76d-5741-4cfb-b5c0-4feccc580d12/
+GET http://localhost:8000/api/v1/templates/0cccf76d-5741-4cfb-b5c0-4feccc580d12/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 ###
 
-GET https://chatbotstudio.rezayogaswara.dev/api/v1/user/templates/
+GET http://localhost:8000/api/v1/user/templates/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 ###
 
-PUT https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/24b22911-4547-477e-949c-4b4264e383fa/
+PUT http://localhost:8000/api/v1/template-contents/2db802ad-c8a8-4fd4-88e4-bdce4164ea96/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
@@ -233,7 +233,7 @@ Authorization: Bearer {{access_token}}
   "parent_ids": [{
     "option": "No",
     "parent_id": "2d6f9901-e6f5-42b3-be03-7a4986d0bac9",
-    "option_label": "Option label Yes",
+    "option_label": "Option label 123",
     "option_position": {"x": 95, "y": 43}
   }],
   "payloads": [{
@@ -267,20 +267,20 @@ Authorization: Bearer {{access_token}}
     }
 }],
   "label": "init",
-  "position": {"x": 44, "y": 55},
+  "position": {"x": 123, "y": 123},
   "template_id": "a24bc2a9-9f38-4eb7-858b-94a93d4a2de2"
 }
 
 ###
 
-GET https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/a194cdbd-0894-4828-afb3-d5273602b463/
+GET http://localhost:8000/api/v1/template-contents/a194cdbd-0894-4828-afb3-d5273602b463/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 ###
 
-POST https://chatbotstudio.rezayogaswara.dev/api/v1/templates/
+POST http://localhost:8000/api/v1/templates/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}

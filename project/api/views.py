@@ -294,11 +294,14 @@ async def create_template_content(created_template_content: Template_ContentSche
 
 	template = await Template_DAL.get_template_by_template_id(user.id, created_template_content.template_id,
 	                                                          session)
-
 	if template is None or template == False:
 		raise not_found_exception("Template not found")
 
-	template_content = await Template_Content_DAL.create_template_content(created_template_content, session)
+	template_content = await Template_Content_DAL.create_template_content(user.id, created_template_content, session)
+
+	if template_content is None or template_content == False:
+		raise not_found_exception("Template found")
+
 	try:
 		await session.commit()
 		return JSONResponse(status_code=200, content={"message": "Template content created successfully",
@@ -352,24 +355,25 @@ async def update_template_content(template_content_id: str, updated_template_con
 		await session.rollback()
 		raise incorrect_request_exception("Incorrect request")
 
-#
-# @api_router.delete("/template-contents/{template_content_id}/", tags=["template-contents"])
-# async def delete_template_content(template_content_id: str, auth: AuthJWT = Depends()):
-# 	auth.jwt_required()
-# 	user = session.query(User) \
-# 		.filter(User.id == auth.get_jwt_subject()) \
-# 		.first()
-#
-# 	if user is None:
-# 		raise get_user_exception()
-#
-# 	template_content = session.query(Template_Content) \
-# 		.filter(Template_Content.id == template_content_id) \
-# 		.first()
-#
-# 	if template_content is None:
-# 		raise not_found_exception("Template content not found")
-#
-# 	session.delete(template_content)
-# 	session.commit()
-# 	return JSONResponse(status_code=200, content={"message": "Template content deleted successfully"})
+
+@api_router.delete("/template-contents/{template_content_id}/", tags=["template-contents"])
+async def delete_template_content(template_content_id: str, auth: AuthJWT = Depends(),
+                                  session: AsyncSession = Depends(get_session)):
+	auth.jwt_required()
+	user = await User_DAL.auth_user_by_user_id(auth.get_jwt_subject(), session)
+
+	if user is None:
+		raise get_user_exception()
+
+	template_content = await Template_Content_DAL.delete_template_content(user.id, template_content_id, session)
+
+	if template_content is None or template_content == False:
+		raise not_found_exception("Template content not found")
+
+	try:
+		await session.commit()
+		return JSONResponse(status_code=200, content={"message": "Template content deleted successfully",
+		                                              "body": jsonable_encoder(template_content)})
+	except IntegrityError as ex:
+		await session.rollback()
+		raise incorrect_request_exception("Incorrect request")

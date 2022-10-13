@@ -231,10 +231,10 @@ Authorization: Bearer {{access_token}}
 
 {
   "parent_ids": [{
-    "option": "Yes",
+    "option": "No",
     "parent_id": "2d6f9901-e6f5-42b3-be03-7a4986d0bac9",
     "option_label": "Option label Yes",
-    "option_position": {"x": 14, "y": 36}
+    "option_position": {"x": 95, "y": 43}
   }],
   "payloads": [{
     "messaging_product": "whatsapp",

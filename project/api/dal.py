@@ -177,6 +177,8 @@ class Template_Content_DAL:
 			select(Template_Content).where(Template_Content.id == template_content_id)
 			.where(Template_Content.is_deleted == False))
 
+		logging.warning(f"template_content: {template_content} / {type(template_content)}")
+
 		if not template_content:
 			return False
 
@@ -186,7 +188,9 @@ class Template_Content_DAL:
 			select(Template).where(Template.id == template_content.template_id).where(Template.owner_id == user_id)
 			.where(Template.is_deleted == False))
 
-		if not template or not isinstance(template_content, Template_Content):
+		logging.warning(f"template: {template} / {type(template)}")
+
+		if not template:
 			return False
 
 		return template_content

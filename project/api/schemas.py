@@ -1,5 +1,5 @@
 from datetime import date, timedelta
-from typing import Optional, List
+from typing import Optional, List, Union
 
 from pydantic import constr, BaseModel, Field, EmailStr
 
@@ -345,7 +345,7 @@ class Template_Update(BaseModel):
 
 
 class Template_Content(BaseModel):
-	parent_ids: Optional[List[Parent_Id]] = Field(title="parent_ids",
+	parent_ids: Optional[Union[List[Parent_Id], None]] = Field(title="parent_ids",
 	                                              description="The list of template_content's parent_id")
 	payloads: List[MessageObjectPayload] = Field(title="payloads",
 	                                             description="The payloads of the template content")

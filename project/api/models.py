@@ -16,7 +16,7 @@ class User(Base):
 	is_active = Column(Boolean, default=True)
 	created_at = Column(DateTime(timezone=True),
 	                    nullable=False, default=func.now())
-	updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+	updated_at = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
 	templates = relationship("Template", backref="template_owner", cascade="all, delete-orphan")
 
 	def __repr__(self):
@@ -71,11 +71,11 @@ class Template_Changelog(Base):
 
 	id = Column(String, primary_key=True, default=func.uuid_generate_v4())
 	version = Column(String(128), nullable=True)
-	user_id = Column(Integer, nullable=False, index=True)
+	user_id = Column(Integer, ForeignKey("users.id"))
 	created_at = Column(DateTime(timezone=True),
 	                    nullable=False, default=func.now())
 
-	updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+	updated_at = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
 	action = Column(String(128), nullable=True)
 	payload = Column(JSONB, nullable=True)
 	template_id = Column(String, ForeignKey("templates.id"))

@@ -1,4 +1,5 @@
 import logging
+from typing import List
 
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy import select
@@ -44,7 +45,7 @@ class User_DAL:
 		return user
 
 	@classmethod
-	async def get_users(cls, session: AsyncSession) -> list[User]:
+	async def get_users(cls, session: AsyncSession) -> List[User]:
 		users = await session.execute(select(User))
 		u = users.scalars().all()
 		if not u:
@@ -67,7 +68,7 @@ class User_DAL:
 
 class Template_DAL:
 	@classmethod
-	async def get_templates(cls, session: AsyncSession) -> list[Template]:
+	async def get_templates(cls, session: AsyncSession) -> List[Template]:
 		templates = await session.execute(select(Template))
 		t = templates.scalars().all()
 		if not t:
@@ -143,7 +144,7 @@ class Template_DAL:
 
 class Template_Content_DAL:
 	@classmethod
-	async def get_template_contents(cls, session: AsyncSession) -> list[Template_Content]:
+	async def get_template_contents(cls, session: AsyncSession) -> List[Template_Content]:
 		template_contents = await session.execute(select(Template_Content))
 		tc = template_contents.scalars().all()
 
@@ -154,7 +155,7 @@ class Template_Content_DAL:
 
 	@classmethod
 	async def get_template_contents_by_template_id(cls, user_id: int, template_id: int,
-	                                               session: AsyncSession) -> list[Template_Content]:
+	                                               session: AsyncSession) -> List[Template_Content]:
 
 		template = await session.execute(
 			select(Template).where(Template.id == template_id).where(Template.owner_id == user_id)

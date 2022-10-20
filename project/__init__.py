@@ -46,10 +46,10 @@ def create_app() -> FastAPI:
 		response.headers['Access-Control-Allow-Credentials'] = 'true'
 		return response
 
-	from project.logging import configure_logging  # new
+	from project.logging import configure_logging
 	configure_logging()
 
-	# do this before loading routes              # new
+	# do this before loading routes
 	app.celery_app = create_celery()
 
 	from fastapi.exceptions import RequestValidationError
@@ -74,7 +74,5 @@ def create_app() -> FastAPI:
 	@app.get("/")
 	async def root():
 		return {"message": "App started successfully"}
-
-	# bugsnag.notify(Exception('Test error'))
 
 	return app

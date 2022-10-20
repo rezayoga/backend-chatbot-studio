@@ -72,6 +72,7 @@ class Template_Changelog(Base):
 	id = Column(String, primary_key=True, default=func.uuid_generate_v4())
 	version = Column(String(128), nullable=True)
 	user_id = Column(Integer, ForeignKey("users.id"))
+	test_column = Column(String(128), nullable=True)
 	created_at = Column(DateTime(timezone=True),
 	                    nullable=False, default=func.now())
 

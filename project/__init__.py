@@ -24,7 +24,7 @@ def create_app() -> FastAPI:
 	              servers=[{"url": "https://chatbotstudio.rezayogaswara.dev/", "description": "Development"}])
 
 	# Salt to your taste
-	ALLOWED_ORIGINS = 'https://localhost:5173'  # or 'foo.com', etc.
+	ALLOWED_ORIGINS = 'https://127.0.0.1:5173'  # or 'foo.com', etc.
 
 	# handle CORS preflight requests
 	@app.options('/{rest_of_path:path}')

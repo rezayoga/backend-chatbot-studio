@@ -25,10 +25,10 @@ def create_app() -> FastAPI:
 	              },
 	              servers=[{"url": "https://chatbotstudio.rezayogaswara.dev/", "description": "Development"}])
 
-	# # Salt to your taste
-	# ALLOWED_ORIGINS = 'https://127.0.0.1:5173'  # or 'foo.com', etc.
-	#
-	# # handle CORS preflight requests
+	# Salt to your taste
+	ALLOWED_ORIGINS = 'https://127.0.0.1:5173'  # or 'foo.com', etc.
+
+	# handle CORS preflight requests
 	# @app.options('/{rest_of_path:path}')
 	# async def preflight_handler(request: Request, rest_of_path: str) -> Response:
 	# 	response = Response()
@@ -37,29 +37,29 @@ def create_app() -> FastAPI:
 	# 	response.headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type'
 	# 	response.headers['Access-Control-Allow-Credentials'] = 'true'
 	# 	return response
+
+	# set CORS headers
+	@app.middleware('http')
+	async def add_CORS_header(request: Request, call_next):
+		response = await call_next(request)
+		response.headers['Access-Control-Allow-Origin'] = ALLOWED_ORIGINS
+		response.headers['Access-Control-Allow-Methods'] = 'POST, GET, DELETE, OPTIONS, PUT'
+		response.headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type'
+		response.headers['Access-Control-Allow-Credentials'] = 'true'
+		return response
+
+	# origins = [
+	# 	"https://localhost:5173",
+	# 	"https://127.0.0.1:5173"
+	# ]
 	#
-	# # set CORS headers
-	# @app.middleware('http')
-	# async def add_CORS_header(request: Request, call_next):
-	# 	response = await call_next(request)
-	# 	response.headers['Access-Control-Allow-Origin'] = ALLOWED_ORIGINS
-	# 	response.headers['Access-Control-Allow-Methods'] = 'POST, GET, DELETE, OPTIONS, PUT'
-	# 	response.headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type'
-	# 	response.headers['Access-Control-Allow-Credentials'] = 'true'
-	# 	return response
-
-	origins = [
-		"https://localhost:5173",
-		"https://127.0.0.1:5173"
-	]
-
-	app.add_middleware(
-		CORSMiddleware,
-		allow_origins=origins,
-		allow_credentials=True,
-		allow_methods=["*"],
-		allow_headers=["*"],
-	)
+	# app.add_middleware(
+	# 	CORSMiddleware,
+	# 	allow_origins=origins,
+	# 	allow_credentials=True,
+	# 	allow_methods=["*"],
+	# 	allow_headers=["*"],
+	# )
 
 	from project.logging import configure_logging
 	configure_logging()

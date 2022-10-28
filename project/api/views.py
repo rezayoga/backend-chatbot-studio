@@ -1,13 +1,8 @@
-import logging
-from typing import List
-
 from fastapi import HTTPException, Depends
-from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from fastapi_jwt_auth import AuthJWT
 from redis import Redis
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.ext.asyncio import AsyncSession
 
 # from project.database import SessionLocal
 from project.api.dal import *
@@ -62,7 +57,7 @@ def get_config():
 	return settings
 
 
-redis_connection = Redis(host='localhost', port=6379, db=0, decode_responses=True)
+redis_connection = Redis(host='rezayogaswara.com', username='reza', password='reza1985', port=6379, db=0, decode_responses=True)
 
 
 # A storage engine to save revoked tokens. in production,

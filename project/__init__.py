@@ -29,14 +29,15 @@ def create_app() -> FastAPI:
 	ALLOWED_ORIGINS = 'https://127.0.0.1:5173'  # or 'foo.com', etc.
 
 	# handle CORS preflight requests
-	# @app.options('/{rest_of_path:path}')
-	# async def preflight_handler(request: Request, rest_of_path: str) -> Response:
-	# 	response = Response()
-	# 	response.headers['Access-Control-Allow-Origin'] = ALLOWED_ORIGINS
-	# 	response.headers['Access-Control-Allow-Methods'] = 'POST, GET, DELETE, OPTIONS, PUT'
-	# 	response.headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type'
-	# 	response.headers['Access-Control-Allow-Credentials'] = 'true'
-	# 	return response
+	@app.options('/{rest_of_path:path}')
+	async def preflight_handler(request: Request, rest_of_path: str) -> Response:
+		response = Response()
+		response.headers['Access-Control-Allow-Origin'] = ALLOWED_ORIGINS
+		response.headers['Access-Control-Allow-Methods'] = 'POST, GET, DELETE, OPTIONS, PUT'
+		response.headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type'
+		response.headers['Access-Control-Allow-Headers'] = 'x-requested-with, x-requested-by'
+		response.headers['Access-Control-Allow-Credentials'] = 'true'
+		return response
 
 	# set CORS headers
 	@app.middleware('http')
@@ -45,7 +46,11 @@ def create_app() -> FastAPI:
 		response.headers['Access-Control-Allow-Origin'] = ALLOWED_ORIGINS
 		response.headers['Access-Control-Allow-Methods'] = 'POST, GET, DELETE, OPTIONS, PUT'
 		response.headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type'
+		response.headers['Access-Control-Allow-Headers'] = 'x-requested-with, x-requested-by'
 		response.headers['Access-Control-Allow-Credentials'] = 'true'
+
+		# Buat loggin disini
+
 		return response
 
 	# origins = [

@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import HTTPException, Depends
 from fastapi.responses import JSONResponse
 from fastapi_jwt_auth import AuthJWT

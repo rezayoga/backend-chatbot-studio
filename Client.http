@@ -230,37 +230,15 @@ Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "payloads": [{
-    "messaging_product": "whatsapp",
-    "recipient_type": "individual",
-    "to": "{{Recipient-Phone-Number}}",
-    "type": "interactive",
-    "interactive": {
-        "type": "button",
-        "body": {
-            "text": "<BUTTON_TEXT>"
-        },
-        "action": {
-            "buttons": [
-                {
-                    "type": "reply",
-                    "reply": {
-                        "id": "<UNIQUE_BUTTON_ID_1>",
-                        "title": "<BUTTON_TITLE_1>"
-                    }
-                },
-                {
-                    "type": "reply",
-                    "reply": {
-                        "id": "<UNIQUE_BUTTON_ID_2>",
-                        "title": "<BUTTON_TITLE_2>"
-                    }
-                }
-            ]
-        }
-    }
-}],
-  "position": {"x": 123, "y": 123}
+  "parent_ids": [{
+    "option": "No",
+    "parent_id": "2d6f9901-e6f5-42b3-be03-7a4986d0bac9",
+    "option_label": "Option label 123",
+    "option_position": {"x": 95, "y": 43}
+  }],
+  "label": "init",
+  "position": {"x": 123, "y": 123},
+  "template_id": "a24bc2a9-9f38-4eb7-858b-94a93d4a2de2"
 }
 
 ###

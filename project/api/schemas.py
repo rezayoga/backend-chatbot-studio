@@ -281,6 +281,7 @@ class MessageObjectPayload(BaseModel):
 
 """ Application Schemas """
 
+
 class Option_Position(BaseModel):
 	x: int = Field(title="x", description="The x position of the option")
 	y: int = Field(title="y", description="The y position of the option")

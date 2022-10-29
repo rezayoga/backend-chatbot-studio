@@ -1,14 +1,14 @@
-import logging
 from typing import List
 
 from fastapi.encoders import jsonable_encoder
+from passlib.handlers.bcrypt import bcrypt
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .models import *
-from passlib.handlers.bcrypt import bcrypt
 from .schemas import User as UserSchema, Template as TemplateSchema, Template_Update as Template_UpdateSchema, \
 	Template_Content as Template_ContentSchema, Template_Content_Update as Template_Content_UpdateSchema
+
 
 ###
 # Data Access Layer (DAL) for all service endpoints
@@ -249,17 +249,20 @@ class Template_Content_DAL:
 		if not t:
 			return False
 
-		for i in range(len(updated_template_content.payloads)):
-			updated_template_content.payloads[i] = updated_template_content.payloads[i].dict(exclude_unset=True,
-			                                                                                 exclude_none=True)
+		if updated_template_content.payloads is not None:
+			for i in range(len(updated_template_content.payloads)):
+				updated_template_content.payloads[i] = updated_template_content.payloads[i].dict(exclude_unset=True,
+				                                                                                 exclude_none=True)
+			tc.payloads = jsonable_encoder(updated_template_content.payloads)
+
 		tc.parent_ids = jsonable_encoder(updated_template_content.parent_ids)
-		tc.payloads = jsonable_encoder(updated_template_content.payloads)
 		tc.label = updated_template_content.label
 		tc.position = jsonable_encoder(updated_template_content.position)
 		return tc
 
 	@classmethod
-	async def delete_template_content(cls, user_id: int, template_content_id: int, session: AsyncSession) -> Template_Content:
+	async def delete_template_content(cls, user_id: int, template_content_id: int,
+	                                  session: AsyncSession) -> Template_Content:
 		template_content = await session.execute(
 			select(Template_Content).where(Template_Content.id == template_content_id).where(
 				Template_Content.is_deleted == False))

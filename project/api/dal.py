@@ -8,8 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from .models import *
 from passlib.handlers.bcrypt import bcrypt
 from .schemas import User as UserSchema, Template as TemplateSchema, Template_Update as Template_UpdateSchema, \
-	Template_Content as Template_ContentSchema, Template_Content_Update as Template_Content_UpdateSchema, \
-
+	Template_Content as Template_ContentSchema, Template_Content_Update as Template_Content_UpdateSchema
 
 ###
 # Data Access Layer (DAL) for all service endpoints

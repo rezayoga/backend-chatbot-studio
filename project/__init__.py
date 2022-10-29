@@ -1,12 +1,17 @@
+import logging.config
+import os
+
+import bugsnag
 from fastapi import FastAPI, Request, Response, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
-import bugsnag
-import os
-
-from starlette.middleware.cors import CORSMiddleware
 
 from project.celery_utils import create_celery  # new
+
+logging.config.fileConfig('logging.conf', disable_existing_loggers=False)
+
+# get root logger
+logger = logging.getLogger(__name__)  # __name__ = "project"
 
 bugsnag.configure(
 	api_key="2d4b6a2c28e1f8375a9597608e54b04d",
@@ -49,7 +54,7 @@ def create_app() -> FastAPI:
 		response.headers['Access-Control-Allow-Headers'] = 'x-requested-with, x-requested-by'
 		response.headers['Access-Control-Allow-Credentials'] = 'true'
 
-		# Buat loggin disini
+		# Buat login disini
 
 		return response
 
@@ -65,9 +70,6 @@ def create_app() -> FastAPI:
 	# 	allow_methods=["*"],
 	# 	allow_headers=["*"],
 	# )
-
-	from project.logging import configure_logging
-	configure_logging()
 
 	# do this before loading routes
 	app.celery_app = create_celery()

@@ -346,11 +346,26 @@ class Template_Update(BaseModel):
 
 class Template_Content(BaseModel):
 	parent_ids: Optional[Union[List[Parent_Id], None]] = Field(title="parent_ids",
-	                                              description="The list of template_content's parent_id")
+	                                                           description="The list of template_content's parent_id")
 	payloads: List[MessageObjectPayload] = Field(title="payloads",
 	                                             description="The payloads of the template content")
 	template_id: constr(min_length=1) = Field(title="template_id",
 	                                          description="The template_id of the template content")
+	label: Optional[str] = None
+	position: Optional[Option_Position] = None
+	is_deleted: Optional[bool] = False
+
+	class Config:
+		orm_mode = True
+
+
+class Template_Content_Update(BaseModel):
+	parent_ids: Optional[Union[List[Parent_Id], None]] = Field(title="parent_ids",
+	                                                           description="The list of template_content's parent_id")
+	payloads: Optional[List[MessageObjectPayload]] = Field(title="payloads",
+	                                                       description="The payloads of the template content")
+	template_id: Optional[str] = Field(title="template_id",
+	                                   description="The template_id of the template content")
 	label: Optional[str] = None
 	position: Optional[Option_Position] = None
 	is_deleted: Optional[bool] = False

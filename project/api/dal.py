@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from .models import *
 from passlib.handlers.bcrypt import bcrypt
 from .schemas import User as UserSchema, Template as TemplateSchema, Template_Update as Template_UpdateSchema, \
-	Template_Content as Template_ContentSchema
+	Template_Content as Template_ContentSchema, Template_Content_Update as Template_Content_UpdateSchema, \
 
 
 ###
@@ -229,7 +229,7 @@ class Template_Content_DAL:
 
 	@classmethod
 	async def update_template_content(cls, user_id: int, template_content_id: int,
-	                                  updated_template_content: Template_ContentSchema,
+	                                  updated_template_content: Template_Content_UpdateSchema,
 	                                  session: AsyncSession) -> Template_Content:
 
 		template_content = await session.execute(

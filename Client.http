@@ -230,12 +230,6 @@ Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "parent_ids": [{
-    "option": "No",
-    "parent_id": "2d6f9901-e6f5-42b3-be03-7a4986d0bac9",
-    "option_label": "Option label 123",
-    "option_position": {"x": 95, "y": 43}
-  }],
   "payloads": [{
     "messaging_product": "whatsapp",
     "recipient_type": "individual",
@@ -266,9 +260,7 @@ Authorization: Bearer {{access_token}}
         }
     }
 }],
-  "label": "init",
-  "position": {"x": 123, "y": 123},
-  "template_id": "a24bc2a9-9f38-4eb7-858b-94a93d4a2de2"
+  "position": {"x": 123, "y": 123}
 }
 
 ###

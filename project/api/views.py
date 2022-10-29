@@ -172,8 +172,8 @@ async def get_template_by_template_id(template_id: str, auth: AuthJWT = Depends(
 
 	template = await Template_DAL.get_template_by_template_id(auth.get_jwt_subject(), template_id, session)
 
-	if template is None or template == False:
-		raise not_found_exception("Template not found")
+	# if template is None or template == False:
+	# 	raise not_found_exception("Template not found")
 
 	return template
 
@@ -182,8 +182,8 @@ async def get_template_by_template_id(template_id: str, auth: AuthJWT = Depends(
 async def get_templates(session: AsyncSession = Depends(get_session)):
 	templates = await Template_DAL.get_templates(session)
 
-	if templates is None or templates == False:
-		raise not_found_exception("Templates not found")
+	# if templates is None or templates == False:
+	# 	raise not_found_exception("Templates not found")
 
 	return templates
 
@@ -195,8 +195,8 @@ async def get_templates_by_user_id(auth: AuthJWT = Depends(),
 
 	templates = await Template_DAL.get_template_by_user_id(auth.get_jwt_subject(), session)
 
-	if templates is None or templates == False:
-		raise not_found_exception("Templates not found")
+	# if templates is None or templates == False:
+	# 	raise not_found_exception("Templates not found")
 
 	return templates
 
@@ -255,8 +255,8 @@ async def delete_template(template_id: str, auth: AuthJWT = Depends(),
 async def get_template_contents(session: AsyncSession = Depends(get_session)):
 	template_contents = await Template_Content_DAL.get_template_contents(session)
 
-	if template_contents is None or template_contents == False:
-		raise not_found_exception("Template contents not found")
+	# if template_contents is None or template_contents == False:
+	# 	raise not_found_exception("Template contents not found")
 
 	return template_contents
 
@@ -272,8 +272,8 @@ async def get_template_contents_by_template_id(template_id: str, auth: AuthJWT =
 
 	template_contents = await Template_Content_DAL.get_template_contents_by_template_id(user.id, template_id, session)
 
-	if template_contents is None or template_contents == False:
-		raise not_found_exception("Template contents not found")
+	# if template_contents is None or template_contents == False:
+	# 	raise not_found_exception("Template contents not found")
 
 	return template_contents
 
@@ -292,8 +292,8 @@ async def get_template_content_by_template_content_id(template_content_id: str,
 	                                                                                          template_content_id,
 	                                                                                          session)
 
-	if template_content is None or template_content == False:
-		raise not_found_exception("Template content not found")
+	# if template_content is None or template_content == False:
+	# 	raise not_found_exception("Template content not found")
 
 	return template_content
 

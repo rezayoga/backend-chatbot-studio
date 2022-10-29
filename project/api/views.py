@@ -8,8 +8,9 @@ from sqlalchemy.exc import IntegrityError
 from project.api.dal import *
 from . import api_router
 from .schemas import JWT_Settings as JWT_SettingsSchema
-from .schemas import Template as TemplateSchema
-from .schemas import Template_Update as Template_UpdateSchema, Template_Content as Template_ContentSchema
+from .schemas import Template as TemplateSchema, Template_Update as Template_UpdateSchema, \
+	Template_Content as Template_ContentSchema, \
+	Template_Content_Update as Template_Content_UpdateSchema
 from .schemas import User as UserSchema
 from .schemas import User_Login as User_LoginSchema
 from ..database import get_session
@@ -327,7 +328,7 @@ async def create_template_content(created_template_content: Template_ContentSche
 
 
 @api_router.put("/template-contents/{template_content_id}/", tags=["template-contents"])
-async def update_template_content(template_content_id: str, updated_template_content: Template_ContentSchema,
+async def update_template_content(template_content_id: str, updated_template_content: Template_Content_UpdateSchema,
                                   auth: AuthJWT = Depends(), session: AsyncSession = Depends(get_session)):
 	auth.jwt_required()
 	user = await User_DAL.auth_user_by_user_id(auth.get_jwt_subject(), session)

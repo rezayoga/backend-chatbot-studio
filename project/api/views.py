@@ -29,7 +29,7 @@ settings = JWT_SettingsSchema()
 
 def not_found_exception(message: str):
 	not_found_exception_response = HTTPException(
-		status_code=404,
+		status_code=200,
 		detail=jsonable_encoder({"message": message, "data": {}}),
 	)
 	return not_found_exception_response

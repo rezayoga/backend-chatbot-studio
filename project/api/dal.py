@@ -265,6 +265,9 @@ class Template_Content_DAL:
 		if updated_template_content is not None and updated_template_content.position:
 			tc.position = jsonable_encoder(updated_template_content.position)
 
+		if updated_template_content is not None and updated_template_content.template_id:
+			tc.template_id = updated_template_content.template_id
+
 		return tc
 
 	@classmethod

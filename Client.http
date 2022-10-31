@@ -230,8 +230,7 @@ Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "position": {"x": 123, "y": 123},
-  "template_id": "a24bc2a9-9f38-4eb7-858b-94a93d4a2de2"
+    "template_id": "a194cdbd-0894-4828-afb3-d5273602b463"
 }
 
 ###

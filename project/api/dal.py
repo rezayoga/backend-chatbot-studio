@@ -251,18 +251,18 @@ class Template_Content_DAL:
 		if not t:
 			return False
 
-		if len(updated_template_content.payloads) > 0:
+		if updated_template_content is not None and len(updated_template_content.payloads) > 0:
 			for i in range(len(updated_template_content.payloads)):
 				updated_template_content.payloads[i] = updated_template_content.payloads[i].dict(exclude_unset=True,
 				                                                                                 exclude_none=True)
 			tc.payloads = jsonable_encoder(updated_template_content.payloads)
-		if updated_template_content.parent_ids:
+		if updated_template_content is not None and updated_template_content.parent_ids:
 			tc.parent_ids = jsonable_encoder(updated_template_content.parent_ids)
 
-		if updated_template_content.label:
+		if updated_template_content is not None and updated_template_content.label:
 			tc.label = updated_template_content.label
 
-		if updated_template_content.position:
+		if updated_template_content is not None and updated_template_content.position:
 			tc.position = jsonable_encoder(updated_template_content.position)
 
 		return tc

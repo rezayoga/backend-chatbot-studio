@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union, Any
 
 from fastapi.encoders import jsonable_encoder
 from passlib.handlers.bcrypt import bcrypt
@@ -6,6 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .models import *
+from .models import Template_Content
 from .schemas import User as UserSchema, Template as TemplateSchema, Template_Update as Template_UpdateSchema, \
 	Template_Content as Template_ContentSchema, Template_Content_Update as Template_Content_UpdateSchema
 
@@ -26,7 +27,7 @@ def verify_password(plain_password, hashed_password):
 
 class User_DAL:
 	@classmethod
-	async def auth_user(cls, username: str, password: str, session: AsyncSession) -> User:
+	async def auth_user(cls, username: str, password: str, session: AsyncSession) -> Union[bool, User]:
 		u = await session.execute(select(User).where(User.username == username).where(User.is_active == True))
 		user = u.scalars().first()
 		if not user:
@@ -36,7 +37,7 @@ class User_DAL:
 		return user
 
 	@classmethod
-	async def auth_user_by_user_id(cls, user_id: int, session: AsyncSession) -> User:
+	async def auth_user_by_user_id(cls, user_id: int, session: AsyncSession) -> Union[bool, User]:
 		u = await session.execute(select(User).where(User.id == user_id).where(User.is_active == True))
 		user = u.scalars().first()
 		if not user:
@@ -44,7 +45,7 @@ class User_DAL:
 		return user
 
 	@classmethod
-	async def get_users(cls, session: AsyncSession) -> List[User]:
+	async def get_users(cls, session: AsyncSession) -> Union[bool, List[User]]:
 		users = await session.execute(select(User))
 		u = users.scalars().all()
 		if not u:
@@ -67,7 +68,7 @@ class User_DAL:
 
 class Template_DAL:
 	@classmethod
-	async def get_templates(cls, session: AsyncSession) -> List[Template]:
+	async def get_templates(cls, session: AsyncSession) -> Union[bool, List[Template]]:
 		templates = await session.execute(select(Template))
 		t = templates.scalars().all()
 		if not t:
@@ -75,7 +76,8 @@ class Template_DAL:
 		return t
 
 	@classmethod
-	async def get_template_by_template_id(cls, user_id: str, template_id: str, session: AsyncSession) -> Template:
+	async def get_template_by_template_id(cls, user_id: str, template_id: str, session: AsyncSession) -> Union[
+		bool, Template]:
 		template = await session.execute(
 			select(Template).where(Template.id == template_id).where(Template.owner_id == user_id).where(
 				Template.is_deleted == False))
@@ -85,7 +87,7 @@ class Template_DAL:
 		return t
 
 	@classmethod
-	async def get_template_by_user_id(cls, user_id: int, session: AsyncSession) -> Template:
+	async def get_template_by_user_id(cls, user_id: int, session: AsyncSession) -> Union[bool, Template]:
 		template = await session.execute(
 			select(Template).where(Template.owner_id == user_id).where(Template.is_deleted == False))
 		t = template.scalars().all()
@@ -108,7 +110,7 @@ class Template_DAL:
 
 	@classmethod
 	async def update_template(cls, user_id: int, template_id: int, updated_template: Template_UpdateSchema,
-	                          session: AsyncSession) -> Template:
+	                          session: AsyncSession) -> Union[bool, Template]:
 		template = await session.execute(select(Template).where(Template.id == template_id)
 		                                 .where(Template.owner_id == user_id)
 		                                 .where(Template.is_deleted == False))
@@ -126,7 +128,7 @@ class Template_DAL:
 		return t
 
 	@classmethod
-	async def delete_template(cls, user_id: int, template_id: int, session: AsyncSession) -> Template:
+	async def delete_template(cls, user_id: int, template_id: int, session: AsyncSession) -> Union[bool, Template]:
 		template = await session.execute(
 			select(Template).where(Template.id == template_id).where(Template.owner_id == user_id)
 			.where(Template.is_deleted == False))
@@ -143,7 +145,7 @@ class Template_DAL:
 
 class Template_Content_DAL:
 	@classmethod
-	async def get_template_contents(cls, session: AsyncSession) -> List[Template_Content]:
+	async def get_template_contents(cls, session: AsyncSession) -> Union[bool, List[Template_Content]]:
 		template_contents = await session.execute(select(Template_Content))
 		tc = template_contents.scalars().all()
 
@@ -154,7 +156,7 @@ class Template_Content_DAL:
 
 	@classmethod
 	async def get_template_contents_by_template_id(cls, user_id: int, template_id: int,
-	                                               session: AsyncSession) -> List[Template_Content]:
+	                                               session: AsyncSession) -> Union[bool, List[Template_Content]]:
 
 		template = await session.execute(
 			select(Template).where(Template.id == template_id).where(Template.owner_id == user_id)
@@ -178,7 +180,7 @@ class Template_Content_DAL:
 
 	@classmethod
 	async def get_template_content_by_template_content_id(cls, user_id: int, template_content_id: int,
-	                                                      session: AsyncSession) -> Template_Content:
+	                                                      session: AsyncSession) -> Union[bool, Template_Content]:
 
 		template_content = await session.execute(
 			select(Template_Content).where(Template_Content.id == template_content_id)
@@ -202,7 +204,7 @@ class Template_Content_DAL:
 
 	@classmethod
 	async def create_template_content(cls, user_id: int, created_template_content: Template_ContentSchema,
-	                                  session: AsyncSession) -> Template_Content:
+	                                  session: AsyncSession) -> Union[bool, Template_Content]:
 
 		template = await session.execute(select(Template).where(Template.id == created_template_content.template_id)
 		                                 .where(Template.owner_id == user_id)
@@ -229,7 +231,7 @@ class Template_Content_DAL:
 	@classmethod
 	async def update_template_content(cls, user_id: int, template_content_id: int,
 	                                  updated_template_content: Template_Content_UpdateSchema,
-	                                  session: AsyncSession) -> Template_Content:
+	                                  session: AsyncSession) -> Union[bool, Template_Content]:
 
 		template_content = await session.execute(
 			select(Template_Content).where(Template_Content.id == template_content_id).where(
@@ -262,7 +264,7 @@ class Template_Content_DAL:
 
 	@classmethod
 	async def delete_template_content(cls, user_id: int, template_content_id: int,
-	                                  session: AsyncSession) -> Template_Content:
+	                                  session: AsyncSession) -> Union[bool, Template_Content]:
 		template_content = await session.execute(
 			select(Template_Content).where(Template_Content.id == template_content_id).where(
 				Template_Content.is_deleted == False))

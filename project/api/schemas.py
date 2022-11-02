@@ -1,7 +1,10 @@
 from datetime import date, timedelta
-from typing import Optional, List, Union
+from typing import Optional, List
 
 from pydantic import constr, BaseModel, Field, EmailStr
+from pydantic_sqlalchemy import sqlalchemy_to_pydantic
+
+from project.api.models import Template, Block, Content
 
 
 class NameObject(BaseModel):
@@ -282,31 +285,18 @@ class MessageObjectPayload(BaseModel):
 """ Application Schemas """
 
 
-class Option_Position(BaseModel):
-	x: int = Field(title="x", description="The x position of the option")
-	y: int = Field(title="y", description="The y position of the option")
-
-	class config:
-		orm_mode = True
-
-
-class Parent_Id(BaseModel):
-	parent_id: str = Field(title="parent_id", description="The parent_id of the message")
-	option: str = Field(title="option", description="The option of the message")
-	option_label: str = Field(title="option_label", description="The option_label of the message")
-	option_position: Option_Position = Field(title="option_position",
-	                                         description="The option_position of the message")
-
-	class Config:
-		orm_mode = True
-
-
 class User_Login(BaseModel):
 	username: str = Field(title="username", description="The username of the user")
 	password: str = Field(title="password", description="The password of the user")
 
 	class Config:
 		orm_mode = True
+		schema_extra = {
+			"example": {
+				"username": "reza",
+				"password": "reza"
+			}
+		}
 
 
 class User(BaseModel):
@@ -320,61 +310,6 @@ class User(BaseModel):
 		orm_mode = True
 
 
-class Template(BaseModel):
-	client: Optional[str] = None
-	channel: constr(min_length=1)
-	channel_account_alias: Optional[str] = None
-	template_name: constr(min_length=1) = None
-	template_description: Optional[str] = None
-	division_id: Optional[str] = None
-	is_deleted: Optional[bool] = False
-
-	class Config:
-		orm_mode = True
-
-
-class Template_Update(BaseModel):
-	client: Optional[str] = None
-	channel_account_alias: Optional[str] = None
-	template_name: constr(min_length=1)
-	template_description: constr(min_length=1)
-	division_id: Optional[str] = None
-	is_deleted: Optional[bool] = False
-
-	class Config:
-		orm_mode = True
-
-
-class Template_Content(BaseModel):
-	parent_ids: Optional[Union[List[Parent_Id], None]] = Field(title="parent_ids",
-	                                                           description="The list of template_content's parent_id")
-	payloads: List[MessageObjectPayload] = Field(title="payloads",
-	                                             description="The payloads of the template content")
-	template_id: constr(min_length=1) = Field(title="template_id",
-	                                          description="The template_id of the template content")
-	label: Optional[str] = None
-	position: Optional[Option_Position] = None
-	is_deleted: Optional[bool] = False
-
-	class Config:
-		orm_mode = True
-
-
-class Template_Content_Update(BaseModel):
-	parent_ids: Optional[Union[List[Parent_Id], None]] = Field(title="parent_ids",
-	                                                           description="The list of template_content's parent_id")
-	payloads: Optional[List[MessageObjectPayload]] = Field(title="payloads",
-	                                                       description="The payloads of the template content")
-	template_id: Optional[str] = Field(title="template_id",
-	                                   description="The template_id of the template content")
-	label: Optional[str] = None
-	position: Optional[Option_Position] = None
-	is_deleted: Optional[bool] = False
-
-	class Config:
-		orm_mode = True
-
-
 # set denylist enabled to True
 # you can set to check access or refresh token or even both of them
 class JWT_Settings(BaseModel):
@@ -383,3 +318,14 @@ class JWT_Settings(BaseModel):
 	authjwt_denylist_token_checks: set = {"access", "refresh"}
 	access_token_expires: int = timedelta(minutes=15)
 	refresh_token_expires: int = timedelta(days=30)
+
+
+Template = sqlalchemy_to_pydantic(Template,
+                                  exclude=["id",
+                                           "owner_id",
+                                           "created_at",
+                                           "updated_at"])
+
+Block = sqlalchemy_to_pydantic(Block, exclude=["id", "created_at", "updated_at"])
+Content = sqlalchemy_to_pydantic(Content)
+# t_block_edges = sqlalchemy_to_pydantic(t_block_edges)

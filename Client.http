@@ -1,5 +1,5 @@
 ###
-POST https://chatbotstudio.rezayogaswara.dev/api/v1/token/
+POST http://localhost:8000/api/v1/token/
 accept: application/json
 Content-Type: application/json
 
@@ -10,59 +10,180 @@ Content-Type: application/json
 
 > {% client.global.set("access_token", response.body.access_token); %}
 
+#### users
 
-####
-
-GET https://chatbotstudio.rezayogaswara.dev/api/v1/users/
+GET http://localhost:8000/api/v1/users/
 accept: application/json
 Content-Type: application/json
 
 ####
 
-GET https://chatbotstudio.rezayogaswara.dev/api/v1/templates/
+POST http://localhost:8000/api/v1/users/
 accept: application/json
 Content-Type: application/json
 
-####
+{
+  "username": "efcd",
+  "name": "efcd",
+  "password": "efcd",
+  "email": "reza.yoga@live.com",
+  "is_active": true
+}
 
-#
-#POST https://chatbotstudio.rezayogaswara.dev/api/v1/users/
-#accept: application/json
-#Content-Type: application/json
-#
-#{
-#  "username": "efcd",
-#  "name": "efcd",
-#  "password": "efcd",
-#  "email": "reza.yoga@live.com",
-#  "is_active": false
-#}
+#### templates
 
-###
-
-GET https://chatbotstudio.rezayogaswara.dev/api/v1/templates/a194cdbd-0894-4828-afb3-d5273602b463/
+POST http://localhost:8000/api/v1/templates/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
+{
+  "title": "s",
+  "description": "s",
+  "language": "s",
+  "type": "BASIC",
+  "is_deleted": false
+}
 
-###
+####
 
-GET https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/
+PUT http://localhost:8000/api/v1/templates/524ff7fd-7f5b-4b85-a9e3-03b062de6b80/
+accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "title": "1f",
+  "description": "1f",
+  "type": "BASIC",
+  "language": "1f",
+  "is_deleted": false
+}
+
+####
+
+DELETE http://localhost:8000/api/v1/templates/524ff7fd-7f5b-4b85-a9e3-03b062de6b80/
+accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+####
+
+GET http://localhost:8000/api/v1/templates/524ff7fd-7f5b-4b85-a9e3-03b062de6b80/
+accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+####
+
+GET http://localhost:8000/api/v1/user/templates/
+accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+####
+
+GET http://localhost:8000/api/v1/templates/
 accept: application/json
 Content-Type: application/json
 
+#### blocks
+
+POST http://localhost:8000/api/v1/blocks/
+accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "label": "string",
+  "type": "START",
+  "position_x": 10,
+  "position_y": 20,
+  "is_deleted": false,
+  "template_id": "0369e5ba-2090-48cf-b3fd-4882a1f339c1"
+}
+
+
+####
+
+PUT http://localhost:8000/api/v1/blocks/9cbf963d-ba46-42f9-bd00-0656373dad84/
+accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "label": "string",
+  "type": "KEYWORD",
+  "position_x": 0,
+  "position_y": 0,
+  "is_deleted": false,
+  "template_id": "0369e5ba-2090-48cf-b3fd-4882a1f339c1"
+}
+
+####
+
+DELETE http://localhost:8000/api/v1/blocks/4be6f88b-0b0d-433e-aff8-d776b5b9165b/
+accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+####
+
+
+GET http://localhost:8000/api/v1/blocks/add25ecc-103c-4118-a8a4-42d4b56c5271/
+accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+####
+
+GET http://localhost:8000/api/v1/blocks/
+accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+####
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ###
 
-GET https://chatbotstudio.rezayogaswara.dev/api/v1/template/template-contents/d92c9539-13a0-4aa6-b8dd-2ab1ee88da82/
+GET http://localhost:8000/api/v1/template/template-contents/d92c9539-13a0-4aa6-b8dd-2ab1ee88da82/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 ###
 
-POST https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/
+POST http://localhost:8000/api/v1/template-contents/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
@@ -179,79 +300,74 @@ Authorization: Bearer {{access_token}}
   "template_id": "dff780ba-1428-4f1d-b185-e475459289fa"
 }
 
+
 ###
 
-DELETE https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/d92c9539-13a0-4aa6-b8dd-2ab1ee88da82/
+GET http://localhost:8000/api/v1/templates/0cccf76d-5741-4cfb-b5c0-4feccc580d12/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 ###
 
-DELETE https://chatbotstudio.rezayogaswara.dev/api/v1/templates/f99a6751-f44f-4f55-8d63-1dd0175bae9c/
-accept: application/json
-Content-Type: application/json
-Authorization: Bearer {{access_token}}
+
 
 ###
 
-PUT https://chatbotstudio.rezayogaswara.dev/api/v1/templates/f99a6751-f44f-4f55-8d63-1dd0175bae9c/
-accept: application/json
-Content-Type: application/json
-Authorization: Bearer {{access_token}}
-
-{
-  "client": " o p e n m e d i a ",
-  "channel_account_alias": " o p e n m e d i a ",
-  "template_name": "Template  o p e n m e d i a ",
-  "template_description": "Desc Template  o p e n m e d i a ",
-  "division_id": " o p e n m e d i a ?"
-}
-
-###
-
-GET https://chatbotstudio.rezayogaswara.dev/api/v1/templates/0cccf76d-5741-4cfb-b5c0-4feccc580d12/
-accept: application/json
-Content-Type: application/json
-Authorization: Bearer {{access_token}}
-
-###
-
-GET https://chatbotstudio.rezayogaswara.dev/api/v1/user/templates/
-accept: application/json
-Content-Type: application/json
-Authorization: Bearer {{access_token}}
-
-###
-
-PUT https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/2db802ad-c8a8-4fd4-88e4-bdce4164ea96/
+PUT http://localhost:8000/api/v1/template-contents/8f81c734-68ee-4516-a255-669f1db0ccce/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-    "template_id": "a194cdbd-0894-4828-afb3-d5273602b463"
+  "parent_ids": null,
+    "payloads": [
+      {
+        "to": "{{08123456789}}",
+        "type": "interactive",
+        "interactive": {
+          "body": {
+            "text": "<BUTTON_TEXT>"
+          },
+          "type": "button",
+          "action": {
+            "buttons": [
+              {
+                "type": "reply",
+                "reply": {
+                  "id": "<UNIQUE_BUTTON_ID_1>",
+                  "title": "<BUTTON_TITLE_1>"
+                }
+              },
+              {
+                "type": "reply",
+                "reply": {
+                  "id": "<UNIQUE_BUTTON_ID_2>",
+                  "title": "<BUTTON_TITLE_2>"
+                }
+              }
+            ]
+          }
+        },
+        "recipient_type": "individual",
+        "messaging_product": "whatsapp"
+      }
+    ],
+    "position": {
+      "x": 10,
+      "y": 20
+    },
+    "created_at": "2022-10-13T05:03:23.370869+00:00",
+    "template_id": "f562ec6c-df11-4e7e-a69a-4278ec6c41d4",
+    "label": "init 123",
+    "is_deleted": true
 }
 
 ###
 
-GET https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/a194cdbd-0894-4828-afb3-d5273602b463/
+GET http://localhost:8000/api/v1/template-contents/a194cdbd-0894-4828-afb3-d5273602b463/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 ###
-
-POST https://chatbotstudio.rezayogaswara.dev/api/v1/templates/
-accept: application/json
-Content-Type: application/json
-Authorization: Bearer {{access_token}}
-
-{
-  "client": "a b c d e f g h i j k l m n o p q r s t u v w x y z",
-  "channel": "a b c d e f g h i j k l m n o p q r s t u v w x y z",
-  "channel_account_alias": "a b c d e f g h i j k l m n o p q r s t u v w x y z",
-  "template_name": "Template a b c d e f g h i j k l m n o p q r s t u v w x y z",
-  "template_description": "Desc Template a b c d e f g h i j k l m n o p q r s t u v w x y z",
-  "division_id": "a b c d e f g h i j k l m n o p q r s t u v w x y z?"
-}

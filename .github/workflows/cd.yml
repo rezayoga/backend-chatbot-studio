@@ -34,8 +34,8 @@ jobs:
             pip install --upgrade pip
             pip install -r requirements.txt
             echo ----------------------------------------------
-            alembic revision --autogenerate -m "migration"
-            alembic upgrade head
+            # alembic revision --autogenerate -m "migration"
+            # alembic upgrade head
             echo ----------------------------------------------
             sudo systemctl stop chatbotstudio
             sudo systemctl start chatbotstudio

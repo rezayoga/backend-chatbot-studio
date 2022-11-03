@@ -27,8 +27,8 @@ class User(Base):
 
 class Block_Edges(Base):
 	__tablename__ = 'block_edges'
-	previous_block_id = Column(String, ForeignKey('blocks.id'), primary_key=True)
-	next_block_id = Column(String, ForeignKey('blocks.id'), primary_key=True)
+	source_block_id = Column(String, ForeignKey('blocks.id'), primary_key=True)
+	target_block_id = Column(String, ForeignKey('blocks.id'), primary_key=True)
 
 
 class Content(Base):

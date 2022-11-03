@@ -46,7 +46,6 @@ class Content(Base):
 	updated_at = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
 	block_id = Column(String, ForeignKey("blocks.id"))
 
-
 	def __repr__(self):
 		return f"<Content: {self.id} - {self.label} -  {self.type}>"
 

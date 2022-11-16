@@ -99,9 +99,10 @@ class Template_DAL:
 	def create_template(cls, user_id: int, created_template: TemplateSchema, session: AsyncSession) -> Template:
 		template = Template()
 		template.owner_id = user_id
-		template.client = created_template.client
-		template.channel = created_template.channel
-		template.channel_account_alias = created_template.channel_account_alias
+		template.client_id = created_template.client_id
+		template.channel_id = created_template.channel_id
+		template.account_id = created_template.account_id
+		template.account_alias = created_template.account_alias
 		template.template_name = created_template.template_name
 		template.template_description = created_template.template_description
 		template.division_id = created_template.division_id
@@ -119,8 +120,10 @@ class Template_DAL:
 		if not t:
 			return False
 
-		t.client = updated_template.client
-		t.channel_account_alias = updated_template.channel_account_alias
+		t.client_id = updated_template.client_id
+		t.channel_id = updated_template.channel_id
+		t.account_id = updated_template.account_id
+		t.account_alias = updated_template.account_alias
 		t.template_name = updated_template.template_name
 		t.template_description = updated_template.template_description
 		t.division_id = updated_template.division_id

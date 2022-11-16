@@ -60,7 +60,7 @@ def get_config():
 	return settings
 
 
-redis_connection = Redis(host='rezayogaswara.com', username='reza', password='reza1985', port=6379, db=0, decode_responses=True)
+redis_connection = Redis(host='rezayogaswara.com', username='reza', password='reza1985', port=6379, db=5, decode_responses=True)
 
 
 # A storage engine to save revoked tokens. in production,

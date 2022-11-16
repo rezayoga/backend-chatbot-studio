@@ -54,7 +54,7 @@ class Template_Content(Base):
 
 	id = Column(String(128), primary_key=True, default=func.uuid_generate_v4())
 	parent_ids = Column(JSONB, nullable=True)
-	payload = Column(JSONB, nullable=True)
+	payloads = Column(JSONB, nullable=True)
 	label = Column(Text, nullable=True)
 	position = Column(JSONB, nullable=True)
 	is_deleted = Column(Boolean, default=False)

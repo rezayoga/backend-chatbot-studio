@@ -181,7 +181,7 @@ async def get_template_by_template_id(template_id: str, auth: AuthJWT = Depends(
 	return template
 
 
-@api_router.get("/templates/", tags=["templates"], response_model=List[TemplateSchema])
+@api_router.get("/templates/", tags=["templates"])
 async def get_templates(session: AsyncSession = Depends(get_session)):
 	templates = await Template_DAL.get_templates(session)
 

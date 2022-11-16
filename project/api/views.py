@@ -131,7 +131,7 @@ async def get_users(session: AsyncSession = Depends(get_session)):
 	return users
 
 
-@api_router.post("/users/", tags=["auth"])
+@api_router.post("/users/", tags=["users"])
 async def create_user(created_user: UserSchema, session: AsyncSession = Depends(get_session)):
 	user = User_DAL.create_user(created_user, session)
 	try:

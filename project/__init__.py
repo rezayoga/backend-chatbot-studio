@@ -23,13 +23,13 @@ bugsnag.configure(
 
 def create_app() -> FastAPI:
 	app = FastAPI(title="Chatbot Studio API",
-	              version="1.1.0",
+	              version="1.2.0",
 	              description="API docs for Jatis Mobile Chatbot Studio",
-	              contact={
-		              "name": "Reza Yogaswara",
-		              "url": "https://me.rezayogaswara.dev/",
-		              "email": "reza.yoga@gmail.com",
-	              },
+	              # contact={
+		          #     "name": "Reza Yogaswara",
+		          #     "url": "https://me.rezayogaswara.dev/",
+		          #     "email": "reza.yoga@gmail.com",
+	              # },
 	              servers=[{"url": "https://chatbotstudio.rezayogaswara.dev/", "description": "Development"}])
 
 	@app.on_event("startup")

@@ -322,8 +322,8 @@ class User(BaseModel):
 
 class Template(BaseModel):
 	client_id: Optional[str] = None
-	channel_id: constr(min_length=1)
-	account_id: constr(min_length=1)
+	channel_id: Optional[str] = None
+	account_id: Optional[str] = None
 	account_alias: Optional[str] = None
 	template_name: constr(min_length=1) = None
 	template_description: Optional[str] = None
@@ -340,7 +340,7 @@ class Template_Update(BaseModel):
 	account_id: Optional[str] = None
 	account_alias: Optional[str] = None
 	template_name: constr(min_length=1)
-	template_description: constr(min_length=1)
+	template_description: Optional[str] = None
 	division_id: Optional[str] = None
 
 	class Config:

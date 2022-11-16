@@ -6,8 +6,10 @@ from fastapi import FastAPI, Request, Response, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
+import project.database
 from project.celery_utils import create_celery  # new
 from project.config import settings
+from rich import inspect
 
 logging.config.fileConfig('logging.conf', disable_existing_loggers=False)
 

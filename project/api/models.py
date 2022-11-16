@@ -1,16 +1,14 @@
-# coding: utf-8
-from sqlalchemy import Column, Enum, Integer, String, Text, ForeignKey, Boolean, DateTime, func
+from sqlalchemy import Column, DateTime, ForeignKey, String, Text, Boolean, Integer
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 
 from project.database import Base
-
-metadata = Base.metadata
 
 
 class User(Base):
 	__tablename__ = "users"
-	id = Column(Integer, primary_key=True, autoincrement=True)
+	id = Column(Integer, primary_key=True)
 	email = Column(String, unique=True, index=True)
 	username = Column(String, unique=True, index=True)
 	name = Column(String, nullable=True)
@@ -25,67 +23,63 @@ class User(Base):
 		return f"{self.name} <{self.email}>"
 
 
-class Block_Edges(Base):
-	__tablename__ = 'block_edges'
-	source_block_id = Column(String, ForeignKey('blocks.id'), primary_key=True)
-	target_block_id = Column(String, ForeignKey('blocks.id'), primary_key=True)
-
-
-class Content(Base):
-	__tablename__ = 'contents'
+class Template(Base):
+	__tablename__ = "templates"
 
 	id = Column(String, primary_key=True, default=func.uuid_generate_v4())
-	label = Column(String)
-	payload = Column(JSONB(astext_type=Text()))
-	type = Column(Enum('TEXT', 'IMAGE', 'VIDEO', 'AUDIO', 'DOCUMENT', 'LOCATION', 'CONTACTS', 'BUTTON', 'LIST',
-	                   name='payload_types'))
-	is_deleted = Column(Boolean, default=False)
+	client = Column(String(128), nullable=True)
+	channel = Column(String(128), nullable=True)
+	channel_account_alias = Column(String(128), nullable=True)
 	created_at = Column(DateTime(timezone=True),
 	                    nullable=False, default=func.now())
-
 	updated_at = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
-	block_id = Column(String, ForeignKey("blocks.id"))
+	template_name = Column(Text, nullable=False)
+	template_description = Column(Text, nullable=True)
+	division_id = Column(String(128), nullable=True)
+	is_deleted = Column(Boolean, default=False)
+	owner_id = Column(Integer, ForeignKey("users.id"))
+	template_contents = relationship(
+		"Template_Content", backref="template_content", cascade="all, delete-orphan")
+	template_changelogs = relationship(
+		"Template_Changelog", backref="template_changelog", cascade="all, delete-orphan")
 
-	def __repr__(self):
-		return f"<Content: {self.id} - {self.label} -  {self.type}>"
+	def __repr__(self) -> str:
+		return f"<Template: {self.id} - {self.template_name} -  {self.template_description}>"
 
 
-class Block(Base):
-	__tablename__ = 'blocks'
+class Template_Content(Base):
+	__tablename__ = "template_contents"
 
 	id = Column(String, primary_key=True, default=func.uuid_generate_v4())
-	label = Column(String)
-	type = Column(Enum('START', 'INTENT', 'KEYWORD', 'REPLY', 'ACTION', 'FORM', name='block_types'))
-	position_x = Column(Integer)
-	position_y = Column(Integer)
+	parent_ids = Column(JSONB, nullable=True)
+	payloads = Column(JSONB, nullable=True)
+	label = Column(Text, nullable=True)
+	position = Column(JSONB, nullable=True)
 	is_deleted = Column(Boolean, default=False)
 	created_at = Column(DateTime(timezone=True),
 	                    nullable=False, default=func.now())
 
 	updated_at = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
 	template_id = Column(String, ForeignKey("templates.id"))
-	contents = relationship(
-		"Content", backref="blocks", cascade="all, delete-orphan")
 
-	def __repr__(self):
-		return f"<Block: {self.id} - {self.label} -  {self.type}>"
+	def __repr__(self) -> str:
+		return f"<Template Content: {self.id} -  {self.payloads} -  {self.updated_at}>"
 
 
-class Template(Base):
-	__tablename__ = 'templates'
+class Template_Changelog(Base):
+	__tablename__ = "template_changelogs"
 
 	id = Column(String, primary_key=True, default=func.uuid_generate_v4())
-	title = Column(String)
-	description = Column(Text)
-	language = Column(String)
-	type = Column(Enum('SMART', 'BASIC', name='template_types'))
-	owner_id = Column(Integer, ForeignKey("users.id"))
+	version = Column(String(128), nullable=True)
+	user_id = Column(Integer, ForeignKey("users.id"))
 	created_at = Column(DateTime(timezone=True),
 	                    nullable=False, default=func.now())
-	updated_at = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
-	is_deleted = Column(Boolean, default=False)
-	blocks = relationship(
-		"Block", backref="templates", cascade="all, delete-orphan")
 
-	def __repr__(self):
-		return f"<Template: {self.id} - {self.title} -  {self.type}>"
+	updated_at = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
+	action = Column(String(128), nullable=True)
+	payload = Column(JSONB, nullable=True)
+	template_id = Column(String, ForeignKey("templates.id"))
+	is_deleted = Column(Boolean, default=False)
+
+	def __repr__(self) -> str:
+		return f"<Template: {self.id} -  {self.template_id} -  {self.user_id} -  {self.action}>"

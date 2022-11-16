@@ -1,18 +1,18 @@
 import logging
 
 from fastapi import HTTPException, Depends
-from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from fastapi_jwt_auth import AuthJWT
 from redis import Redis
-from rich.console import Console
 from sqlalchemy.exc import IntegrityError
 
 # from project.database import SessionLocal
 from project.api.dal import *
 from . import api_router
 from .schemas import JWT_Settings as JWT_SettingsSchema
-from .schemas import Template as TemplateSchema
+from .schemas import Template as TemplateSchema, Template_Update as Template_UpdateSchema, \
+	Template_Content as Template_ContentSchema, \
+	Template_Content_Update as Template_Content_UpdateSchema
 from .schemas import User as UserSchema
 from .schemas import User_Login as User_LoginSchema
 from ..database import get_session
@@ -20,7 +20,6 @@ from ..database import get_session
 logger = logging.getLogger(__name__)
 # session = SessionLocal()
 settings = JWT_SettingsSchema()
-console = Console()
 
 """ Exception Handler """
 
@@ -61,8 +60,7 @@ def get_config():
 	return settings
 
 
-redis_connection = Redis(host='rezayogaswara.com', username='reza', password='reza1985', port=6379, db=0,
-                         decode_responses=True)
+redis_connection = Redis(host='rezayogaswara.com', username='reza', password='reza1985', port=6379, db=0, decode_responses=True)
 
 
 # A storage engine to save revoked tokens. in production,
@@ -153,9 +151,6 @@ async def create_template(created_template: TemplateSchema, auth: AuthJWT = Depe
 	auth.jwt_required()
 	user = await User_DAL.auth_user_by_user_id(auth.get_jwt_subject(), session)
 
-	# console.print(user, style="bold red")
-	# inspect(user, methods=False)
-
 	if user is None:
 		raise get_user_exception()
 
@@ -169,8 +164,48 @@ async def create_template(created_template: TemplateSchema, auth: AuthJWT = Depe
 		raise incorrect_request_exception("Incorrect request")
 
 
+@api_router.get("/templates/{template_id}/", tags=["templates"])
+async def get_template_by_template_id(template_id: str, auth: AuthJWT = Depends(),
+                                      session: AsyncSession = Depends(get_session)):
+	auth.jwt_required()
+	user = await User_DAL.auth_user_by_user_id(auth.get_jwt_subject(), session)
+
+	if user is None:
+		raise get_user_exception()
+
+	template = await Template_DAL.get_template_by_template_id(auth.get_jwt_subject(), template_id, session)
+
+	if template is None or template == False:
+		raise not_found_exception("Template not found")
+
+	return template
+
+
+@api_router.get("/templates/", tags=["templates"], response_model=List[TemplateSchema])
+async def get_templates(session: AsyncSession = Depends(get_session)):
+	templates = await Template_DAL.get_templates(session)
+
+	# if templates is None or templates == False:
+	# 	raise not_found_exception("Templates not found")
+
+	return templates
+
+
+@api_router.get("/user/templates/", tags=["templates"])
+async def get_templates_by_user_id(auth: AuthJWT = Depends(),
+                                   session: AsyncSession = Depends(get_session)):
+	auth.jwt_required()
+
+	templates = await Template_DAL.get_template_by_user_id(auth.get_jwt_subject(), session)
+
+	if templates is None or templates == False:
+		raise not_found_exception("Templates not found")
+
+	return templates
+
+
 @api_router.put("/templates/{template_id}/", tags=["templates"])
-async def update_template(template_id: str, updated_template: TemplateSchema, auth: AuthJWT = Depends(),
+async def update_template(template_id: str, updated_template: Template_UpdateSchema, auth: AuthJWT = Depends(),
                           session: AsyncSession = Depends(get_session)):
 	auth.jwt_required()
 	user = await User_DAL.auth_user_by_user_id(auth.get_jwt_subject(), session)
@@ -182,8 +217,6 @@ async def update_template(template_id: str, updated_template: TemplateSchema, au
 
 	if template is None or template == False:
 		raise not_found_exception("Template not found")
-
-	# inspect(template, methods=False)
 
 	try:
 		await session.commit()
@@ -217,199 +250,128 @@ async def delete_template(template_id: str, auth: AuthJWT = Depends(),
 		raise incorrect_request_exception("Incorrect request")
 
 
-@api_router.get("/templates/{template_id}/", tags=["templates"])
-async def get_template_by_template_id(template_id: str, auth: AuthJWT = Depends(),
-                                      session: AsyncSession = Depends(get_session)):
+""" template contents """
+
+
+@api_router.get("/template-contents/", tags=["template-contents"], response_model=List[Template_ContentSchema],
+                response_model_exclude_none=True)
+async def get_template_contents(session: AsyncSession = Depends(get_session)):
+	template_contents = await Template_Content_DAL.get_template_contents(session)
+
+	if template_contents is None or template_contents == False:
+		raise not_found_exception("Template contents not found")
+
+	return template_contents
+
+
+@api_router.get("/template/template-contents/{template_id}/", tags=["template-contents"])
+async def get_template_contents_by_template_id(template_id: str, auth: AuthJWT = Depends(),
+                                               session: AsyncSession = Depends(get_session)):
 	auth.jwt_required()
 	user = await User_DAL.auth_user_by_user_id(auth.get_jwt_subject(), session)
 
 	if user is None:
 		raise get_user_exception()
 
-	template = await Template_DAL.get_template_by_template_id(auth.get_jwt_subject(), template_id, session)
+	template_contents = await Template_Content_DAL.get_template_contents_by_template_id(user.id, template_id, session)
 
-	if template is None or template == False:
-		raise not_found_exception("Template not found")
+	if template_contents is None or template_contents == False:
+		raise not_found_exception("Template contents not found")
 
-	return template
-
-
-@api_router.get("/user/templates/", tags=["templates"])
-async def get_templates_by_user_id(auth: AuthJWT = Depends(),
-                                   session: AsyncSession = Depends(get_session)):
-	auth.jwt_required()
-
-	templates = await Template_DAL.get_template_by_user_id(auth.get_jwt_subject(), session)
-
-	if templates is None or templates == False:
-		raise not_found_exception("Templates not found")
-
-	return templates
+	return template_contents
 
 
-@api_router.get("/templates/", tags=["templates"], response_model=List[TemplateSchema])
-async def get_templates(session: AsyncSession = Depends(get_session)):
-	templates = await Template_DAL.get_templates(session)
-
-	if templates is None or templates == False:
-		raise not_found_exception("Templates not found")
-
-	return templates
-
-
-#
-""" blocks """
-
-
-@api_router.post("/blocks/", tags=["blocks"])
-async def create_block(created_block: BlockSchema,
-                       auth: AuthJWT = Depends(), session: AsyncSession = Depends(get_session)):
+@api_router.get("/template-contents/{template_content_id}/", tags=["template-contents"])
+async def get_template_content_by_template_content_id(template_content_id: str,
+                                                      auth: AuthJWT = Depends(),
+                                                      session: AsyncSession = Depends(get_session)):
 	auth.jwt_required()
 	user = await User_DAL.auth_user_by_user_id(auth.get_jwt_subject(), session)
 
 	if user is None:
 		raise get_user_exception()
 
-	template = await Template_DAL.get_template_by_template_id(user.id, created_block.template_id,
+	template_content = await Template_Content_DAL.get_template_content_by_template_content_id(user.id,
+	                                                                                          template_content_id,
+	                                                                                          session)
+
+	if template_content is None or template_content == False:
+		raise not_found_exception("Template content not found")
+
+	return template_content
+
+
+@api_router.post("/template-contents/", tags=["template-contents"])
+async def create_template_content(created_template_content: Template_ContentSchema,
+                                  auth: AuthJWT = Depends(), session: AsyncSession = Depends(get_session)):
+	auth.jwt_required()
+	user = await User_DAL.auth_user_by_user_id(auth.get_jwt_subject(), session)
+
+	if user is None:
+		raise get_user_exception()
+
+	template = await Template_DAL.get_template_by_template_id(user.id, created_template_content.template_id,
 	                                                          session)
 	if template is None or template == False:
 		raise not_found_exception("Template not found")
 
-	block = await Block_DAL.create_block(user.id, created_block, session)
+	template_content = await Template_Content_DAL.create_template_content(user.id, created_template_content, session)
 
-	if block is None or block == False:
-		raise not_found_exception("Block not found")
-
-	try:
-		await session.commit()
-		return JSONResponse(status_code=200, content={"message": "Block created successfully",
-		                                              "body": jsonable_encoder(block)})
-	except IntegrityError as ex:
-		await session.rollback()
-		raise incorrect_request_exception(jsonable_encoder(ex))
-
-	except Exception as ex:
-		await session.rollback()
-		raise incorrect_request_exception(jsonable_encoder(ex))
-
-
-@api_router.put("/blocks/{block_id}/", tags=["blocks"])
-async def update_block(block_id: str, updated_block: BlockSchema,
-                       auth: AuthJWT = Depends(), session: AsyncSession = Depends(get_session)):
-	auth.jwt_required()
-	user = await User_DAL.auth_user_by_user_id(auth.get_jwt_subject(), session)
-
-	if user is None:
-		raise get_user_exception()
-
-	block = await Block_DAL.update_block(block_id,
-	                                     updated_block,
-	                                     session)
-
-	if block is None or block == False:
-		raise not_found_exception("Block not found")
+	if template_content is None or template_content == False:
+		raise not_found_exception("Template found")
 
 	try:
 		await session.commit()
-		return JSONResponse(status_code=200, content={"message": "Block updated successfully",
-		                                              "body": jsonable_encoder(block)})
-	except IntegrityError as ex:
-		await session.rollback()
-		raise incorrect_request_exception(jsonable_encoder(ex))
-
-	except Exception as ex:
-		await session.rollback()
-		raise incorrect_request_exception(jsonable_encoder(ex))
-
-
-@api_router.delete("/blocks/{block_id}/", tags=["blocks"])
-async def delete_block(block_id: str, auth: AuthJWT = Depends(),
-                       session: AsyncSession = Depends(get_session)):
-	auth.jwt_required()
-	user = await User_DAL.auth_user_by_user_id(auth.get_jwt_subject(), session)
-
-	if user is None:
-		raise get_user_exception()
-
-	block = await Block_DAL.delete_block(user.id, block_id, session)
-
-	if block is None or block == False:
-		raise not_found_exception("Block not found")
-
-	try:
-		await session.commit()
-		return JSONResponse(status_code=200, content={"message": "Block deleted successfully",
-		                                              "body": jsonable_encoder(block)})
+		return JSONResponse(status_code=200, content={"message": "Template content created successfully",
+		                                              "body": jsonable_encoder(template_content)})
 	except IntegrityError as ex:
 		await session.rollback()
 		raise incorrect_request_exception("Incorrect request")
 
 
-@api_router.get("/blocks/{block_id}/", tags=["blocks"])
-async def get_block_by_block_id(block_id: str,
-                                auth: AuthJWT = Depends(),
-                                session: AsyncSession = Depends(get_session)):
+@api_router.put("/template-contents/{template_content_id}/", tags=["template-contents"])
+async def update_template_content(template_content_id: str, updated_template_content: Template_Content_UpdateSchema,
+                                  auth: AuthJWT = Depends(), session: AsyncSession = Depends(get_session)):
 	auth.jwt_required()
 	user = await User_DAL.auth_user_by_user_id(auth.get_jwt_subject(), session)
 
 	if user is None:
 		raise get_user_exception()
 
-	block = await Block_DAL.get_block_by_block_id(user.id,
-	                                              block_id,
-	                                              session)
+	template_content = await Template_Content_DAL.update_template_content(user.id, template_content_id,
+	                                                                      updated_template_content,
+	                                                                      session)
 
-	if block is None or block == False:
-		raise not_found_exception("Block not found")
+	if template_content is None or template_content == False:
+		raise not_found_exception("Template content not found")
 
-	return block
+	try:
+		await session.commit()
+		return JSONResponse(status_code=200, content={"message": "Template content updated successfully",
+		                                              "body": jsonable_encoder(template_content)})
+	except IntegrityError as ex:
+		await session.rollback()
+		raise incorrect_request_exception("Incorrect request")
 
 
-@api_router.get("/blocks/", tags=["blocks"], response_model=List[BlockSchema],
-                response_model_exclude_none=True)
-async def get_blocks(session: AsyncSession = Depends(get_session)):
-	b = await Block_DAL.get_blocks(session)
+@api_router.delete("/template-contents/{template_content_id}/", tags=["template-contents"])
+async def delete_template_content(template_content_id: str, auth: AuthJWT = Depends(),
+                                  session: AsyncSession = Depends(get_session)):
+	auth.jwt_required()
+	user = await User_DAL.auth_user_by_user_id(auth.get_jwt_subject(), session)
 
-	if b is None or b == False:
-		raise not_found_exception("Blocks not found")
+	if user is None:
+		raise get_user_exception()
 
-	return b
+	template_content = await Template_Content_DAL.delete_template_content(user.id, template_content_id, session)
 
-#
-# """ template contents """
-#
-#
-# @api_router.get("/template-contents/", tags=["template-contents"], response_model=List[Template_ContentSchema],
-#                 response_model_exclude_none=True)
-# async def get_template_contents(session: AsyncSession = Depends(get_session)):
-# 	template_contents = await Template_Content_DAL.get_template_contents(session)
-#
-# 	if template_contents is None or template_contents == False:
-# 		raise not_found_exception("Blocks not found")
-#
-# 	return template_contents
-#
-#
-# @api_router.get("/template/template-contents/{template_id}/", tags=["template-contents"])
-# async def get_template_contents_by_template_id(template_id: str, auth: AuthJWT = Depends(),
-#                                                session: AsyncSession = Depends(get_session)):
-# 	auth.jwt_required()
-# 	user = await User_DAL.auth_user_by_user_id(auth.get_jwt_subject(), session)
-#
-# 	if user is None:
-# 		raise get_user_exception()
-#
-# 	template_contents = await Template_Content_DAL.get_template_contents_by_template_id(user.id, template_id, session)
-#
-# 	if template_contents is None or template_contents == False:
-# 		raise not_found_exception("Blocks not found")
-#
-# 	return template_contents
-#
-#
+	if template_content is None or template_content == False:
+		raise not_found_exception("Template content not found")
 
-#
-#
-#
-
-#
+	try:
+		await session.commit()
+		return JSONResponse(status_code=200, content={"message": "Template content deleted successfully",
+		                                              "body": jsonable_encoder(template_content)})
+	except IntegrityError as ex:
+		await session.rollback()
+		raise incorrect_request_exception("Incorrect request")

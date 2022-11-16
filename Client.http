@@ -289,8 +289,9 @@ Authorization: Bearer {{access_token}}
 
 {
   "client_id": "a b c d e f g h i j k l m n o p q r s t u v w x y z",
-  "channel": "a b c d e f g h i j k l m n o p q r s t u v w x y z",
-  "channel_account_alias": "a b c d e f g h i j k l m n o p q r s t u v w x y z",
+  "channel_id": "a b c d e f g h i j k l m n o p q r s t u v w x y z",
+  "account_id": "a b c d e f g h i j k l m n o p q r s t u v w x y z",
+  "account_alias": "a b c d e f g h i j k l m n o p q r s t u v w x y z",
   "template_name": "Template a b c d e f g h i j k l m n o p q r s t u v w x y z",
   "template_description": "Desc Template a b c d e f g h i j k l m n o p q r s t u v w x y z",
   "division_id": "a b c d e f g h i j k l m n o p q r s t u v w x y z?"

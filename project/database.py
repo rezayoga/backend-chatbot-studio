@@ -18,3 +18,13 @@ async def get_session() -> AsyncSession:
 	)
 	async with async_session() as session:
 		yield session
+
+
+async def connect() -> None:
+	async with engine.begin() as conn:
+		await conn.run_sync(Base.metadata.create_all, checkfirst=True)
+
+
+async def disconnect() -> None:
+	if engine:
+		await engine.dispose()

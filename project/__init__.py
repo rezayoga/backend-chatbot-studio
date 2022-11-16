@@ -7,6 +7,7 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
 from project.celery_utils import create_celery  # new
+from project.config import settings
 
 logging.config.fileConfig('logging.conf', disable_existing_loggers=False)
 
@@ -29,6 +30,15 @@ def create_app() -> FastAPI:
 		              "email": "reza.yoga@gmail.com",
 	              },
 	              servers=[{"url": "https://chatbotstudio.rezayogaswara.dev/", "description": "Development"}])
+
+	@app.on_event("startup")
+	async def startup_event():
+		inspect(settings.DATABASE_URL, methods=True)
+		await database.connect()
+
+	@app.on_event("shutdown")
+	async def shutdown_event():
+		await database.disconnect()
 
 	# Salt to your taste
 	ALLOWED_ORIGINS = 'https://localhost:5173'  # or 'foo.com', etc.

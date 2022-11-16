@@ -175,27 +175,27 @@ Authorization: Bearer {{access_token}}
     }
   }],
   "label": "init",
-  "position": {"x": 13, "y": 22} ,
-  "template_id": "dff780ba-1428-4f1d-b185-e475459289fa"
+  "position": {"x": 1, "y": 9} ,
+  "template_id": "2478273b-71fb-4f4e-8d10-2b484704d4cd"
 }
 
 ###
 
-DELETE https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/d92c9539-13a0-4aa6-b8dd-2ab1ee88da82/
+DELETE https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/8966625f-da16-47c8-b5ed-ef13247f0d82/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 ###
 
-DELETE https://chatbotstudio.rezayogaswara.dev/api/v1/templates/f99a6751-f44f-4f55-8d63-1dd0175bae9c/
+DELETE https://chatbotstudio.rezayogaswara.dev/api/v1/templates/2478273b-71fb-4f4e-8d10-2b484704d4cd/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 ###
 
-PUT https://chatbotstudio.rezayogaswara.dev/api/v1/templates/f99a6751-f44f-4f55-8d63-1dd0175bae9c/
+PUT https://chatbotstudio.rezayogaswara.dev/api/v1/templates/2478273b-71fb-4f4e-8d10-2b484704d4cd/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
@@ -210,7 +210,7 @@ Authorization: Bearer {{access_token}}
 
 ###
 
-GET https://chatbotstudio.rezayogaswara.dev/api/v1/templates/0cccf76d-5741-4cfb-b5c0-4feccc580d12/
+GET https://chatbotstudio.rezayogaswara.dev/api/v1/templates/2478273b-71fb-4f4e-8d10-2b484704d4cd/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
@@ -224,7 +224,7 @@ Authorization: Bearer {{access_token}}
 
 ###
 
-PUT https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/8f81c734-68ee-4516-a255-669f1db0ccce/
+PUT https://chatbotstudio.rezayogaswara.dev/api/v1/template-contents/2478273b-71fb-4f4e-8d10-2b484704d4cd/
 accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}

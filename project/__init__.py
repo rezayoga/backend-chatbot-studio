@@ -21,7 +21,6 @@ bugsnag.configure(
 	project_root=os.getcwd(),
 )
 
-
 def create_app() -> FastAPI:
 	app = FastAPI(title="Chatbot Studio API",
 	              version="1.1.0",

@@ -185,8 +185,8 @@ async def get_template_by_template_id(template_id: str, auth: AuthJWT = Depends(
 async def get_templates(session: AsyncSession = Depends(get_session)):
 	templates = await Template_DAL.get_templates(session)
 
-	# if templates is None or templates == False:
-	# 	raise not_found_exception("Templates not found")
+	if templates is None or templates == False:
+		raise not_found_exception("Templates not found")
 
 	return templates
 
